@@ -164,6 +164,7 @@ app.post("/", (req, res) => {
   }
 });
 
+
 //logout
 app.get("/logout", (req, res) => {
   res.redirect("/"); //access index.html
