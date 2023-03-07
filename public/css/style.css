@@ -1,0 +1,230 @@
+*{
+    padding: 0;
+    margin: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+h2 {
+    font-size:30px;
+    font-weight: 600;
+}
+
+h3{
+    font-size:26px;
+    font-weight: 600;
+} 
+
+h4{
+    font-size:18px;
+    font-weight: 300;
+} 
+
+.row-one{
+border: 1px solid #d7d7d7;
+padding:20px; 
+max-width: 500px;
+margin: auto;
+margin-top: 20%;
+}
+
+
+
+
+/* .dashboard{
+    height: 100vh;
+    padding: 5% 4%;
+    overflow-y: scroll;
+}
+
+.row-dashboard{
+    border: 1px solid #d7d7d7;
+    padding:20px;
+    max-width: 1200px;
+    margin: auto;
+} */
+
+
+/*Orders page*/
+.order {
+    padding: 5% 18%;
+}
+
+.picker-details{
+    padding: 10px;
+    background-color: #016d35;
+    color: #ffff;
+}
+.username-name{
+    font-weight: 600;
+}
+
+a.customer-id-link {
+    text-decoration: none;
+}
+
+/* search base */
+.sort{
+    margin-bottom: 20px;
+}
+.amountToView{
+    padding:6px 15px;
+    border: 1px solid rgb(149, 149, 149);
+    border-radius: 10px;
+
+}
+
+/* admin page */
+.admin-section{
+    background-color: #efefef;
+    height: 100vh;
+    padding: 30vh 30vw;
+
+}
+.admin-section-option{
+    border: solid 2px #d7d7d7;
+    padding: 10%;
+    border-radius: 20px;
+}
+.admin-section-option-main{
+    padding: 0;
+}
+
+.admin-section-option-item h4{
+    background-color: #d7d7d7;
+    font-weight: 600;
+    margin: 3px;
+    padding: 10%;
+    border-radius: 20px;
+    cursor: pointer;
+}
+
+.admin-section-option-item h4:hover{
+    background-color: #016d35;
+    color:#ffff;
+    transition: 0.6s;
+}
+
+
+
+/* single page */
+input.con{
+    width: 50px;
+    border: 1px solid;
+    padding: 10px;
+}
+
+input.check:checked{
+    background-color: #016d35;
+}
+
+.text-area{
+    height: 50px;
+    width: 300px;
+    padding: 10px;
+}
+
+
+
+/*Loading effect*/
+.loading-hide{
+    display:none;
+}
+
+.loading{
+        display:block;
+}
+
+@media (max-width:520px)
+ {
+
+ /* login page */
+ h2 {
+    font-size:28px;
+    font-weight: 800;
+}
+
+.login-sec{
+    height: 100%;
+    padding: 50% 10%;
+}
+
+tr{
+    font-size: 14px;
+}
+
+
+/*Orders page*/
+.order {
+    padding: 5% 6%;
+}
+
+.username-name{
+    font-weight: 600;
+    font-size: 14px;
+}
+
+
+/* admin page */
+.admin-section{
+    background-color: #efefef;
+    height: 100vh;
+    padding: 30vh 30vw;
+
+}
+
+}
+
+
+
+/* Tab view */
+@media (max-width:820px){
+
+            /* login page */
+            h2 {
+                font-size:28px;
+                font-weight: 800;
+            }
+
+            .login-sec{
+                height: 100%;
+                padding: 20vh 10%;
+            }
+
+            tr{
+                font-size: 14px;
+            }
+
+
+            /*Orders page*/
+            .order {
+                padding: 5% 8%;
+            }
+
+
+            /* admin page */
+            .admin-section{
+                background-color: #efefef;
+                height: 100vh;
+                padding: 30vh 30vw;
+
+            }
+            
+
+            /* single page */
+            .singlepage{
+                padding: 5% 5%;
+            }
+
+            /* admin page */
+            .admin-section{
+                background-color: #efefef;
+                height: 100vh;
+                padding: 30vh 10vw;
+
+            }
+
+}
+
+
+

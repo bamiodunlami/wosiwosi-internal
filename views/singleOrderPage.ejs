@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Orders</title>
+        <meta name="description" content="Wosiwosi Picking and Packer">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Stylesheet -->
+
+
+        <!-- Bostrap stylesheet -->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
+        
+        <!-- Google Fonts  -->
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@200;300;600&display=swap" rel="stylesheet">
+        <!--internal style-->
+        <link href="/public/css/style.css" rel="stylesheet">
+    </head>
+    <body>
+        
+        <section class="order singlepage">
+            <div class="row">
+                <div class="col-sm-12  customer-name">
+                    <h3 class="customer-name-item" id="customer-name">Customer Name</h3>
+                    <h4 class="order-id-item" id="order-id">Order ID</h4>
+                    <h4 class="order-status-item" id="order-status">Order Status</h4>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <!-- <form action=""> -->
+                    <div class="row picker-details">
+                        <div class="col-6 text-center picker-name">
+                            <h4 id="userName">?</h4>
+                        </div>
+        
+                        <div class="col-6 text-center picker-name">
+                            <h4>Today: <span id="username" class="username-name"><%=logDate%></span></h4>
+                        </div> 
+        
+                    </div>
+
+
+                <table id="extable" class="table table-hover">
+                    <tr>
+                    <th>S/N</th>
+                    <th>Pic.</th>
+                    <th>Prod.</th>
+                    <th>size</th>
+                    <th>Qty</th>
+                    <th>cut</th>
+                    <th>Loc</th>
+                    <th>Confirm</th>
+                    </tr>
+                
+
+                    <tbody id="myTable">
+
+                        <!-- loading effect -->
+                        <div class="text-center loading-hide" id="loading">
+                                <div class="spinner-border text-secondary" role="status">
+                                </div>
+                        </div>
+                        <!-- loading effect ends -->
+                    </tbody>
+
+                  </table>
+
+                  <div class="row">
+                        <div class="col-sm-12">Add Note</div>
+                        <div class="col-sm-12">
+                        <textarea class="text-area" id="text-area"></textarea>
+                        </div>
+                    </div>
+
+                  <div class="row">
+                    <!-- Button trigger modal -->
+                    <div class="col-sm-6">
+                    <button id="btn-comp" class="btn btn-danger">Confirm</button>
+                    <button type="button" disabled="disabled" id="con-btn" class="btn btn-warning">
+                        Complete Picking
+                        </button>
+                        </div>
+                  </div>
+
+                <!-- </form> -->
+
+                    <!-- Button trigger modal
+                    <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
+                        Complete Picking
+                        </button> -->
+
+                            <!-- Modal
+                            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                        <h1 class="modal-title fs-5" id="staticBackdropLabel">Confirm Comptetion</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                        </div>
+                                        <div class="modal-body">
+                                        Kindly confirm you have complete the picking, you will not be able to edit after submission
+                                        </div>
+                                        <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                        <button id="btn-comp" type="button" class="btn btn-danger">Complete</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+            </div> -->
+
+            
+
+        </section>
+
+
+           
+        <!--Boostrap-->
+        <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js" integrity="sha384-w76AqPfDkMBDXo30jS1Sgez6pr3x5MlQ1ZAGC+nuZB+EYdgRZgiwxhTBTkF7CXvN" crossorigin="anonymous"></script>
+       <!--jquery-->
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
+        <!--internal js-->
+        <!-- <script src="/public/call.js"></script> -->
+        <script src="/public/singleProductAjax.js"></script>
+        <!-- <script src="/public/singleProductAction.js"></script> -->
+
+    </body>
+</html>
