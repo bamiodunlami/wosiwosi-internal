@@ -98,7 +98,7 @@ async function sortOrders(){
 
 // // get requst from browser to lead homepage
 app.get("/", (req, res) => {
-  // getOrders();
+  getOrders();
   res.sendFile(`${__dirname}/public/index.html`); //access index.html
 });
 
