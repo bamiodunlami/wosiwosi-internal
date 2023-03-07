@@ -3,6 +3,7 @@ const app = express();
 const fs = require("fs"); //writing to file intenal package
 const port=process.env.PORT || 3000;
 
+
 // require body parser
 const bodyParser = require("body-parser");
 const { json } = require("body-parser"); // auto added
@@ -97,7 +98,7 @@ async function sortOrders(){
 
 // // get requst from browser to lead homepage
 app.get("/", (req, res) => {
-  getOrders();
+  // getOrders();
   res.sendFile(`${__dirname}/public/index.html`); //access index.html
 });
 
