@@ -23,7 +23,7 @@ const woocommerce = new WooCommerRestApi({
   url: "https://wosiwosi.co.uk",
   consumerKey: "ck_f41a79e671f0bd0194b53e96c45805e265a78bf1",
   consumerSecret: "cs_4368e2b1e72c226cfbc64197e76b57635cc7d233",
-  version: "wc/v3",
+  // version: "wc/v3",
 });
 
 
