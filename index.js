@@ -193,15 +193,15 @@ app.post("/complete", (req, res) => {
   // res.sendFile(`${__dirname}/public/index.html`);//access index.html
 });
 
-//sort order by day
-// app.post("/dateSort", (req, res)=>{
-//   console.log(req.body);
-//   dates=req.body.from;
-//   dates2=req.body.to;
-//   sortOrders();
-//   // finalOrderSorting();
-//   res.send();
-// });
+// sort order by day
+app.post("/dateSort", (req, res)=>{
+  console.log(req.body);
+  dates=req.body.from;
+  dates2=req.body.to;
+  sortOrders();
+  // finalOrderSorting();
+  res.send();
+});
 
 // //grap each customer request
 // app.get("*", (req, res)=>{
