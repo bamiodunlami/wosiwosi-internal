@@ -115,6 +115,7 @@ $(document).ready(() => {
     }
   }
 
+  //serch box
     $("#search-filter").on("keyup", function() {
       let value = $(this).val().toLowerCase();
       $("#myTable tr").filter(function() {
@@ -122,6 +123,7 @@ $(document).ready(() => {
       });
     });
 
+    //function to catch the date set for filtering
     async function sortByDateAjax(){
       $('#sort-by-date').on('click', function(){
         let fromDate=$('#fromDate').val();
@@ -147,7 +149,7 @@ $(document).ready(() => {
         $('#loading').removeClass('loading')
         $.getJSON("sortProducts.json", (respo) => {
           sortOrder = respo;
-          counter = 5; 
+          counter = 20; 
           buildData(sortOrder);
         });
     

@@ -64,6 +64,7 @@ woocommerce.get("orders", {
   }
 }
 
+//fuction for sorting order
 async function sortOrders(){
         console.log(dates);
         console.log(dates2)
@@ -98,15 +99,12 @@ async function sortOrders(){
 }
 
 // // get requst from browser to lead homepage
-
-
 app.get("/", (req, res) => {
   getOrders();
   res.sendFile(`${__dirname}/public/index.html`); //access index.html
 });
 
 //Admin Operatons
-
 // view all orders
 app.get("/orderlist", (req, res) => {
   res.render("adminOrder", {});
