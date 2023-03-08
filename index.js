@@ -64,38 +64,38 @@ woocommerce.get("orders", {
   }
 }
 
-// async function sortOrders(){
-//         console.log(dates);
-//         console.log(dates2)
+async function sortOrders(){
+        console.log(dates);
+        console.log(dates2)
 
-//       //sorted order
-//       woocommerce.get(`orders?after=${dates}T00:00:00&before=${dates2}T23:59:59`, {
-//         per_page: 100, //number of order par page
-//         status: "completed", //select completed only
-//       })  .then((response) => {
-//        sortOrder=response.data;
-//       //  console.log(sortOrder)
-//       })
-//       .catch((error) => {
-//         console.log("Not sorted");
-//       });
+      //sorted order
+      woocommerce.get(`orders?after=${dates}T00:00:00&before=${dates2}T23:59:59`, {
+        per_page: 100, //number of order par page
+        status: "completed", //select completed only
+      })  .then((response) => {
+       sortOrder=response.data;
+      //  console.log(sortOrder)
+      })
+      .catch((error) => {
+        console.log("Not sorted");
+      });
 
-//      setTimeout(() => {
-//       try {
-//         data = JSON.stringify(sortOrder);
-//         path = `${__dirname}/sortProducts.json`;
-//         fs.writeFile(path, data, (err) => {
-//           if (err) console.log(err);
-//           else {
-//             console.log("Sort written");
-//           }
-//         });
-//       } catch (er) {
-//         console.log(er);
-//       }
-//     }, 15000); 
+     setTimeout(() => {
+      try {
+        data = JSON.stringify(sortOrder);
+        path = `${__dirname}/sortProducts.json`;
+        fs.writeFile(path, data, (err) => {
+          if (err) console.log(err);
+          else {
+            console.log("Sort written");
+          }
+        });
+      } catch (er) {
+        console.log(er);
+      }
+    }, 15000); 
     
-// }
+}
 
 // // get requst from browser to lead homepage
 
