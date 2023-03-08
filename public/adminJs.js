@@ -1,8 +1,8 @@
 $(document).ready(()=>{
-
-$('#back').on('click', ()=>{
-    window.location="/";
-})
+    sortByDateAjax()
+        $('#back').on('click', ()=>{
+            window.location="/";
+        })
 
     //request all order
     $('.all-order').click(()=>{
@@ -163,5 +163,47 @@ $('#back').on('click', ()=>{
                     $(this).toggle($(this).text().toLowerCase().indexOf(textValue)>-1)
                 });
               });
+
+                  //function to catch the date set for filtering
+    async function sortByDateAjax(){
+        $('#sort-by-date').on('click', function(){
+          let fromDate=$('#fromDate').val();
+          let toDate=$('#toDate').val();
+         let sortDateValue={
+              from:fromDate,
+              to:toDate
+          }
+          $("#myTable").empty();
+          $('#loading').addClass('loading')
+  
+  
+            fetch('/dateSort', {
+              method: "POST",
+              headers: {
+                "Content-Type":"application/json",
+              },
+              body: JSON.stringify(sortDateValue),
+            });
+  
+      setTimeout(() => {
+          $('#myTable').empty();
+          $('#loading').removeClass('loading')
+          $.getJSON("sortProducts.json", (respo) => {
+            sortOrder = respo;
+            counter = 20; 
+            buildData(sortOrder);
+          });
+      
+          $("#btn-filter").on("click", () => {
+            let amountFilter = Number($("input#filter").val());
+            console.log(`here is me ${amountFilter}`);
+            counter = amountFilter;
+            $("#myTable").empty();
+            buildData(sortOrder);
+            });
+          }, 20000)
+  
+       });
+      }
 
          });
