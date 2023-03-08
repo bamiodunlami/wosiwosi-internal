@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const fs = require("fs"); //writing to file intenal package
 const port=process.env.PORT || 3000;
+const WooCommerRestApi = require("@woocommerce/woocommerce-rest-api").default;
 
 
 // require body parser
@@ -19,12 +20,12 @@ app.use(express.json({ limit: "5mb" }));
 app.use(express.static(__dirname));
 
 //wooommerce api
-const WooCommerRestApi = require("@woocommerce/woocommerce-rest-api").default;
+
 const woocommerce = new WooCommerRestApi({
   url: "https://wosiwosi.co.uk",
   consumerKey: "ck_f41a79e671f0bd0194b53e96c45805e265a78bf1",
   consumerSecret: "cs_4368e2b1e72c226cfbc64197e76b57635cc7d233",
-  version: "wc/v2",
+  version: "wc/v3",
 });
 
 
@@ -44,11 +45,11 @@ woocommerce.get("orders", {
     order = response.data; // store response in order
   })
   .catch((error) => {
-    // console.log(error.response.data);
+    console.log(error.response.data);
   });
 
 // fucntion to log recent order
-async function getOrders() {
+ function getOrders() {
   try {
     data = JSON.stringify(order);
     path = `${__dirname}/products.json`;
@@ -63,40 +64,42 @@ async function getOrders() {
   }
 }
 
-async function sortOrders(){
-        console.log(dates);
-        console.log(dates2)
+// async function sortOrders(){
+//         console.log(dates);
+//         console.log(dates2)
 
-      //sorted order
-      woocommerce.get(`orders?after=${dates}T00:00:00&before=${dates2}T23:59:59`, {
-        per_page: 100, //number of order par page
-        status: "completed", //select completed only
-      })  .then((response) => {
-       sortOrder=response.data;
-      //  console.log(sortOrder)
-      })
-      .catch((error) => {
-        console.log("Not sorted");
-      });
+//       //sorted order
+//       woocommerce.get(`orders?after=${dates}T00:00:00&before=${dates2}T23:59:59`, {
+//         per_page: 100, //number of order par page
+//         status: "completed", //select completed only
+//       })  .then((response) => {
+//        sortOrder=response.data;
+//       //  console.log(sortOrder)
+//       })
+//       .catch((error) => {
+//         console.log("Not sorted");
+//       });
 
-     setTimeout(() => {
-      try {
-        data = JSON.stringify(sortOrder);
-        path = `${__dirname}/sortProducts.json`;
-        fs.writeFile(path, data, (err) => {
-          if (err) console.log(err);
-          else {
-            console.log("Sort written");
-          }
-        });
-      } catch (er) {
-        console.log(er);
-      }
-    }, 15000); 
+//      setTimeout(() => {
+//       try {
+//         data = JSON.stringify(sortOrder);
+//         path = `${__dirname}/sortProducts.json`;
+//         fs.writeFile(path, data, (err) => {
+//           if (err) console.log(err);
+//           else {
+//             console.log("Sort written");
+//           }
+//         });
+//       } catch (er) {
+//         console.log(er);
+//       }
+//     }, 15000); 
     
-}
+// }
 
 // // get requst from browser to lead homepage
+
+
 app.get("/", (req, res) => {
   getOrders();
   res.sendFile(`${__dirname}/public/index.html`); //access index.html
@@ -201,30 +204,30 @@ app.post("/complete", (req, res) => {
 // });
 
 // //grap each customer request
-app.get("*", (req, res)=>{
+// app.get("*", (req, res)=>{
 
-      let requester=req.url;
-      console.log(requester);
+//       let requester=req.url;
+//       console.log(requester);
       
-        woocommerce.get(`orders${requester}`)
-        .then((response) => {
-          anOrder= response.data;// store response in order
+//         woocommerce.get(`orders${requester}`)
+//         .then((response) => {
+//           anOrder= response.data;// store response in order
 
-          //save retrieved an order to picker.json
-          let path=`${__dirname}/singleOrder.json`;
-          let anData=JSON.stringify(anOrder);
-          fs.writeFile(path,anData, (err)=>{
-          if (err) {console.log("cannot get single order")}
-          else {console.log("Single Order saved")}
-          });
-        });
+//           //save retrieved an order to picker.json
+//           let path=`${__dirname}/singleOrder.json`;
+//           let anData=JSON.stringify(anOrder);
+//           fs.writeFile(path,anData, (err)=>{
+//           if (err) {console.log("cannot get single order")}
+//           else {console.log("Single Order saved")}
+//           });
+//         });
 
-      res.render('singleOrderPage',{
-      logDate: date
+//       res.render('singleOrderPage',{
+//       logDate: date
 
-      });
+//       });
 
-    });
+//     });
 
 app.listen(port, () => {
   console.log("Server started");
