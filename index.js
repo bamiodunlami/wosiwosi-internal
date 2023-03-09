@@ -4,23 +4,21 @@ const fs = require("fs"); //writing to file intenal package
 const port=process.env.PORT || 3000;
 const WooCommerRestApi = require("@woocommerce/woocommerce-rest-api").default;
 
-
 // require body parser
 const bodyParser = require("body-parser");
-const { json } = require("body-parser"); // auto added
-const { response } = require("express"); //auto added
+// const { json } = require("body-parser"); // auto added
+// const { response } = require("express"); //auto added
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //ejs
 app.set("view engine", "ejs");
 
-app.use(express.json({ limit: "5mb" }));
+app.use(express.json({ limit: "1mb" }));
 
 //access public diroctory and use static files (CSS JS )
-app.use(express.static(__dirname));
+app.use(express.static('public'));
 
 //wooommerce api
-
 const woocommerce = new WooCommerRestApi({
   url: "https://wosiwosi.co.uk",
   consumerKey: "ck_f41a79e671f0bd0194b53e96c45805e265a78bf1",
@@ -52,7 +50,7 @@ woocommerce.get("orders", {
  function getOrders() {
   try {
     data = JSON.stringify(order);
-    path = `${__dirname}/products.json`;
+    path = `${__dirname}/public/products.json`;
     fs.writeFile(path, data, (err) => {
       if (err) console.log(err);
       else {
@@ -60,11 +58,11 @@ woocommerce.get("orders", {
       }
     });
   } catch (er) {
-    console.log("Couldn't get order");
+    console.log(` cannot get order ${er}`);
   }
 }
 
-//fuction for sorting order
+//fuction for sorting order by date
 async function sortOrders(){
         console.log(dates);
         console.log(dates2)
@@ -84,7 +82,7 @@ async function sortOrders(){
      setTimeout(() => {
       try {
         data = JSON.stringify(sortOrder);
-        path = `${__dirname}/sortProducts.json`;
+        path = `${__dirname}/public/sortProducts.json`;
         fs.writeFile(path, data, (err) => {
           if (err) console.log(err);
           else {
@@ -98,10 +96,10 @@ async function sortOrders(){
     
 }
 
-// // get requst from browser to lead homepage
+// get requst from browser to lead homepage
 app.get("/", (req, res) => {
   getOrders();
-  res.sendFile(`${__dirname}/public/index.html`); //access index.html
+  res.sendFile(`${__dirname}/public/homer.html`); //access index.html
 });
 
 //Admin Operatons
@@ -116,7 +114,7 @@ app.get("/adminCompletedOrder", (req, res) => {
 });
 
 //Handle Post  request Login from homepage
-app.post("/", (req, res) => {
+app.post("/user", (req, res) => {
   let user = req.body.username;
   let selected = req.body.selector;
   // console.log(selected);
@@ -127,7 +125,7 @@ app.post("/", (req, res) => {
     name: userName,
     position: accessAs,
   };
-  const path = `${__dirname}/currentUser.json`;
+  const path = `${__dirname}/public/currentUser.json`;
   fs.writeFile(path, JSON.stringify(data), (error) => {
     if (error) console.log("User not loged");
     console.log("User saved");
@@ -176,13 +174,13 @@ app.get("/logout", (req, res) => {
 //staff completed an order
 app.post("/complete", (req, res) => {
   console.log(req.body);
-  let data = fs.readFileSync(`${__dirname}/activity.json`);
+  let data = fs.readFileSync(`${__dirname}/public/activity.json`);
   let myArray = JSON.parse(data);
   let newData = req.body;
   myArray.unshift(newData);
 
   let finalData = JSON.stringify(myArray);
-  const path = `${__dirname}/activity.json`;
+  const path = `${__dirname}/public/activity.json`;
   fs.writeFile(path, finalData, (err) => {
     if (err) console.log(err);
     console.log("front page file written");
