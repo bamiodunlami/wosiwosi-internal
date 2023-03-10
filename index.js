@@ -202,7 +202,6 @@ app.post("/dateSort", (req, res)=>{
   res.send();
 });
 
-
 // //grap each customer request
 // app.get("*", (req, res)=>{
 
