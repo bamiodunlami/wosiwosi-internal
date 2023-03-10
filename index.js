@@ -13,7 +13,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //ejs
 app.set("view engine", "ejs");
-çpp.use(express.json({ limit: "1mb" }));
+app.use(express.json({ limit: "1mb" }));
 
 //clear cache memory
 app.use(nocache());
