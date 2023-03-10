@@ -12,8 +12,13 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //ejs
 app.set("view engine", "ejs");
-
 app.use(express.json({ limit: "1mb" }));
+
+//clear cache memory
+app.use((req, res, next)=>{
+  res.set('Cache-Control', 'no-store')
+  next();
+});
 
 //access public diroctory and use static files (CSS JS )
 app.use(express.static('public'));
