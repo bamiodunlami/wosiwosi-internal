@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const fs = require("fs"); //writing to file intenal package
 const port=process.env.PORT || 3000;
+const nocache=require('nocache')
 const WooCommerRestApi = require("@woocommerce/woocommerce-rest-api").default;
 
 // require body parser
@@ -12,14 +13,10 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //ejs
 app.set("view engine", "ejs");
-app.use(express.json({ limit: "1mb" }));
+çpp.use(express.json({ limit: "1mb" }));
 
 //clear cache memory
-app.use((req, res, next)=>{
-  res.set('Cache-Control', 'no-store')
-  next();
-  console.log("cache cleared");
-});
+app.use(nocache());
 
 //access public diroctory and use static files (CSS JS )
 app.use(express.static('public'));
