@@ -60,60 +60,46 @@ $(document).ready(() => {
 
   function buildData(data) {
     // console.log(data)
-    let table = document.querySelector("#myTable");
-    $("#orderUnit").text(counter);
-    for (let i = 0; i < counter; i++) {
-      let row = `<tr id="trow">
-                    <td> ${i + 1} </td>
-                    <td><a class="customer-id-link" href="/${data[i].id}"> ${data[i].id}</a></td>
-                   <td>${data[i].billing.first_name} ${data[i].billing.last_name}</td>
-                   <td>${data[i].date_completed.slice(0, 10)}</td>
-                   <td><input type="checkbox" id="checkbox-cu" name="status" vlaue="status" disabled ></td>
-                   <td><input type="checkbox" id="checkbox-pi" name="status" vlaue="status" disabled ></td>
-                   <td><input type="checkbox" id="checkbox-pa" name="status" vlaue="status" disabled ></td>
-                  
-              </tr>`;
+      let table = document.querySelector("#myTable");
+      $("#orderUnit").text(counter);
+      for (let i = 0; i < counter; i++) {
+        let row = `<tr id="trow">
+                      <td> ${i + 1} </td>
+                      <td class="customer-id-link" id="ln${i}"> ${data[i].id}</a></td>
+                    <td>${data[i].billing.first_name} ${data[i].billing.last_name}</td>
+                    <td>${data[i].date_completed.slice(0, 10)}</td>
+                    <td><input type="checkbox" id="checkbox-cu" name="status" vlaue="status" disabled ></td>
+                    <td><input type="checkbox" id="checkbox-pi" name="status" vlaue="status" disabled ></td>
+                    <td><input type="checkbox" id="checkbox-pa" name="status" vlaue="status" disabled ></td>
+                    
+                </tr>`;
 
-      table.innerHTML += row;
+        table.innerHTML += row;
+      }
 
-      numbersOfTr = $("tr#trow");
-      let valueOfSelectedRow, matching;
-    //   if you click on any tr, ajax will fetch
-      for (let i = 0; i < numbersOfTr.length; i++) {
-          valueOfSelectedRow=$(numbersOfTr[i]).children()[1].innerText;
+        //Single order click, fetch and reroute
+      let rowNumber= $("tr#trow")
+      //capture row clicked
+      for (let i=0; i<rowNumber.length; i++){
+        $(rowNumber[i]).on('click', function(){
+          orderNumberSelected=$(rowNumber[i]).children()[1].innerText;
+          console.log(orderNumberSelected)
+          let orderSelected={
+            orderNumber: orderNumberSelected,
+          }
+          //send the order number in json formart
+          fetch('/getSingleOrder', {
+            method:"POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body:JSON.stringify(orderSelected)
+          });
 
-            //fetch and sychornise data background
-            // $.getJSON('activity.json', (data)=>{
-            //     myMatching(data);
-            // });
-            // function myMatching(data){
-            //     for (let i=0; i<data.length; i++){
-            //         //find object with this specific property
-            //         for(let prop in data[i]){
-            //             //match the property and print
-            //             if(data[i][prop].includes(valueOfSelectedRow)){
-            //                  matching=data[i].orderNumber;
-            //                     //check box if cutter already worked on the order
-            //                  if(valueOfSelectedRow===matching && data[i].Position=='Cutter' && data[i].cutterStatus=='1'){
-            //                   $(numbersOfTr[i]).children()[4].children[0].checked=true;
-            //                  } 
-            //                  //check box if picker already work on the order
-            //                  if(valueOfSelectedRow===matching && data[i].Position=='Picker' && data[i].pickerStatus=='1'){
-            //                     $(numbersOfTr[i]).children()[5].children[0].checked=true;
-            //                     }
-
-            //                     //check box if picker already work on the order
-            //                  if(valueOfSelectedRow===matching && data[i].Position=='Packer' && data[i].packerStatus=='1'){
-            //                     $(numbersOfTr[i]).children()[6].children[0].checked=true;
-            //                     }
-            //                  break;
-            //             }   
-            //         }break;
-            //     } 
-            // }
-         }            console.log(`the value in this col ${i} is ${valueOfSelectedRow}`)
+          window.location.href="/singleOrderPage" //redirect to single order page
+        });
+      } 
     }
-  }
 
   //serch box
     $("#search-filter").on("keyup", function() {
@@ -164,5 +150,9 @@ $(document).ready(() => {
 
      });
     }
+
+        
+
+
 
 });
