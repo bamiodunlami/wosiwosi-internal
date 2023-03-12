@@ -39,7 +39,7 @@ $(document).ready(()=>{
             reOrder(mydata);
         });
             console.log("done populating")
-        }, 4500);
+        }, 3000);
      }
     
     //populaet data to table

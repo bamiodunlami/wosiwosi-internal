@@ -26,11 +26,16 @@ $(document).ready(() => {
 
   // ajax call for order
   function ajaxCall() {
+    $('#loading').addClass('loading');
+    setTimeout(()=>{
+     $('#loading').removeClass('loading');
     $.getJSON("products.json", (list) => {
       myOrder = list;
       counter = 20; 
       buildData(myOrder);
     });
+  }, 1000);
+
 
     $("#btn-filter").on("click", () => {
       let amountFilter = Number($("input#filter").val());
