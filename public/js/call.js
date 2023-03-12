@@ -26,11 +26,9 @@ $(document).ready(() => {
 
   // ajax call for order
   function ajaxCall() {
-    $('#loading').addClass('loading');
     $.getJSON("products.json", (list) => {
       myOrder = list;
       counter = 20; 
-      $('#loading').removeClass('loading');
       buildData(myOrder);
     });
 
