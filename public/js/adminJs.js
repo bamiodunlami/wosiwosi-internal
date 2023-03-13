@@ -23,41 +23,40 @@ $(document).ready(()=>{
         
             let counter=0; //counter for filter
         
-                // using ajax
-                // $.ajax(
-                //     {
-                //         url:"products.json",
-                //         type:"GET",
-                //         dataType:'json',
-                //         success: function(list){                
-                //         myOrder=list;    
-                //         buildData(myOrder);
-                //         console.log(myOrder);
-                //         document.querySelector("#ren").innerHTML=list[0].billing.first_name;
-        
-                //         }
-                //     }
-                // );
-        
-                    // ajax call for order
-                        function ajaxCall(){
-                        $.getJSON("products.json", (list)=>{
-                            myOrder=list;
-                            counter=20;
-                            buildData(myOrder);
-                            console.log(myOrder);
-                       
-                        });
-        
-                        $('#btn-filter').on("click", ()=>{
-                            let amountFilter=Number($('input#filter').val());
-                            console.log(`here is me ${amountFilter}`);
-                            counter=amountFilter;
-                            $("#myTable").empty();
-                            buildData(myOrder);
-                        });
-                    
-                    }
+        // using ajax
+        // $.ajax(
+        //     {
+        //         url:"products.json",
+        //         type:"GET",
+        //         dataType:'json',
+        //         success: function(list){                
+        //         myOrder=list;    
+        //         buildData(myOrder);
+        //         console.log(myOrder);
+        //         document.querySelector("#ren").innerHTML=list[0].billing.first_name;
+
+        //         }
+        //     }
+        // );
+
+            // ajax call for order
+                function ajaxCall(){
+                $.getJSON("products.json", (list)=>{
+                    myOrder=list;
+                    counter=20;
+                    buildData(myOrder);
+                    console.log(myOrder);
+                
+                });
+
+                $('#btn-filter').on("click", ()=>{
+                    let amountFilter=Number($('input#filter').val());
+                    console.log(`here is me ${amountFilter}`);
+                    counter=amountFilter;
+                    $("#myTable").empty();
+                    buildData(myOrder);
+                });
+            }
         
         
                function buildData(data){
@@ -117,6 +116,7 @@ $(document).ready(()=>{
 
 
                    }
+                   checkDoneOrders()
                }
 
 
@@ -204,6 +204,38 @@ $(document).ready(()=>{
           }, 20000)
   
        });
+      }
+
+         //check if already done and mark done
+    function checkDoneOrders(){
+        $.getJSON('/activity.json', (response)=> {
+        let orderTableRow=$('tr#trow')
+          for (let i=0; i<orderTableRow.length; i++){  
+          let orderNumberAvailable=$(orderTableRow[i]).children()[1].innerText;
+          let cutterCheckBox=  $(orderTableRow[i]).children()[4];
+          let pickerCheckBox=  $(orderTableRow[i]).children()[5];
+          let packerCheckBox=  $(orderTableRow[i]).children()[6];
+            for (let x=0; x<response.length; x++){
+              let doneOrder=response[x].orderNumber;
+              //checkbox cutter
+              if (doneOrder===orderNumberAvailable && response[x].Position=="Cutter"){
+                $(cutterCheckBox).children().prop('checked', true);
+              }
+  
+              //checkbox picker
+              if (doneOrder===orderNumberAvailable && response[x].Position=="Picker"){
+                $(pickerCheckBox).children().prop('checked', true);
+              }
+  
+               //Packer picker
+              if (doneOrder===orderNumberAvailable && response[x].Position=="Packer"){
+                $(packerCheckBox).children().prop('checked', true);
+              }
+  
+            }   
+          } 
+        });
+  
       }
 
          });

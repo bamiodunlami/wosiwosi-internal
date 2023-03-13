@@ -105,7 +105,7 @@ $(document).ready(() => {
           window.location.href="/singleOrderPage" //redirect to single order page
         });
       } 
-      
+
       checkDoneOrders();
     }
 
@@ -168,7 +168,6 @@ $(document).ready(() => {
         let cutterCheckBox=  $(orderTableRow[i]).children()[4];
         let pickerCheckBox=  $(orderTableRow[i]).children()[5];
         let packerCheckBox=  $(orderTableRow[i]).children()[6];
-        console.log(orderNumberAvailable);
           for (let x=0; x<response.length; x++){
             let doneOrder=response[x].orderNumber;
             //checkbox cutter

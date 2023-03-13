@@ -1,5 +1,5 @@
 $(document).ready(()=>{
-    let firstName, lastName, orderNumber, position, name, note, cutterStatus, pickerStatus, packerStatus;
+    let firstName, lastName, orderNumber, position, name, note, cutterStatus, pickerStatus, packerStatus, freezerNo ;
     const date=new Date();
     let cutterSKip=0 //for skipping if theres no frozen
     ajaxCall();
@@ -34,7 +34,7 @@ $(document).ready(()=>{
 
             $('#customer-name').text(`${data.billing.first_name} ${data.billing.last_name}`);
             $('#order-id').text(`Order No: ${data.id}`);
-            $('#order-status').text(`Status: ${data.status}`);   
+            $('#order-status').text(`Status: ${data.status}`); 
             mydata=data.line_items;
             reOrder(mydata);
         });
@@ -113,6 +113,7 @@ $(document).ready(()=>{
                 break;
               } else {
                 note=$('textarea#text-area').val();
+                freezerNo=$('#freezerNumber').val();
                 $('#btn-comp').prop("disabled", true);
                 $('#con-btn').prop('disabled', false)
               }
@@ -129,6 +130,7 @@ $(document).ready(()=>{
                                 DoneBy:`${name}`,
                                 date:`${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`,
                                 note:note,
+                                freezerNumber: freezerNo,
                                 cutterStatus:cutterStatus,
                                 pickerStatus:pickerStatus,
                                 packerStatus:packerStatus
@@ -151,7 +153,25 @@ $(document).ready(()=>{
                     // });
 
             });
+            checkDoneOrders();
     }
     
+       //check if already done and mark done
+       function checkDoneOrders(){
+        $.getJSON('/activity.json', (response)=> {          
+            for(let x=0; x<response.length; x++){            
+                let doneOrder=response[x].orderNumber;
+                            //checkbox cutter
+                            if (orderNumber==doneOrder){
+                                console.log("This order is done");
+                                $('#freezerNumber').val(response[x].freezerNumber)
+                                if (Number(response[x].freezerNumber)>0){
+                                  $('#freezerNumber').prop('disabled', true)
+                                }
+                             } else {}
+            }
+        });
+  
+      }
 
 });
