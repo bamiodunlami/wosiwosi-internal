@@ -168,8 +168,7 @@ $(document).ready(() => {
         let packerCheckBox=  $(orderTableRow[i]).children()[6]
           for (let x=0; x<response.length; x++){
             let doneOrder=response[x].orderNumber;
-            // console.log(`available ${orderNumberAvailable}`);
-            // console.log(doneOrder);
+            console.log(doneOrder);
 
             //checkbox cutter
             if (doneOrder===orderNumberAvailable && response[x].Position=="Cutter"){
