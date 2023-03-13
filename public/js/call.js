@@ -1,6 +1,7 @@
 $(document).ready(() => {
   ajaxCall();
   sortByDateAjax();
+  checkDoneOrders();
   // searchOrder();
   $("#logout").click(() => {
     window.location.href = "/logout";
@@ -31,7 +32,7 @@ $(document).ready(() => {
     //  $('#loading').removeClass('loading');
     $.getJSON("products.json", (list) => {
       myOrder = list;
-      counter = 20; 
+      counter = 100; 
       buildData(myOrder);
     });
   // }, 1000);
@@ -156,8 +157,40 @@ $(document).ready(() => {
      });
     }
 
-        
+    //check if already done and mark done
+    function checkDoneOrders(){
+      $.getJSON('/activity.json', (response)=> {
+      let orderTableRow=$('tr#trow')
+        for (let i=0; i<orderTableRow.length; i++){  
+        let orderNumberAvailable=$(orderTableRow[i]).children()[1].innerText;
+        let cutterCheckBox=  $(orderTableRow[i]).children()[4]
+        let pickerCheckBox=  $(orderTableRow[i]).children()[5]
+        let packerCheckBox=  $(orderTableRow[i]).children()[6]
+          for (let x=0; x<response.length; x++){
+            let doneOrder=response[x].orderNumber;
+            // console.log(`available ${orderNumberAvailable}`);
+            // console.log(doneOrder);
 
+            //checkbox cutter
+            if (doneOrder===orderNumberAvailable && response[x].Position=="Cutter"){
+              $(cutterCheckBox).children().prop('checked', true);
+            }
+
+            //checkbox picker
+            if (doneOrder===orderNumberAvailable && response[x].Position=="Picker"){
+              $(pickerCheckBox).children().prop('checked', true);
+            }
+
+             //Packer picker
+            if (doneOrder===orderNumberAvailable && response[x].Position=="Packer"){
+              $(packerCheckBox).children().prop('checked', true);
+            }
+
+          }   
+        } 
+      });
+
+    }
 
 
 });
