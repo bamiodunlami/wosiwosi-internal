@@ -1,7 +1,7 @@
 $(document).ready(() => {
   ajaxCall();
   sortByDateAjax();
-  checkDoneOrders();
+
   // searchOrder();
   $("#logout").click(() => {
     window.location.href = "/logout";
@@ -105,6 +105,8 @@ $(document).ready(() => {
           window.location.href="/singleOrderPage" //redirect to single order page
         });
       } 
+      
+      checkDoneOrders();
     }
 
   //serch box
@@ -163,9 +165,9 @@ $(document).ready(() => {
       let orderTableRow=$('tr#trow')
         for (let i=0; i<orderTableRow.length; i++){  
         let orderNumberAvailable=$(orderTableRow[i]).children()[1].innerText;
-        let cutterCheckBox=  $(orderTableRow[i]).children()[4]
-        let pickerCheckBox=  $(orderTableRow[i]).children()[5]
-        let packerCheckBox=  $(orderTableRow[i]).children()[6]
+        let cutterCheckBox=  $(orderTableRow[i]).children()[4];
+        let pickerCheckBox=  $(orderTableRow[i]).children()[5];
+        let packerCheckBox=  $(orderTableRow[i]).children()[6];
         console.log(orderNumberAvailable);
           for (let x=0; x<response.length; x++){
             let doneOrder=response[x].orderNumber;
