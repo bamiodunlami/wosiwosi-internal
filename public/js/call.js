@@ -161,6 +161,7 @@ $(document).ready(() => {
     function checkDoneOrders(){
       $.getJSON('/activity.json', (response)=> {
       let orderTableRow=$('tr#trow')
+      console.log(orderTableRow)
         for (let i=0; i<orderTableRow.length; i++){  
         let orderNumberAvailable=$(orderTableRow[i]).children()[1].innerText;
         let cutterCheckBox=  $(orderTableRow[i]).children()[4]
@@ -168,8 +169,6 @@ $(document).ready(() => {
         let packerCheckBox=  $(orderTableRow[i]).children()[6]
           for (let x=0; x<response.length; x++){
             let doneOrder=response[x].orderNumber;
-            console.log(doneOrder);
-
             //checkbox cutter
             if (doneOrder===orderNumberAvailable && response[x].Position=="Cutter"){
               $(cutterCheckBox).children().prop('checked', true);
