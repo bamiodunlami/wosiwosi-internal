@@ -163,9 +163,10 @@ $(document).ready(()=>{
                 let doneOrder=response[x].orderNumber;
                             //checkbox cutter
                             if (orderNumber==doneOrder){
-                                console.log("This order is done");
-                                $('#freezerNumber').val(response[x].freezerNumber)
+                                $('#freezerNumber').val(response[x].freezerNumber);
+                                console.log(Number(response[x].freezerNumber));
                                 if (Number(response[x].freezerNumber)>0){
+                                    console.log("This order is done");
                                   $('#freezerNumber').prop('disabled', true)
                                 }
                              } else {}
