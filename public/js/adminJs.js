@@ -141,6 +141,7 @@ $(document).ready(()=>{
                        <td>${data2[i].Position}: ${data2[i].DoneBy}</td>
                        <td>${data2[i].date}</td>
                        <td>${data2[i].note}</td>
+                       <td>${data2[i].freezerNumber}</td>
                      
                   </tr>`
     
