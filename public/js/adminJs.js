@@ -63,13 +63,13 @@ $(document).ready(()=>{
                  }       
         
                function buildData(data){
-                    
                    let table=document.querySelector("#myTable");
                         $('#orderUnit').text(counter);
                    for (let i=counter; i>=0; i--){
                        let row = `<tr id="trow">
                            <td>${data[i].id}</td>
                            <td>${data[i].billing.first_name} ${data[i].billing.last_name}</td>
+                           <td>${data[i].billing.phone}</td>
                            <td>${data[i].date_completed.slice(0,10)}</td>
                            <td><input type="checkbox" id="checkbox" name="status" vlaue="status" disabled ></td>
                            <td><input type="checkbox" id="checkbox" name="status" vlaue="status" disabled ></td>
@@ -133,7 +133,8 @@ $(document).ready(()=>{
                    let row = `<tr>
                         <td>${data2[i].orderNumber}</td>
                        <td>${data2[i].username}</td>
-                       <td>${data2[i].Position}: ${data2[i].DoneBy}</td>
+                       <td>${data2[i].phone}</td>
+                       <td>${data2[i].DoneBy}</td>
                        <td>${data2[i].date}</td>
                        <td>${data2[i].note}</td>
                        <td>${data2[i].freezerNumber}</td>

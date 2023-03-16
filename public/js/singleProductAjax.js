@@ -1,5 +1,5 @@
 $(document).ready(()=>{
-    let firstName, lastName, orderNumber, position, name, note, cutterStatus, pickerStatus, packerStatus, freezerNo ;
+    let firstName, lastName, orderNumber, position, name, note, cutterStatus, pickerStatus, packerStatus, freezerNo, cuNumber ;
     const date=new Date();
     let cutterSKip=0 //for skipping if theres no frozen
     ajaxCall();
@@ -31,6 +31,7 @@ $(document).ready(()=>{
             firstName=data.billing.first_name;
             lastName=data.billing.last_name;
             orderNumber=data.id;
+            cuNumber=data.billing.phone
 
             $('#customer-name').text(`${data.billing.first_name} ${data.billing.last_name}`);
             $('#order-id').text(`Order No: ${data.id}`);
@@ -44,9 +45,8 @@ $(document).ready(()=>{
     
     //populaet data to table
     function reOrder(data){
+        console.log(data)
         let table=document.querySelector("#myTable");
-
-
         for (let i=0; i<data.length; i++){
            cutLen=data[i].meta_data.length; //product meta details eg wight, cut size et.c
            let metaValue=data[i].meta_data;
@@ -124,8 +124,9 @@ $(document).ready(()=>{
 
             //complete operation
             $('#con-btn').on('click', ()=>{
-                const data = { username: `${firstName} ${lastName}`,
+                const dataSend = { username: `${firstName} ${lastName}`,
                                 orderNumber: `${orderNumber}`,
+                                phone:cuNumber,
                                 Position:`${position}`,
                                 DoneBy:`${name}`,
                                 date:`${date.getDate()}/${date.getMonth()}/${date.getFullYear()}`,
@@ -141,7 +142,7 @@ $(document).ready(()=>{
                     headers: {
                     "Content-Type": "application/json",
                     },
-                    body: JSON.stringify(data),
+                    body: JSON.stringify(dataSend),
                 });
                 window.location.href="/logout"
                     // .then((response) => response.json())
