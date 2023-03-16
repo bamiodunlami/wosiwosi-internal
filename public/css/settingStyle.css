@@ -1,0 +1,36 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+h3{
+    font-size:22px;
+    font-weight: 600;
+} 
+
+.row-def{
+    border: 1px solid #d7d7d7;
+    padding:20px; 
+    max-width: 500px;
+    margin: auto;
+    margin-top: 20%;
+    }
+.row-two{
+    margin-top:20px;
+}
+
+#saveSetting{
+    margin-top: 10px;
+}
+
+
+@media (max-width:600px){
+    .login-sec{
+        display: none;
+        height: 100%;
+        padding: 50% 10%;
+    }
+
+}

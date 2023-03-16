@@ -1,19 +1,25 @@
 $(document).ready(()=>{
-    sortByDateAjax()
-        $('#back').on('click', ()=>{
-            window.location="/";
-        })
+    sortByDateAjax();
+
+    $('#back').on('click', ()=>{
+    window.location="/";
+    })
 
     //request all order
     $('.all-order').click(()=>{
-        window.location.href="/orderlist";
+    window.location.href="/orderlist";
     });
 
-        //request all order
-        $('.completed-orders').click(()=>{
-            window.location.href="/adminCompletedOrder";
-        });
-  
+    //request all order
+    $('.completed-orders').click(()=>{
+    window.location.href="/adminCompletedOrder";
+    });
+
+    //Admin settings get requrest
+    $('.settings').on('click', function(){
+    window.location.href='/settings'
+    });
+
             myOrder=[];
             ajaxCall();
             ajaxCallTwo();
@@ -43,10 +49,8 @@ $(document).ready(()=>{
                 function ajaxCall(){
                 $.getJSON("products.json", (list)=>{
                     myOrder=list;
-                    counter=20;
-                    buildData(myOrder);
-                    console.log(myOrder);
-                
+                    counter=25;
+                    buildData(myOrder);                
                 });
 
                 $('#btn-filter').on("click", ()=>{
@@ -56,23 +60,20 @@ $(document).ready(()=>{
                     $("#myTable").empty();
                     buildData(myOrder);
                 });
-            }
-        
+                 }       
         
                function buildData(data){
                     
                    let table=document.querySelector("#myTable");
                         $('#orderUnit').text(counter);
-                   for (let i=0; i<counter; i++){
+                   for (let i=counter; i>=0; i--){
                        let row = `<tr id="trow">
-                            <td> ${i +1 } </td>
-                            <td>${data[i].id}</td>
+                           <td>${data[i].id}</td>
                            <td>${data[i].billing.first_name} ${data[i].billing.last_name}</td>
                            <td>${data[i].date_completed.slice(0,10)}</td>
                            <td><input type="checkbox" id="checkbox" name="status" vlaue="status" disabled ></td>
                            <td><input type="checkbox" id="checkbox" name="status" vlaue="status" disabled ></td>
-                           <td><input type="checkbox" id="checkbox" name="status" vlaue="status" disabled ></td>
-                          
+                           <td><input type="checkbox" id="checkbox" name="status" vlaue="status" disabled ></td>                          
                       </tr>`
         
                        table.innerHTML += row;
@@ -80,8 +81,8 @@ $(document).ready(()=>{
                        numbersOfTr = $("tr#trow");
                        let valueOfSelectedRow, matching;
                      //   if you click on any tr, ajax will fetch
-                       for (let i = 0; i < numbersOfTr.length; i++) {
-                           valueOfSelectedRow=$(numbersOfTr[i]).children()[1].innerText;
+                       //for (let i = 0; i < numbersOfTr.length; i++) {
+                           //valueOfSelectedRow=$(numbersOfTr[i]).children()[1].innerText;
                  
                             //  //fetch and sychornise data background
                             //  $.getJSON('activity.json', (data)=>{
@@ -112,19 +113,14 @@ $(document).ready(()=>{
                             //          }break;
                             //      } 
                             //  }
-                          }
-
-
+                          //}
                    }
                    checkDoneOrders()
                }
 
-
-
                //competed order more details (details of who did the order)
                function ajaxCallTwo(){
                     $.getJSON('activity.json', (completList)=>{
-                        console.log(completList);
                         completeOrder=completList;
                         buildDataTwo(completList);
                     });
@@ -135,7 +131,6 @@ $(document).ready(()=>{
                     $('#orderUnit').text(counter);
                for (let i=0; i<data2.length; i++){
                    let row = `<tr>
-                        <td> ${i +1 } </td>
                         <td>${data2[i].orderNumber}</td>
                        <td>${data2[i].username}</td>
                        <td>${data2[i].Position}: ${data2[i].DoneBy}</td>
@@ -144,7 +139,6 @@ $(document).ready(()=>{
                        <td>${data2[i].freezerNumber}</td>
                      
                   </tr>`
-    
                    table.innerHTML += row;
                }
                  }
@@ -191,8 +185,9 @@ $(document).ready(()=>{
           $('#loading').removeClass('loading')
           $.getJSON("sortProducts.json", (respo) => {
             sortOrder = respo;
-            counter = 20; 
+            counter = 25; 
             buildData(sortOrder);
+            // console.log(sortOrder);
           });
       
           $("#btn-filter").on("click", () => {
@@ -207,36 +202,36 @@ $(document).ready(()=>{
        });
       }
 
-         //check if already done and mark done
+    //check if already done and mark done
     function checkDoneOrders(){
-        $.getJSON('/activity.json', (response)=> {
-        let orderTableRow=$('tr#trow')
-          for (let i=0; i<orderTableRow.length; i++){  
-          let orderNumberAvailable=$(orderTableRow[i]).children()[1].innerText;
-          let cutterCheckBox=  $(orderTableRow[i]).children()[4];
-          let pickerCheckBox=  $(orderTableRow[i]).children()[5];
-          let packerCheckBox=  $(orderTableRow[i]).children()[6];
-            for (let x=0; x<response.length; x++){
-              let doneOrder=response[x].orderNumber;
-              //checkbox cutter
-              if (doneOrder===orderNumberAvailable && response[x].Position=="Cutter"){
-                $(cutterCheckBox).children().prop('checked', true);
-              }
-  
-              //checkbox picker
-              if (doneOrder===orderNumberAvailable && response[x].Position=="Picker"){
-                $(pickerCheckBox).children().prop('checked', true);
-              }
-  
-               //Packer picker
-              if (doneOrder===orderNumberAvailable && response[x].Position=="Packer"){
-                $(packerCheckBox).children().prop('checked', true);
-              }
-  
-            }   
-          } 
-        });
-  
-      }
+      $.getJSON('/activity.json', (response)=> {
+      let orderTableRow=$('tr#trow')
+        for (let i=0; i<orderTableRow.length; i++){  
+        let orderNumberAvailable=$(orderTableRow[i]).children()[0].innerText;
+        let cutterCheckBox=  $(orderTableRow[i]).children()[3];
+        let pickerCheckBox=  $(orderTableRow[i]).children()[4];
+        let packerCheckBox=  $(orderTableRow[i]).children()[5];
+          for (let x=0; x<response.length; x++){
+            let doneOrder=response[x].orderNumber;
+            //checkbox cutter
+            if (doneOrder===orderNumberAvailable && response[x].Position=="Cutter"){
+              $(cutterCheckBox).children().prop('checked', true);
+            }
 
-         });
+            //checkbox picker
+            if (doneOrder===orderNumberAvailable && response[x].Position=="Picker"){
+              $(pickerCheckBox).children().prop('checked', true);
+            }
+
+             //Packer picker
+            if (doneOrder===orderNumberAvailable && response[x].Position=="Packer"){
+              $(packerCheckBox).children().prop('checked', true);
+            }
+
+          }   
+        } 
+      });
+
+    }
+
+  });

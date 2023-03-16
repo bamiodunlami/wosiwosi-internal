@@ -5,6 +5,7 @@ const port=process.env.PORT || 3000;
 const nocache=require('nocache')
 const WooCommerRestApi = require("@woocommerce/woocommerce-rest-api").default;
 
+
 // require body parser
 const bodyParser = require("body-parser");
 // const { json } = require("body-parser"); // auto added
@@ -246,6 +247,29 @@ app.get("/singleOrderPage", (req, res)=>{
       logDate: date
       });
     });
+
+
+//Admin settings
+app.get('/settings', (req, res)=>{
+  res.sendFile(`${__dirname}/public/adminsettings.html`)
+})
+
+app.post('/adminSettingData', (req, res)=>{
+    console.log(req.body);
+    let setData={
+      fromDate:req.body.fromDate,
+      toDate:req.body.toDate,
+      orderQty:req.body.orderQty
+    }
+    let paths=`${__dirname}/public/adminsettings.json`
+    fs.writeFile(paths, JSON.stringify(setData), (err)=>{
+      if(err) console.log(err);
+      else{console.log("settings saved")}
+    })
+
+    
+
+});
 
 app.listen(port, () => {
   console.log("Server started");
