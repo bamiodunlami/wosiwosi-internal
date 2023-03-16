@@ -1,7 +1,6 @@
 $(document).ready(()=>{
     let firstName, lastName, orderNumber, position, name, note, cutterStatus, pickerStatus, packerStatus, freezerNo, cuNumber ;
     const date=new Date();
-    let cutterSKip=0 //for skipping if theres no frozen
     ajaxCall();
     ajaxCallUser();
 
@@ -120,8 +119,6 @@ $(document).ready(()=>{
             }
         });
 
-
-
             //complete operation
             $('#con-btn').on('click', ()=>{
                 const dataSend = { username: `${firstName} ${lastName}`,
@@ -154,6 +151,7 @@ $(document).ready(()=>{
                     // });
 
             });
+            
             checkDoneOrders();
     }
     

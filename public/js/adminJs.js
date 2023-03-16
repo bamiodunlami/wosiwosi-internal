@@ -1,9 +1,9 @@
 $(document).ready(()=>{
     sortByDateAjax();
 
-    $('#back').on('click', ()=>{
-    window.location="/";
-    })
+    // $('#back').on('click', ()=>{
+    //   parent.history.back()
+    // })
 
     //request all order
     $('.all-order').click(()=>{
@@ -20,14 +20,15 @@ $(document).ready(()=>{
     window.location.href='/settings'
     });
 
-            myOrder=[];
-            ajaxCall();
-            ajaxCallTwo();
-            $('#logout').click(()=>{
-                window.location.href="/logout"
-            });
-        
-            let counter=0; //counter for filter
+      myOrder=[];
+      ajaxCall();
+      ajaxCallTwo();
+
+      $('#logout').click(()=>{
+          window.location.href="/logout"
+      });
+  
+      let counter=0; //counter for filter
         
         // using ajax
         // $.ajax(
@@ -45,163 +46,186 @@ $(document).ready(()=>{
         //     }
         // );
 
-            // ajax call for order
-                function ajaxCall(){
-                $.getJSON("products.json", (list)=>{
-                    myOrder=list;
-                    counter=25;
-                    buildData(myOrder);                
-                });
-
-                $('#btn-filter').on("click", ()=>{
-                    let amountFilter=Number($('input#filter').val());
-                    console.log(`here is me ${amountFilter}`);
-                    counter=amountFilter;
-                    $("#myTable").empty();
-                    buildData(myOrder);
-                });
-                 }       
-        
-               function buildData(data){
-                   let table=document.querySelector("#myTable");
-                        $('#orderUnit').text(counter);
-                   for (let i=counter; i>=0; i--){
-                       let row = `<tr id="trow">
-                           <td>${data[i].id}</td>
-                           <td>${data[i].billing.first_name} ${data[i].billing.last_name}</td>
-                           <td>${data[i].billing.phone}</td>
-                           <td>${data[i].date_completed.slice(0,10)}</td>
-                           <td><input type="checkbox" id="checkbox" name="status" vlaue="status" disabled ></td>
-                           <td><input type="checkbox" id="checkbox" name="status" vlaue="status" disabled ></td>
-                           <td><input type="checkbox" id="checkbox" name="status" vlaue="status" disabled ></td>                          
-                      </tr>`
-        
-                       table.innerHTML += row;
-
-                       numbersOfTr = $("tr#trow");
-                       let valueOfSelectedRow, matching;
-                     //   if you click on any tr, ajax will fetch
-                       //for (let i = 0; i < numbersOfTr.length; i++) {
-                           //valueOfSelectedRow=$(numbersOfTr[i]).children()[1].innerText;
-                 
-                            //  //fetch and sychornise data background
-                            //  $.getJSON('activity.json', (data)=>{
-                            //      myMatching(data);
-                            //  });
-                            //  function myMatching(data){
-                            //      for (let i=0; i<data.length; i++){
-                            //          //find object with this specific property
-                            //          for(let prop in data[i]){
-                            //              //match the property and print
-                            //              if(data[i][prop].includes(valueOfSelectedRow)){
-                            //                   matching=data[i].orderNumber;
-                            //                      //check box if cutter already worked on the order
-                            //                   if(valueOfSelectedRow===matching && data[i].Position=='Cutter' && data[i].cutterStatus=='1'){
-                            //                    $(numbersOfTr[i]).children()[4].children[0].checked=true;
-                            //                   } 
-                            //                   //check box if picker already work on the order
-                            //                   if(valueOfSelectedRow===matching && data[i].Position=='Picker' && data[i].pickerStatus=='1'){
-                            //                      $(numbersOfTr[i]).children()[5].children[0].checked=true;
-                            //                      }
-                 
-                            //                      //check box if picker already work on the order
-                            //                   if(valueOfSelectedRow===matching && data[i].Position=='Packer' && data[i].packerStatus=='1'){
-                            //                      $(numbersOfTr[i]).children()[6].children[0].checked=true;
-                            //                      }
-                            //                   break;
-                            //              }   
-                            //          }break;
-                            //      } 
-                            //  }
-                          //}
-                   }
-                   checkDoneOrders()
-               }
-
-               //competed order more details (details of who did the order)
-               function ajaxCallTwo(){
-                    $.getJSON('activity.json', (completList)=>{
-                        completeOrder=completList;
-                        buildDataTwo(completList);
-                    });
-                 }
-                 
-                 function buildDataTwo(data2){
-                    let table=document.querySelector("#tbody");
-                    $('#orderUnit').text(counter);
-               for (let i=0; i<data2.length; i++){
-                   let row = `<tr>
-                        <td>${data2[i].orderNumber}</td>
-                       <td>${data2[i].username}</td>
-                       <td>${data2[i].phone}</td>
-                       <td>${data2[i].DoneBy}</td>
-                       <td>${data2[i].date}</td>
-                       <td>${data2[i].note}</td>
-                       <td>${data2[i].freezerNumber}</td>
-                     
-                  </tr>`
-                   table.innerHTML += row;
-               }
-                 }
-
-            //search functionality
-            $("#search-filter").on("keyup", function(e) {
-                let key=$(this).val().toLowerCase()
-                $('#myTable tr').filter(function(){
-                    $(this).toggle($(this).text().toLowerCase().indexOf(key)>-1)
-                });
+              // ajax call for order
+              function ajaxCall(){
+              $.getJSON("products.json", (list)=>{
+              myOrder=list;
+              counter=25;
+              buildData(myOrder);                
               });
-              
+
+              $('#btn-filter').on("click", ()=>{
+              let amountFilter=Number($('input#filter').val());
+              console.log(`here is me ${amountFilter}`);
+              counter=amountFilter;
+              $("#myTable").empty();
+              buildData(myOrder);
+              });
+              }       
+
+              function buildData(data){
+              let table=document.querySelector("#myTable");
+              $('#orderUnit').text(counter);
+              for (let i=counter; i>=0; i--){
+              let row = `<tr id="trow">
+              <td>${data[i].id}</td>
+              <td>${data[i].billing.first_name} ${data[i].billing.last_name}</td>
+              <td>${data[i].billing.phone}</td>
+              <td>${data[i].date_completed.slice(0,10)}</td>
+              <td><input type="checkbox" id="checkbox" name="status" vlaue="status" disabled ></td>
+              <td><input type="checkbox" id="checkbox" name="status" vlaue="status" disabled ></td>
+              <td><input type="checkbox" id="checkbox" name="status" vlaue="status" disabled ></td>                          
+              </tr>`
+
+              table.innerHTML += row;
+
+              numbersOfTr = $("tr#trow");
+              let valueOfSelectedRow, matching;
+              //   if you click on any tr, ajax will fetch
+              //for (let i = 0; i < numbersOfTr.length; i++) {
+              //valueOfSelectedRow=$(numbersOfTr[i]).children()[1].innerText;
+
+              //  //fetch and sychornise data background
+              //  $.getJSON('activity.json', (data)=>{
+              //      myMatching(data);
+              //  });
+              //  function myMatching(data){
+              //      for (let i=0; i<data.length; i++){
+              //          //find object with this specific property
+              //          for(let prop in data[i]){
+              //              //match the property and print
+              //              if(data[i][prop].includes(valueOfSelectedRow)){
+              //                   matching=data[i].orderNumber;
+              //                      //check box if cutter already worked on the order
+              //                   if(valueOfSelectedRow===matching && data[i].Position=='Cutter' && data[i].cutterStatus=='1'){
+              //                    $(numbersOfTr[i]).children()[4].children[0].checked=true;
+              //                   } 
+              //                   //check box if picker already work on the order
+              //                   if(valueOfSelectedRow===matching && data[i].Position=='Picker' && data[i].pickerStatus=='1'){
+              //                      $(numbersOfTr[i]).children()[5].children[0].checked=true;
+              //                      }
+
+              //                      //check box if picker already work on the order
+              //                   if(valueOfSelectedRow===matching && data[i].Position=='Packer' && data[i].packerStatus=='1'){
+              //                      $(numbersOfTr[i]).children()[6].children[0].checked=true;
+              //                      }
+              //                   break;
+              //              }   
+              //          }break;
+              //      } 
+              //  }
+              //}
+              }
+
+                  // Handle admin single order click
+                  let rowNumber= $("tr#trow")
+                  //capture row clicked
+                  for (let i=0; i<rowNumber.length; i++){
+                  $(rowNumber[i]).on('click', function(){
+                  orderNumberSelected=$(rowNumber[i]).children()[0].innerText;
+                  console.log(orderNumberSelected)
+                  let orderSelected={
+                  orderNumber: orderNumberSelected,
+                  }
+                  //send the order number in json formart
+                  fetch('/adminGetSingleOrder', {
+                  method:"POST",
+                  headers: {
+                  "Content-Type": "application/json",
+                  },
+                  body:JSON.stringify(orderSelected)
+                  });
+
+                  window.location.href="/adminsingleorderpage" //redirect to single order page
+                  });
+                  } 
+
+              checkDoneOrders()
+              }
+
+              //competed order more details (details of who did the order)
+              function ajaxCallTwo(){
+              $.getJSON('activity.json', (completList)=>{
+              completeOrder=completList;
+              buildDataTwo(completList);
+              });
+              }
+              function buildDataTwo(data2){
+              let table=document.querySelector("#tbody");
+              $('#orderUnit').text(counter);
+              for (let i=0; i<data2.length; i++){
+              let row = `<tr>
+              <td>${data2[i].orderNumber}</td>
+              <td>${data2[i].username}</td>
+              <td>${data2[i].phone}</td>
+              <td>${data2[i].DoneBy}</td>
+              <td>${data2[i].date}</td>
+              <td>${data2[i].note}</td>
+              <td>${data2[i].freezerNumber}</td>
+
+              </tr>`
+              table.innerHTML += row;
+              }
+              }
+
+              //search functionality
+              $("#search-filter").on("keyup", function(e) {
+              let key=$(this).val().toLowerCase()
+              $('#myTable tr').filter(function(){
+              $(this).toggle($(this).text().toLowerCase().indexOf(key)>-1)
+              });
+              });
+
               //for complete order page
               $('#search-filter-two').on('keyup', function(){
-                let textValue= $(this).val().toLowerCase();
-                $('#tbody tr').filter(function(){
-                    $(this).toggle($(this).text().toLowerCase().indexOf(textValue)>-1)
-                });
+              let textValue= $(this).val().toLowerCase();
+              $('#tbody tr').filter(function(){
+              $(this).toggle($(this).text().toLowerCase().indexOf(textValue)>-1)
+              });
               });
 
-                  //function to catch the date set for filtering
-    async function sortByDateAjax(){
-        $('#sort-by-date').on('click', function(){
-          let fromDate=$('#fromDate').val();
-          let toDate=$('#toDate').val();
-         let sortDateValue={
+              //function to catch the date set for filtering
+              async function sortByDateAjax(){
+              $('#sort-by-date').on('click', function(){
+              let fromDate=$('#fromDate').val();
+              let toDate=$('#toDate').val();
+              let sortDateValue={
               from:fromDate,
               to:toDate
-          }
-          $("#myTable").empty();
-          $('#loading').addClass('loading')
-  
-  
-            fetch('/dateSort', {
+              }
+              $("#myTable").empty();
+              $('#loading').addClass('loading')
+
+
+              fetch('/dateSort', {
               method: "POST",
               headers: {
-                "Content-Type":"application/json",
+              "Content-Type":"application/json",
               },
               body: JSON.stringify(sortDateValue),
-            });
-  
-      setTimeout(() => {
-          $('#myTable').empty();
-          $('#loading').removeClass('loading')
-          $.getJSON("sortProducts.json", (respo) => {
-            sortOrder = respo;
-            counter = 25; 
-            buildData(sortOrder);
-            // console.log(sortOrder);
-          });
-      
-          $("#btn-filter").on("click", () => {
-            let amountFilter = Number($("input#filter").val());
-            console.log(`here is me ${amountFilter}`);
-            counter = amountFilter;
-            $("#myTable").empty();
-            buildData(sortOrder);
-            });
-          }, 20000)
-  
-       });
-      }
+              });
+
+              setTimeout(() => {
+              $('#myTable').empty();
+              $('#loading').removeClass('loading')
+              $.getJSON("sortProducts.json", (respo) => {
+              sortOrder = respo;
+              counter = 25; 
+              buildData(sortOrder);
+              // console.log(sortOrder);
+              });
+
+              $("#btn-filter").on("click", () => {
+              let amountFilter = Number($("input#filter").val());
+              console.log(`here is me ${amountFilter}`);
+              counter = amountFilter;
+              $("#myTable").empty();
+              buildData(sortOrder);
+              });
+              }, 20000)
+
+              });
+              }
 
     //check if already done and mark done
     function checkDoneOrders(){

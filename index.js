@@ -106,7 +106,7 @@ app.get('/', (req, res) => {
   res.sendFile(`${__dirname}/public/homer.html`); //access index.html
 });
 
-//Admin Operatons
+//ADMIN OPERATIONS
 // view all orders
 app.get("/orderlist", (req, res) => {
   res.render("adminOrder", {});
@@ -117,6 +117,60 @@ app.get("/adminCompletedOrder", (req, res) => {
   res.sendFile(`${__dirname}/public/completedOrders.html`);
 });
 
+//Admin settings
+app.get('/settings', (req, res)=>{
+  res.sendFile(`${__dirname}/public/adminsettings.html`)
+})
+
+app.post('/adminSettingData', (req, res)=>{
+    console.log(req.body);
+    let setData={
+      fromDate:req.body.fromDate,
+      toDate:req.body.toDate,
+      orderQty:req.body.orderQty
+    }
+    let paths=`${__dirname}/public/adminsettings.json`
+    fs.writeFile(paths, JSON.stringify(setData), (err)=>{
+      if(err) console.log(err);
+      else{console.log("settings saved")}
+    })
+
+    
+
+});
+
+//admin view single order seperate from others
+app.post('/adminGetSingleOrder', (req, res)=>{
+
+  let requester=req.body.orderNumber;
+  console.log(requester);
+    woocommerce.get(`orders/${requester}`)
+    .then((response) => {
+      anOrder= response.data;// store response in order
+
+      //save retrieved an order to picker.json
+      let path=`${__dirname}/public/adminSingleOrder.json`;
+      let anData=JSON.stringify(anOrder);
+      fs.writeFile(path,anData, (err)=>{
+      if (err) {console.log("cannot get admin single order")}
+      else {console.log("Admin Single Order saved")}
+      });
+    });
+
+  res.render('singleOrderPage',{
+  logDate: date
+  });
+
+});
+// send admin single page
+app.get("/adminsingleorderpage", (req, res)=>{
+  res.sendFile(`${__dirname}/public/adminSingleOrderPage.html`);
+  });
+
+
+
+
+//OTHER OPERATIONS
 //Handle Post  request Login from homepage
 app.post("/user", (req, res) => {
   let user = req.body.username;
@@ -248,28 +302,6 @@ app.get("/singleOrderPage", (req, res)=>{
       });
     });
 
-
-//Admin settings
-app.get('/settings', (req, res)=>{
-  res.sendFile(`${__dirname}/public/adminsettings.html`)
-})
-
-app.post('/adminSettingData', (req, res)=>{
-    console.log(req.body);
-    let setData={
-      fromDate:req.body.fromDate,
-      toDate:req.body.toDate,
-      orderQty:req.body.orderQty
-    }
-    let paths=`${__dirname}/public/adminsettings.json`
-    fs.writeFile(paths, JSON.stringify(setData), (err)=>{
-      if(err) console.log(err);
-      else{console.log("settings saved")}
-    })
-
-    
-
-});
 
 app.listen(port, () => {
   console.log("Server started");
