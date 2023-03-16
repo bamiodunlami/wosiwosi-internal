@@ -209,9 +209,9 @@ $(document).ready(()=>{
       let orderTableRow=$('tr#trow')
         for (let i=0; i<orderTableRow.length; i++){  
         let orderNumberAvailable=$(orderTableRow[i]).children()[0].innerText;
-        let cutterCheckBox=  $(orderTableRow[i]).children()[3];
-        let pickerCheckBox=  $(orderTableRow[i]).children()[4];
-        let packerCheckBox=  $(orderTableRow[i]).children()[5];
+        let cutterCheckBox=  $(orderTableRow[i]).children()[4];
+        let pickerCheckBox=  $(orderTableRow[i]).children()[5];
+        let packerCheckBox=  $(orderTableRow[i]).children()[6];
           for (let x=0; x<response.length; x++){
             let doneOrder=response[x].orderNumber;
             //checkbox cutter
