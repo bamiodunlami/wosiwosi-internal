@@ -27,12 +27,15 @@ $(document).ready(() => {
 
   // ajax call for order
   function ajaxCall() {
-    $.getJSON("adminsettings.json", (list) => {
-      myOrder = list;
-      counter = list.length-1; 
-      buildData(myOrder);
-    });
-  // }, 1000);
+    $('#loading').addClass('loading');
+    setTimeout(() => {
+      $('#loading').removeClass('loading');
+      $.getJSON("adminsettings.json", (list) => {
+        myOrder = list;
+        counter = list.length-1; 
+        buildData(myOrder);
+      });
+    }, 1000);
 
     $("#btn-filter").on("click", () => {
       let amountFilter = Number($("input#filter").val());

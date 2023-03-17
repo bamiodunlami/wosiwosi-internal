@@ -49,19 +49,23 @@ $(document).ready(()=>{
 
               // ajax call for order
               function ajaxCall(){
-              $.getJSON("products.json", (list)=>{
-              myOrder=list;
-              counter=99;
-              buildData(myOrder);                
-              });
-
-              $('#btn-filter').on("click", ()=>{
-              let amountFilter=Number($('input#filter').val());
-              console.log(`here is me ${amountFilter}`);
-              counter=amountFilter;
-              $("#myTable").empty();
-              buildData(myOrder);
-              });
+                $('#loading').addClass('loading');
+                setTimeout(() => {
+                  $('#loading').removeClass('loading');
+                  $.getJSON("products.json", (list)=>{
+                    myOrder=list;
+                    counter=99;
+                    buildData(myOrder);                
+                    });
+      
+                    $('#btn-filter').on("click", ()=>{
+                    let amountFilter=Number($('input#filter').val());
+                    console.log(`here is me ${amountFilter}`);
+                    counter=amountFilter;
+                    $("#myTable").empty();
+                    buildData(myOrder);
+                    });
+                }, 1000);
               }       
 
               function buildData(data){
