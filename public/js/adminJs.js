@@ -122,11 +122,19 @@ $(document).ready(()=>{
 
               //competed order more details (details of who did the order)
               function ajaxCallTwo(){
-              $.getJSON('activity.json', (completList)=>{
-              completeOrder=completList;
-              buildDataTwo(completList);
-              });
+                function todo(){
+                  $.getJSON('activity.json', (completList)=>{
+                  completeOrder=completList;
+                  buildDataTwo(completList);
+                  });
+                  }
+                  todo();
+                  setInterval(() => {                
+                  $('#tbody').empty();
+                  todo();
+                  }, 20000);             
               }
+
               function buildDataTwo(data2){
               let table=document.querySelector("#tbody");
               $('#orderUnit').text(counter);
@@ -139,7 +147,6 @@ $(document).ready(()=>{
               <td>${data2[i].date}</td>
               <td>${data2[i].note}</td>
               <td>${data2[i].freezerNumber}</td>
-
               </tr>`
               table.innerHTML += row;
               }
