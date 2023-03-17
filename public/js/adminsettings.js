@@ -14,7 +14,6 @@ async function sortByDateAjax(){
     timing1:toTime1,
     timing2:toTime2
     }
-    console.log(sortDateValue);
 
     $("#myTable").empty();
     $('#loading').addClass('loading')
@@ -31,9 +30,7 @@ async function sortByDateAjax(){
     $('#myTable').empty();
     $('#loading').removeClass('loading')
     $.getJSON("adminsettings.json", (respo) => {
-        console.log(respo);
     sortOrder = respo;
-    counter = 25; 
     buildData(sortOrder);
     // console.log(sortOrder);
     });
@@ -53,7 +50,7 @@ async function sortByDateAjax(){
 
     function buildData(data){
         let table=document.querySelector("#myTable");
-       $('#qtyVal').val(data.length);
+       $('#qtyVal').text(data.length);
         for (let i=data.length-1; i>=0; i--){
         let row = `<tr id="trow">
         <td>${data[i].id}</td>
