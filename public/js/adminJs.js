@@ -50,7 +50,7 @@ $(document).ready(()=>{
               function ajaxCall(){
               $.getJSON("products.json", (list)=>{
               myOrder=list;
-              counter=25;
+              counter=99;
               buildData(myOrder);                
               });
 
@@ -116,30 +116,6 @@ $(document).ready(()=>{
               //  }
               //}
               }
-
-                  // Handle admin single order click
-                  let rowNumber= $("tr#trow")
-                  //capture row clicked
-                  for (let i=0; i<rowNumber.length; i++){
-                  $(rowNumber[i]).on('click', function(){
-                  orderNumberSelected=$(rowNumber[i]).children()[0].innerText;
-                  console.log(orderNumberSelected)
-                  let orderSelected={
-                  orderNumber: orderNumberSelected,
-                  }
-                  //send the order number in json formart
-                  fetch('/adminGetSingleOrder', {
-                  method:"POST",
-                  headers: {
-                  "Content-Type": "application/json",
-                  },
-                  body:JSON.stringify(orderSelected)
-                  });
-
-                  window.location.href="/adminsingleorderpage" //redirect to single order page
-                  });
-                  } 
-
               checkDoneOrders()
               }
 
@@ -189,13 +165,18 @@ $(document).ready(()=>{
               $('#sort-by-date').on('click', function(){
               let fromDate=$('#fromDate').val();
               let toDate=$('#toDate').val();
+              let toTime1=$('#timer1').val();
+              let toTime2=$('#timer2').val();
               let sortDateValue={
               from:fromDate,
-              to:toDate
+              to:toDate,
+              timing1:toTime1,
+              timing2:toTime2
               }
+              console.log(sortDateValue);
+
               $("#myTable").empty();
               $('#loading').addClass('loading')
-
 
               fetch('/dateSort', {
               method: "POST",

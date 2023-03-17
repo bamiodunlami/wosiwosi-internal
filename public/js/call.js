@@ -27,12 +27,9 @@ $(document).ready(() => {
 
   // ajax call for order
   function ajaxCall() {
-    // $('#loading').addClass('loading');
-    // setTimeout(()=>{
-    //  $('#loading').removeClass('loading');
-    $.getJSON("products.json", (list) => {
+    $.getJSON("adminsettings.json", (list) => {
       myOrder = list;
-      counter = 25; 
+      counter = list.length-1; 
       buildData(myOrder);
     });
   // }, 1000);
@@ -65,7 +62,7 @@ $(document).ready(() => {
   function buildData(data) {
     // console.log(data)
       let table = document.querySelector("#myTable");
-      $("#orderUnit").text(counter);
+      $("#orderUnit").text(counter+1);
       console.log(counter)
       for (let i = counter; i>=0; i--) {
         let row = `<tr id="trow">

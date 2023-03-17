@@ -30,11 +30,10 @@ const woocommerce = new WooCommerRestApi({
   version: "wc/v3",
 });
 
-
 const time = new Date();
 let date = `${time.getDate()} / ${time.getMonth() + 1} / ${time.getFullYear()}`;
 
-let dates, dates2;
+let dates, dates2, timer1, timer2;
 
 // ?after=${dates}T00:00:00&before=${dates2}T23:59:59
 
@@ -69,10 +68,12 @@ woocommerce.get("orders", {
 //fuction for sorting order by date
 async function sortOrders(){
         console.log(dates);
-        console.log(dates2)
+        console.log(dates2);
+        console.log(timer1);
+        console.log(timer2);
 
       //sorted order
-      woocommerce.get(`orders?after=${dates}T00:00:00&before=${dates2}T23:59:59`, {
+      woocommerce.get(`orders?after=${dates}T${timer1}:00&before=${dates2}T${timer2}:59`, {
         per_page: 100, //number of order par page
         status: "completed", //select completed only
       })  .then((response) => {
@@ -100,11 +101,49 @@ async function sortOrders(){
     
 }
 
+//admin settings order preferences
+async function sortOrders2(){
+  console.log(dates);
+  console.log(dates2);
+  console.log(timer1);
+  console.log(timer2);
+
+//sorted order
+woocommerce.get(`orders?after=${dates}T${timer1}:00&before=${dates2}T${timer2}:59`, {
+  per_page: 100, //number of order par page
+  status: "completed", //select completed only
+})  .then((response) => {
+ sortOrder=response.data;
+//  console.log(sortOrder)
+})
+.catch((error) => {
+  console.log("Not sorted");
+});
+
+setTimeout(() => {
+try {
+  data = JSON.stringify(sortOrder);
+  path = `${__dirname}/public/adminsettings.json`;
+  fs.writeFile(path, data, (err) => {
+    if (err) console.log(err);
+    else {
+      console.log("Sort written");
+    }
+  });
+} catch (er) {
+  console.log(er);
+}
+}, 15000); 
+
+}
+
 // get requst from browser to lead homepage
 app.get('/', (req, res) => {
   getOrders();
   res.sendFile(`${__dirname}/public/homer.html`); //access index.html
 });
+
+
 
 //ADMIN OPERATIONS
 // view all orders
@@ -139,33 +178,17 @@ app.post('/adminSettingData', (req, res)=>{
 
 });
 
-//admin view single order seperate from others
-app.post('/adminGetSingleOrder', (req, res)=>{
-
-  let requester=req.body.orderNumber;
-  console.log(requester);
-    woocommerce.get(`orders/${requester}`)
-    .then((response) => {
-      anOrder= response.data;// store response in order
-
-      //save retrieved an order to picker.json
-      let path=`${__dirname}/public/adminSingleOrder.json`;
-      let anData=JSON.stringify(anOrder);
-      fs.writeFile(path,anData, (err)=>{
-      if (err) {console.log("cannot get admin single order")}
-      else {console.log("Admin Single Order saved")}
-      });
-    });
-
-  res.render('singleOrderPage',{
-  logDate: date
-  });
-
+// Admin order preference setting
+app.post("/adminDateSort", (req, res)=>{
+  console.log(req.body);
+  dates=req.body.from;
+  dates2=req.body.to;
+  timer1=req.body.timing1;
+  timer2=req.body.timing2;
+  sortOrders2();
+  // finalOrderSorting();
+  res.send();
 });
-// send admin single page
-app.get("/adminsingleorderpage", (req, res)=>{
-  res.sendFile(`${__dirname}/public/adminSingleOrderPage.html`);
-  });
 
 
 
@@ -252,6 +275,8 @@ app.post("/dateSort", (req, res)=>{
   console.log(req.body);
   dates=req.body.from;
   dates2=req.body.to;
+  timer1=req.body.timing1;
+  timer2=req.body.timing2;
   sortOrders();
   // finalOrderSorting();
   res.send();

@@ -10,12 +10,14 @@ h3{
     font-weight: 600;
 } 
 
+section{
+    margin: 10% 20%;
+}
+
 .row-def{
     border: 1px solid #d7d7d7;
     padding:20px; 
-    max-width: 500px;
     margin: auto;
-    margin-top: 20%;
     }
 .row-two{
     margin-top:20px;
@@ -26,11 +28,59 @@ h3{
 }
 
 
-@media (max-width:600px){
-    .login-sec{
-        display: none;
-        height: 100%;
-        padding: 50% 10%;
+
+/* Tab view */
+@media (max-width:820px){
+
+    .tabonly{
+       display: none;
+    }    
+
+    section{
+        margin: 5% 10%;
     }
+            /* login page */
+            h2 {
+                font-size:28px;
+                font-weight: 800;
+            }
+
+            .login-sec{
+                height: 100%;
+                padding: 20vh 10%;
+            }
+
+            tr{
+                font-size: 14px;
+            }
+
+
+            /*Orders page*/
+            .order {
+                padding: 5% 8%;
+            }
+
+
+            /* admin page */
+            .admin-section{
+                background-color: #efefef;
+                height: 100vh;
+                padding: 30vh 30vw;
+
+            }
+            
+
+            /* single page */
+            .singlepage{
+                padding: 5% 5%;
+            }
+
+            /* admin page */
+            .admin-section{
+                background-color: #efefef;
+                height: 100vh;
+                padding: 30vh 10vw;
+
+            }
 
 }

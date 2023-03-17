@@ -24,25 +24,67 @@
       rel="stylesheet" />
     <!--internal style-->
     <link href="css/settingStyle.css" rel="Stylesheet">
+    <link href="css/style.css" rel="stylesheet">
   </head>
 
   <body>
     <section>
-      <div class="row row-def text-center">
-        <div class="col-sm-12">
-            <h3>Order fulfilment date</h3>
-            From: <input type="date" id="fromDate" class="fromDate amountToView" required>
-            to: <input type="date" id="toDate" class="toDate amountToView" required>
-        </div>
-    </section>
 
-    <section>
+
+
+      <h4 class="col-sm-12 text-center">SET ORDER PREFERENCES</h4>
+
+      <div class="row row-def text-center">
+        <!-- <div class="col-sm-12">
+            <h4>ORDER TO FULFIL</h4>
+            <label>From <input type="text" id="fromDateSec" class="fromDate amountToView" required></label>
+            <label>To<input type="text" id="toDateSec" class="toDate amountToView" required></label>
+        </div> -->
+        <div class="col-sm-12 text-center">
+         <label>From: <input type="date" id="fromDate" class="fromDate amountToView"> <input type="time" id="timer1"></label> 
+          <label>To: <input type="date" id="toDate" class="toDate amountToView"> <input type="time" id="timer2"></label> 
+
+          <button id="filter-by-date" class="btn btn-warning btn-sm">Find</button>
+       </div>
+        </div>
+
+
+
+
         <div class="row row-def row-two text-center">
           <div class="col-sm-12">
-            <h3> Order quantity to fulfil</h3>
-             <input type="number" id="qtyVal" required> 
+            <h4> QUANTITY: <span id="qtyVal"></span></h4>
         </div>
-        <button type="submit" class="btn btn-sm btn-warning" id="saveSetting">Save and logout</button>
+          <button type="submit" class="btn btn-sm btn-warning" id="saveSetting">Save and logout</button>
+       </div>
+
+
+
+        <div class="row">
+          <table id="extable" class="table table-hover">
+              <tr>
+                  <th>Order No.</th>
+                  <th>Customer Name</th>
+                  <th>Phone</th>
+                  <th>Date</th>
+                  <th>Time</th>
+                  <th>Cu</th>
+                  <th>Pi</th>
+                  <th>Pa</th>
+              </tr>
+              <tbody id="myTable">
+
+                  <!-- loading effect -->
+                  <div class="text-center loading-hide" id="loading">
+                  <div class="spinner-border text-secondary" role="status">
+                  </div>
+                  </div>
+                  <!-- loading effect end -->
+
+              </tbody>
+            </table>
+      </div>
+
       </section>
 
     <!--Boostrap-->
@@ -55,5 +97,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.1/jquery.min.js"></script>
     <!--internal js-->
     <script src="js/adminsettings.js"></script>
+    <!-- <script src="js/adminJs.js"></script> -->
+    
   </body>
 </html>
