@@ -1,4 +1,8 @@
 $(document).ready(()=>{
+    
+    $('#saveSetting').on('click', function(){
+       window.location.href='/logout'
+      })
 
 sortByDateAjax();
 

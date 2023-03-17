@@ -29,6 +29,7 @@ $(document).ready(()=>{
       });
   
       let counter=0; //counter for filter
+      let counter2=0
         
         // using ajax
         // $.ajax(
@@ -65,8 +66,8 @@ $(document).ready(()=>{
 
               function buildData(data){
               let table=document.querySelector("#myTable");
-              $('#orderUnit').text(counter);
-              for (let i=counter; i>=0; i--){
+              $('#orderUnit').text(data.length);
+              for (let i=data.length-1; i>=0; i--){
               let row = `<tr id="trow">
               <td>${data[i].id}</td>
               <td>${data[i].billing.first_name} ${data[i].billing.last_name}</td>
@@ -191,18 +192,18 @@ $(document).ready(()=>{
               $('#loading').removeClass('loading')
               $.getJSON("sortProducts.json", (respo) => {
               sortOrder = respo;
-              counter = 25; 
+              // counter2 = respo.length-1; 
               buildData(sortOrder);
               // console.log(sortOrder);
               });
 
-              $("#btn-filter").on("click", () => {
-              let amountFilter = Number($("input#filter").val());
-              console.log(`here is me ${amountFilter}`);
-              counter = amountFilter;
-              $("#myTable").empty();
-              buildData(sortOrder);
-              });
+              // $("#btn-filter").on("click", () => {
+              // let amountFilter = Number($("input#filter").val());
+              // console.log(`here is me ${amountFilter}`);
+              // counter = amountFilter;
+              // $("#myTable").empty();
+              // buildData(sortOrder);
+              // });
               }, 20000)
 
               });
