@@ -54,29 +54,30 @@ $(document).ready(()=>{
                   $('#loading').removeClass('loading');
                   $.getJSON("products.json", (list)=>{
                     myOrder=list;
-                    counter=99;
+                    counter=myOrder.length;
                     buildData(myOrder);                
                     });
       
-                    $('#btn-filter').on("click", ()=>{
-                    let amountFilter=Number($('input#filter').val());
-                    console.log(`here is me ${amountFilter}`);
-                    counter=amountFilter;
-                    $("#myTable").empty();
-                    buildData(myOrder);
-                    });
+                    // $('#btn-filter').on("click", ()=>{
+                    // let amountFilter=Number($('input#filter').val());
+                    // console.log(`here is me ${amountFilter}`);
+                    // counter=amountFilter;
+                    // $("#myTable").empty();
+                    // buildData(myOrder);
+                    // });
                 }, 1000);
               }       
 
               function buildData(data){
               let table=document.querySelector("#myTable");
               $('#orderUnit').text(data.length);
+              // console.log(data);
               for (let i=data.length-1; i>=0; i--){
               let row = `<tr id="trow">
               <td>${data[i].id}</td>
               <td>${data[i].billing.first_name} ${data[i].billing.last_name}</td>
               <td>${data[i].billing.phone}</td>
-              <td>${data[i].date_completed.slice(0,10)}</td>
+              <td>${data[i].date_paid.slice(0,10)} </td>
               <td><input type="checkbox" id="checkbox" name="status" vlaue="status" disabled ></td>
               <td><input type="checkbox" id="checkbox" name="status" vlaue="status" disabled ></td>
               <td><input type="checkbox" id="checkbox" name="status" vlaue="status" disabled ></td>                          
@@ -147,7 +148,7 @@ $(document).ready(()=>{
               <td>${data2[i].orderNumber}</td>
               <td>${data2[i].username}</td>
               <td>${data2[i].phone}</td>
-              <td>${data2[i].DoneBy}</td>
+              <td>${data2[i].DoneBy} ${data2[i].Position}</td>
               <td>${data2[i].date}</td>
               <td>${data2[i].note}</td>
               <td>${data2[i].freezerNumber}</td>

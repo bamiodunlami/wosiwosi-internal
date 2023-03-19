@@ -60,8 +60,8 @@ async function sortByDateAjax(){
         <td>${data[i].id}</td>
         <td>${data[i].billing.first_name} ${data[i].billing.last_name}</td>
         <td>${data[i].billing.phone}</td>
-        <td>${data[i].date_completed.slice(0,10)}</td>
-        <td>${data[i].date_completed.slice(11,16)}</td>
+        <td>${data[i].date_paid.slice(0,10)}</td>
+        <td>${data[i].date_paid.slice(11,16)}</td>
         <td><input type="checkbox" id="checkbox" name="status" vlaue="status" disabled ></td>
         <td><input type="checkbox" id="checkbox" name="status" vlaue="status" disabled ></td>
         <td><input type="checkbox" id="checkbox" name="status" vlaue="status" disabled ></td>                          

@@ -71,7 +71,7 @@ $(document).ready(() => {
         let row = `<tr id="trow">
                       <td class="customer-id-link" id="ln${i}"> ${data[i].id}</a></td>
                     <td>${data[i].billing.first_name} ${data[i].billing.last_name}</td>
-                    <td>${data[i].date_completed.slice(0, 10)}</td>
+                    <td>${data[i].date_paid.slice(0, 10)}</td>
                     <td><input type="checkbox" id="checkbox-cu" name="status" vlaue="status" disabled ></td>
                     <td><input type="checkbox" id="checkbox-pi" name="status" vlaue="status" disabled ></td>
                     <td><input type="checkbox" id="checkbox-pa" name="status" vlaue="status" disabled ></td>

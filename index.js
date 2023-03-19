@@ -40,7 +40,7 @@ let dates, dates2, timer1, timer2;
 //get the woocommerce order
 woocommerce.get("orders", {
     per_page: 100, //number of order par page
-    status: "completed", //select completed only
+    status: "completed processing", //select completed only
   })
   .then((response) => {
     order = response.data; // store response in order
@@ -75,7 +75,7 @@ async function sortOrders(){
       //sorted order
       woocommerce.get(`orders?after=${dates}T${timer1}:00&before=${dates2}T${timer2}:59`, {
         per_page: 100, //number of order par page
-        status: "completed", //select completed only
+        status: "completed processing", //select completed only
       })  .then((response) => {
        sortOrder=response.data;
       //  console.log(sortOrder)
@@ -111,7 +111,7 @@ async function sortOrders2(){
 //sorted order
 woocommerce.get(`orders?after=${dates}T${timer1}:00&before=${dates2}T${timer2}:59`, {
   per_page: 100, //number of order par page
-  status: "completed", //select completed only
+  status: "completed processing", //select completed only
 })  .then((response) => {
  sortOrder=response.data;
 //  console.log(sortOrder)
