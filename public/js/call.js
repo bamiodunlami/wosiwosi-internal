@@ -1,11 +1,14 @@
 $(document).ready(() => {
-  ajaxCall();
-  // sortByDateAjax();
+  $.getJSON('/activity.json', (response)=> {
+    $.getJSON('/performance.json', (response2)=>{
 
-  // searchOrder();
-  $("#logout").click(() => {
+
+   $("#logout").click(() => {
     window.location.href = "/logout";
   });
+ 
+  ajaxCall();
+
   let counter = 0; //counter for filter
   let myOrder;
 
@@ -46,27 +49,10 @@ $(document).ready(() => {
     });
   }
 
-  // //ajax for sort order
-  // function ajaxCall2() {
-  //   $.getJSON("sortProducts.json", (respo) => {
-  //     sortOrder = respo;
-  //     counter = 5; 
-  //     buildData(sortOrder);
-  //   });
-
-  //   $("#btn-filter").on("click", () => {
-  //     let amountFilter = Number($("input#filter").val());
-  //     console.log(`here is me ${amountFilter}`);
-  //     counter = amountFilter;
-  //     $("#myTable").empty();
-  //     buildData(sortOrder);
-  //   });
-  // }
   function buildData(data) {
     // console.log(data)
       let table = document.querySelector("#myTable");
       $("#orderUnit").text(counter+1);
-      console.log(counter)
       for (let i = counter; i>=0; i--) {
         let row = `<tr id="trow">
                       <td class="customer-id-link" id="ln${i}"> ${data[i].id}</a></td>
@@ -87,7 +73,23 @@ $(document).ready(() => {
       for (let i=0; i<rowNumber.length; i++){
         $(rowNumber[i]).on('click', function(){
           orderNumberSelected=$(rowNumber[i]).children()[0].innerText;
-          console.log(orderNumberSelected)
+          //send details for perfomace evaluation
+          let performances={
+            nameOfStaff:$('#username').text(),
+            rollOfStaff:$('#staffRole').text().slice(0,6),
+            theDate:$('#logDate').text(),
+            activity: `${$('#username').text()} started ${orderNumberSelected}`,
+            orderNumber:orderNumberSelected
+          }
+          fetch('/sendPerformance', {
+            method: 'POST',
+            headers: {
+              'Content-Type':'application/json',
+            },
+            body: JSON.stringify(performances)
+          });
+
+         //send details for single order page
           let orderSelected={
             orderNumber: orderNumberSelected,
           }
@@ -99,12 +101,13 @@ $(document).ready(() => {
             },
             body:JSON.stringify(orderSelected)
           });
-
           window.location.href="/singleOrderPage" //redirect to single order page
         });
       } 
 
       checkDoneOrders();
+      checkActivity();
+
     }
 
   //serch box
@@ -159,7 +162,6 @@ $(document).ready(() => {
 
     //check if already done and mark done
     function checkDoneOrders(){
-      $.getJSON('/activity.json', (response)=> {
       let orderTableRow=$('tr#trow')
         for (let i=0; i<orderTableRow.length; i++){  
         let orderNumberAvailable=$(orderTableRow[i]).children()[0].innerText;
@@ -187,9 +189,41 @@ $(document).ready(() => {
 
           }   
         } 
-      });
-
     }
 
+    function checkActivity(){
+      let orderTableRow=$('tr#trow')
+        for (let i=0; i<orderTableRow.length; i++){  
+        let orderNumberAvailable=$(orderTableRow[i]).children()[0].innerText;
+          for (let x=0; x<response2.length; x++){
+            let doneOrder=response2[x].orderNumber;
 
+            if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Cutter' && response2[x].rollOfStaff=='Cutter' ){ 
+              $(orderTableRow[i]).off('click');
+              $(orderTableRow[i]).on('click', ()=>{
+                alert(`Order is being worked on select another other`)
+              });
+            }
+
+            if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Picker' && response2[x].rollOfStaff=='Picker' ){ 
+              $(orderTableRow[i]).off('click');
+              $(orderTableRow[i]).on('click', ()=>{
+                alert(`Order is being worked on select another other`)
+              });
+            }
+
+            if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Packer' && response2[x].rollOfStaff=='Packer' ){ 
+              $(orderTableRow[i]).off('click');
+              $(orderTableRow[i]).on('click', ()=>{
+                alert(`Order is being worked on select another other`)
+              });
+            }
+
+          }   
+        } 
+    }
+
+    
+    });
+  });
 });

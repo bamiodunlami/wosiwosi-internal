@@ -39,7 +39,7 @@ $(document).ready(()=>{
             reOrder(mydata);
         });
             console.log("done populating")
-        }, 3000);
+        }, 4000);
      }
     
     //populaet data to table
@@ -164,7 +164,7 @@ $(document).ready(()=>{
                             if (orderNumber==doneOrder){
                                 $('#freezerNumber').val(response[x].freezerNumber);
                                 console.log(Number(response[x].freezerNumber));
-                                if (Number(response[x].freezerNumber)>0){
+                                if (Number(response[x].freezerNumber)>=0){
                                     console.log("This order is done");
                                   $('#freezerNumber').prop('disabled', true)
                                 }

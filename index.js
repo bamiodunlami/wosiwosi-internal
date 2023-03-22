@@ -46,7 +46,7 @@ woocommerce.get("orders", {
     order = response.data; // store response in order
   })
   .catch((error) => {
-    console.log(error.response.data);
+    console.log(`${console.log("Error Connection to woocommerce")}`);
   });
 
 // fucntion to log recent order
@@ -144,7 +144,6 @@ app.get('/', (req, res) => {
 });
 
 
-
 //ADMIN OPERATIONS
 // view all orders
 app.get("/orderlist", (req, res) => {
@@ -188,6 +187,27 @@ app.post("/adminDateSort", (req, res)=>{
   sortOrders2();
   // finalOrderSorting();
   res.send();
+});
+
+//staff perefomance report
+app.get('/performance', (req, res)=>{
+  res.sendFile(`${__dirname}/public/performance.html`)
+});
+
+app.post('/sendPerformance', (req, res)=>{
+  console.log(req.body);
+  let perf=fs.readFileSync(`${__dirname}/public/performance.json`);
+  let NewPerfArray=JSON.parse(perf);
+  let newData = req.body;
+  NewPerfArray.unshift(newData);
+
+  let newPafData = JSON.stringify(NewPerfArray);
+  const path = `${__dirname}/public/performance.json`;
+  fs.writeFile(path, newPafData, (err) => {
+    if (err) console.log(err);
+    console.log("Perfomance Writen");
+  });
+
 });
 
 
@@ -288,15 +308,17 @@ app.post('/getSingleOrder', (req, res)=>{
       console.log(requester);
         woocommerce.get(`orders/${requester}`)
         .then((response) => {
-          anOrder= response.data;// store response in order
+          // anOrder= response.data;// store response in order
 
           //save retrieved an order to picker.json
           let path=`${__dirname}/public/singleOrder.json`;
-          let anData=JSON.stringify(anOrder);
+          let anData=JSON.stringify(response.data);
           fs.writeFile(path,anData, (err)=>{
           if (err) {console.log("cannot get single order")}
           else {console.log("Single Order saved")}
           });
+        }).catch((error)=>{
+          console.log(error.response.data)
         });
 
       res.render('singleOrderPage',{
