@@ -39,7 +39,7 @@ $(document).ready(()=>{
             reOrder(mydata);
         });
             console.log("done populating")
-        }, 4000);
+        }, 5500);
      }
     
     //populaet data to table
@@ -108,8 +108,8 @@ $(document).ready(()=>{
 
              if(conVal !=qtyVal && position!="Cutter"){
                 alert(`Quantity in row ${x+1} not confirmed`)
-                cutterIdentify=0;
-                break;
+                // cutterIdentify=0;
+                // break;
               } else {
                 note=$('textarea#text-area').val();
                 freezerNo=$('#freezerNumber').val();

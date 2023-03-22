@@ -1,6 +1,5 @@
 $(document).ready(() => {
   $.getJSON('/activity.json', (response)=> {
-    $.getJSON('/performance.json', (response2)=>{
 
 
    $("#logout").click(() => {
@@ -39,14 +38,6 @@ $(document).ready(() => {
         buildData(myOrder);
       });
     }, 1000);
-
-    $("#btn-filter").on("click", () => {
-      let amountFilter = Number($("input#filter").val());
-      console.log(`here is me ${amountFilter}`);
-      counter = amountFilter;
-      $("#myTable").empty();
-      buildData(myOrder);
-    });
   }
 
   function buildData(data) {
@@ -106,9 +97,47 @@ $(document).ready(() => {
       } 
 
       checkDoneOrders();
-      checkActivity();
 
-    }
+         function checkActivity(){
+         let orderTableRow=$('tr#trow')
+        for (let i=0; i<orderTableRow.length; i++){  
+        let orderNumberAvailable=$(orderTableRow[i]).children()[0].innerText;
+        $.getJSON('/performance.json', (response2)=>{
+          for (let x=0; x<response2.length; x++){
+            let doneOrder=response2[x].orderNumber;
+
+            if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Cutter' && response2[x].rollOfStaff=='Cutter' ){ 
+              $(orderTableRow[i]).off('click');
+              $(orderTableRow[i]).on('click', ()=>{
+                alert(`Order is being worked on select another other`)
+              });
+            }
+
+            if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Picker' && response2[x].rollOfStaff=='Picker' ){ 
+              $(orderTableRow[i]).off('click');
+              $(orderTableRow[i]).on('click', ()=>{
+                alert(`Order is being worked on select another other`)
+              });
+            }
+
+            if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Packer' && response2[x].rollOfStaff=='Packer' ){ 
+              $(orderTableRow[i]).off('click');
+              $(orderTableRow[i]).on('click', ()=>{
+                alert(`Order is being worked on select another other`)
+              });
+            }
+
+          }
+        });
+      } 
+        }      
+        checkActivity();
+        setInterval(() => {                
+          checkActivity();
+          console.log("rechecked")
+          }, 2000);  
+
+  }
 
   //serch box
     $("#search-filter").on("keyup", function() {
@@ -191,39 +220,7 @@ $(document).ready(() => {
         } 
     }
 
-    function checkActivity(){
-      let orderTableRow=$('tr#trow')
-        for (let i=0; i<orderTableRow.length; i++){  
-        let orderNumberAvailable=$(orderTableRow[i]).children()[0].innerText;
-          for (let x=0; x<response2.length; x++){
-            let doneOrder=response2[x].orderNumber;
-
-            if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Cutter' && response2[x].rollOfStaff=='Cutter' ){ 
-              $(orderTableRow[i]).off('click');
-              $(orderTableRow[i]).on('click', ()=>{
-                alert(`Order is being worked on select another other`)
-              });
-            }
-
-            if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Picker' && response2[x].rollOfStaff=='Picker' ){ 
-              $(orderTableRow[i]).off('click');
-              $(orderTableRow[i]).on('click', ()=>{
-                alert(`Order is being worked on select another other`)
-              });
-            }
-
-            if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Packer' && response2[x].rollOfStaff=='Packer' ){ 
-              $(orderTableRow[i]).off('click');
-              $(orderTableRow[i]).on('click', ()=>{
-                alert(`Order is being worked on select another other`)
-              });
-            }
-
-          }   
-        } 
-    }
-
     
-    });
+
   });
 });
