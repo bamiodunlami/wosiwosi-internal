@@ -37,20 +37,19 @@ let dates, dates2, timer1, timer2;
 
 // ?after=${dates}T00:00:00&before=${dates2}T23:59:59
 
-//get the woocommerce order
-woocommerce.get("orders", {
-    per_page: 100, //number of order par page
-    status: "completed processing", //select completed only
-  })
-  .then((response) => {
-    order = response.data; // store response in order
-  })
-  .catch((error) => {
-    console.log(`${console.log("Error Connection to woocommerce")}`);
-  });
-
 // fucntion to log recent order
  function getOrders() {
+      //get the woocommerce order
+    woocommerce.get("orders", {
+      per_page: 100, //number of order par page
+      status: "completed processing", //select completed only
+    }).then((response) => {
+      order = response.data; // store response in order
+    })
+    .catch((error) => {
+      console.log(`${console.log("Error Connection to woocommerce")}`);
+    });
+
   try {
     data = JSON.stringify(order);
     path = `${__dirname}/public/products.json`;
