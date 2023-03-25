@@ -135,7 +135,7 @@ $(document).ready(() => {
         setInterval(() => {                
           checkActivity();
           console.log("rechecked")
-          }, 2000);  
+          }, 500);  
 
   }
 
