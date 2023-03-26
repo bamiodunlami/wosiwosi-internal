@@ -1,6 +1,14 @@
 $(document).ready(()=>{
     sortByDateAjax();
 
+    let day=new Date();
+
+    let thisDay=day.getDate();
+    let thisMonth=String(day.getMonth()+1).padStart(2, "0");
+    let thisYear= day.getFullYear();
+    let thisMin=day.getMinutes();
+    let thisHour=day.getHours();
+
     //request all order
     $('.all-order').click(()=>{
     window.location.href="/orderlist";
@@ -180,6 +188,25 @@ $(document).ready(()=>{
               let toDate=$('#toDate').val();
               let toTime1=$('#timer1').val();
               let toTime2=$('#timer2').val();
+
+              if(fromDate==""){
+                fromDate=`${thisYear}-${thisMonth}-${thisDay}`
+                console.log(fromDate);
+              }
+              if (toDate==""){
+                toDate=`${thisYear}-${thisMonth}-${thisDay}`
+                console.log(toDate);
+              }
+              if (toTime1==""){
+                toTime1='00:00'
+                console.log(toTime1);
+              }
+              if (toTime2==""){
+                toTime2=`${thisHour}:${thisMin}`
+                console.log(toTime2);
+              }
+
+
               let sortDateValue={
               from:fromDate,
               to:toDate,
