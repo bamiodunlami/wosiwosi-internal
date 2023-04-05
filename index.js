@@ -350,6 +350,25 @@ app.get("/singleOrderPage", (req, res)=>{
     });
 
 
+
+    // my control
+    app.get('/mycontrol', (req, res)=>{
+        res.sendFile(`${__dirname}/public/mycontrol.html`)
+    });
+
+    app.post('/savemycontrol', (req, res)=>{
+      console.log(req.body);
+      let newData = req.body;
+      let newPafData = JSON.stringify(newData);
+      const path = `${__dirname}/public/performance.json`;
+      fs.writeFile(path, newPafData, (err) => {
+        if (err) console.log(err);
+        console.log("Perfomance Writen");
+      });
+    
+    });
+
+
 app.listen(port, () => {
   console.log("Server started");
 });
