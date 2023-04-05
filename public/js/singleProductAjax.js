@@ -83,13 +83,13 @@ $(document).ready(()=>{
             // }
 
             let row = `<tr>
-                 <td> ${i +1 } </td>
-                 <td><img src="${data[i].image.src}" style="width:60px; height:60px"</img> </td>
+                 <td class="sn"> ${i +1 } </td>
+                 <td><img src="${data[i].image.src}" style="width:50px; height:50px"</img> </td>
                 <td>${data[i].name} </td>
                 <td style="font-weight:600; background-color:#ff0000; color:#ffff">${metaValue}</td>
                 <td id=qtyBox style="font-weight:600; background-color:#00ff00;">${data[i].quantity}</td>
                 <td style="font-weight:600; background-color:#0000ff; color:#ffff">${metaValuTwo}</td>
-                <td>-</td>
+                <td class="loc">-</td>
                 <td><input type="number" class="con" id="con"  min="0" placeholder="0"></td>
            </tr>`
                 // console.log($('#con').val());

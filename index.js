@@ -217,7 +217,8 @@ app.post('/sendPerformance', (req, res)=>{
 app.post("/user", (req, res) => {
   let user = req.body.username;
   let selected = req.body.selector;
-  // console.log(selected);
+  console.log(selected);
+  console.log(user);
 
   let userName = user;
   let accessAs = selected;
