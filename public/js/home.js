@@ -59,6 +59,12 @@ $(document).ready(()=>{
                     $("#exampleInputUsername").val("Ester");
                     $("#selector").attr("disabled", false);
                     break;
+
+                    case "AD" :
+                        $("#selector").val("Admin");
+                        $("#exampleInputUsername").val("Admin");
+                        $("#selector").attr("disabled", false);
+                        break;
             
             default:
                 $("#selector").attr("disabled", true);
