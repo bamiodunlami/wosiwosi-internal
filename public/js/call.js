@@ -1,11 +1,12 @@
-$(document).ready(() => {
-  $.getJSON('/activity.json', (response)=> {
+$(document).ready(() => {    
+  console.log("Hey bar");
+  $.getJSON('activity.json', (response)=> {
+
+    $("#logout").click(() => {
+      window.location.href = "/logout";
+    });
 
 
-   $("#logout").click(() => {
-    window.location.href = "/logout";
-  });
- 
   ajaxCall();
 
   let counter = 0; //counter for filter
@@ -37,11 +38,10 @@ $(document).ready(() => {
         counter = list.length-1; 
         buildData(myOrder);
       });
-    }, 1000);
+    }, 500);
   }
 
   function buildData(data) {
-    // console.log(data)
       let table = document.querySelector("#myTable");
       $("#orderUnit").text(counter+1);
       for (let i = counter; i>=0; i--) {
