@@ -108,21 +108,21 @@ $(document).ready(() => {
             if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Cutter' && response2[x].rollOfStaff=='Cutter' ){ 
               $(orderTableRow[i]).off('click');
               $(orderTableRow[i]).on('click', ()=>{
-                alert(`Order is being worked on select another other`)
+                alert(`${response2[x].nameOfStaff} is working or left this order`);
               });
             }
 
             if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Picker' && response2[x].rollOfStaff=='Picker' ){ 
               $(orderTableRow[i]).off('click');
               $(orderTableRow[i]).on('click', ()=>{
-                alert(`Order is being worked on select another other`)
+                alert(`${response2[x].nameOfStaff} is working or left this order`);
               });
             }
 
             if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Packer' && response2[x].rollOfStaff=='Packer' ){ 
               $(orderTableRow[i]).off('click');
               $(orderTableRow[i]).on('click', ()=>{
-                alert(`Order is being worked on select another other`)
+                alert(`${response2[x].nameOfStaff} is working or left this order`);
               });
             }
 
@@ -133,8 +133,7 @@ $(document).ready(() => {
         checkActivity();
         setInterval(() => {                
           checkActivity();
-          console.log("rechecked")
-          }, 500);  
+          }, 800);  
 
   }
 
@@ -198,6 +197,7 @@ $(document).ready(() => {
         let packerCheckBox=  $(orderTableRow[i]).children()[5];
           for (let x=0; x<response.length; x++){
             let doneOrder=response[x].orderNumber;
+            // console.log(`${doneOrder} is done`);
             //checkbox cutter
             if (doneOrder===orderNumberAvailable && response[x].Position=="Cutter"){
               $(cutterCheckBox).children().prop('checked', true);

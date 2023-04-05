@@ -160,6 +160,7 @@ $(document).ready(()=>{
         $.getJSON('/activity.json', (response)=> {          
             for(let x=0; x<response.length; x++){            
                 let doneOrder=response[x].orderNumber;
+                console.log(`${doneOrder} is done`)
                             //checkbox cutter
                             if (orderNumber==doneOrder){
                                 $('#freezerNumber').val(response[x].freezerNumber);
