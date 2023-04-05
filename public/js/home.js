@@ -62,7 +62,7 @@ $(document).ready(()=>{
 
                     case "AD" :
                         $("#selector").val("Admin");
-                        $("#exampleInputUsername").val("Admin");
+                        $("#exampleInputUsername").val("admin");
                         $("#selector").attr("disabled", false);
                         break;
             
