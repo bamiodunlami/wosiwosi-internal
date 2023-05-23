@@ -38,13 +38,13 @@ $(document).ready(()=>{
             mydata=data.line_items;
             reOrder(mydata);
         });
-            console.log("done populating")
-        }, 5500);
+            // console.log("done populating")
+        }, 5000);
      }
     
     //populaet data to table
     function reOrder(data){
-        console.log(data)
+        // console.log(data)
         let table=document.querySelector("#myTable");
         for (let i=0; i<data.length; i++){
            cutLen=data[i].meta_data.length; //product meta details eg wight, cut size et.c
@@ -106,7 +106,8 @@ $(document).ready(()=>{
             let conVal=$($(confBox)[x]).val();
             let qtyVal =$($(qtyField)[x]).text();
 
-             if(conVal !=qtyVal && position!="Cutter"){
+            //  if(conVal !=qtyVal && position!="Cutter"){
+                if(position=="Picker"){
                 alert(`Quantity in row ${x+1} not confirmed`)
                 // cutterIdentify=0;
                 // break;
@@ -141,7 +142,9 @@ $(document).ready(()=>{
                     },
                     body: JSON.stringify(dataSend),
                 });
-                window.location.href="/logout"
+
+                // window.history.go(-1);
+                window.location.href='/'
                     // .then((response) => response.json())
                     // .then((data) => {
                     // console.log("Success:", data);
@@ -160,7 +163,7 @@ $(document).ready(()=>{
         $.getJSON('/activity.json', (response)=> {          
             for(let x=0; x<response.length; x++){            
                 let doneOrder=response[x].orderNumber;
-                console.log(`${doneOrder} is done`)
+                // console.log(`${doneOrder} is done`)
                             //checkbox cutter
                             if (orderNumber==doneOrder){
                                 $('#freezerNumber').val(response[x].freezerNumber);

@@ -1,7 +1,7 @@
 $(document).ready(() => {    
   console.log("Hey bar");
   $.getJSON('activity.json', (response)=> {
-
+ 
     $("#logout").click(() => {
       window.location.href = "/logout";
     });
@@ -11,22 +11,6 @@ $(document).ready(() => {
 
   let counter = 0; //counter for filter
   let myOrder;
-
-  // using ajax
-  // $.ajax(
-  //     {
-  //         url:"products.json",
-  //         type:"GET",
-  //         dataType:'json',
-  //         success: function(list){
-  //         myOrder=list;
-  //         buildData(myOrder);
-  //         console.log(myOrder);
-  //         document.querySelector("#ren").innerHTML=list[0].billing.first_name;
-
-  //         }
-  //     }
-  // );
 
   // ajax call for order
   function ajaxCall() {
@@ -64,26 +48,27 @@ $(document).ready(() => {
         $(rowNumber[i]).on('click', function(){
           orderNumberSelected=$(rowNumber[i]).children()[0].innerText;
           //send details for perfomace evaluation
-          let performances={
-            nameOfStaff:$('#username').text(),
-            rollOfStaff:$('#staffRole').text().slice(0,6),
-            theDate:$('#logDate').text(),
-            activity: `${$('#username').text()} started ${orderNumberSelected}`,
-            orderNumber:orderNumberSelected
-          }
-          fetch('/sendPerformance', {
-            method: 'POST',
-            headers: {
-              'Content-Type':'application/json',
-            },
-            body: JSON.stringify(performances)
-          });
+          // let performances={
+          //   nameOfStaff:$('#username').text(),
+          //   rollOfStaff:$('#staffRole').text().slice(0,6),
+          //   theDate:$('#logDate').text(),
+          //   activity: `${$('#username').text()} clicked on ${orderNumberSelected}`,
+          //   orderNumber:orderNumberSelected
+          // }
+          // console.log(JSON.stringify(performances))
+          // fetch('/sendPerformance', {
+          //   method: 'POST',
+          //   headers: {
+          //     'Content-Type':'application/json',
+          //   },
+          //   body: JSON.stringify(performances)
+          // });
 
          //send details for single order page
           let orderSelected={
             orderNumber: orderNumberSelected,
           }
-          //send the order number in json formart
+          // send the order number in json formart
           fetch('/getSingleOrder', {
             method:"POST",
             headers: {
@@ -97,44 +82,46 @@ $(document).ready(() => {
 
       checkDoneOrders();
 
-         function checkActivity(){
-         let orderTableRow=$('tr#trow')
-        for (let i=0; i<orderTableRow.length; i++){  
-        let orderNumberAvailable=$(orderTableRow[i]).children()[0].innerText;
-        $.getJSON('/performance.json', (response2)=>{
-          for (let x=0; x<response2.length; x++){
-            let doneOrder=response2[x].orderNumber;
+      //    function checkActivity(){
+      //    let orderTableRow=$('tr#trow')
+      //   for (let i=0; i<orderTableRow.length; i++){  
+      //   let orderNumberAvailable=$(orderTableRow[i]).children()[0].innerText;
+      //   $.getJSON('/performance.json', (response2)=>{
+      //     // console.log(response2)
+      //     for (let x=0; x<response2.length; x++){
+      //       let doneOrder=response2[x].orderNumber;
 
-            if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Cutter' && response2[x].rollOfStaff=='Cutter' ){ 
-              $(orderTableRow[i]).off('click');
-              $(orderTableRow[i]).on('click', ()=>{
-                alert(`${response2[x].nameOfStaff} is working or left this order`);
-              });
-            }
+      //       if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Cutter' && response2[x].rollOfStaff=='Cutter' ){ 
+      //         $(orderTableRow[i]).off('click');
+      //         $(orderTableRow[i]).on('click', ()=>{
+      //           alert(`${response2[x].nameOfStaff} is working or left this order`);
+      //         });
+      //       }
 
-            if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Picker' && response2[x].rollOfStaff=='Picker' ){ 
-              $(orderTableRow[i]).off('click');
-              $(orderTableRow[i]).on('click', ()=>{
-                alert(`${response2[x].nameOfStaff} is working or left this order`);
-              });
-            }
+      //       if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Picker' && response2[x].rollOfStaff=='Picker' ){ 
+      //         $(orderTableRow[i]).off('click');
+      //         $(orderTableRow[i]).on('click', ()=>{
+      //           alert(`${response2[x].nameOfStaff} is working or left this order`);
+      //         });
+      //       }
 
-            if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Packer' && response2[x].rollOfStaff=='Packer' ){ 
-              $(orderTableRow[i]).off('click');
-              $(orderTableRow[i]).on('click', ()=>{
-                alert(`${response2[x].nameOfStaff} is working or left this order`);
-              });
-            }
+      //       if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Packer' && response2[x].rollOfStaff=='Packer' ){ 
+      //         $(orderTableRow[i]).off('click');
+      //         $(orderTableRow[i]).on('click', ()=>{
+      //           alert(`${response2[x].nameOfStaff} is working or left this order`);
+      //         });
+      //       }
 
-          }
-        });
-      } 
-        }      
-        checkActivity();
-        setInterval(() => {                
-          checkActivity();
-          }, 800);  
-
+      //     }
+      //   });
+      // } 
+      //   }      
+        
+      
+      // checkActivity();
+      //   setInterval(() => {                
+      //     checkActivity();
+      //     }, 2000);  
   }
 
   //serch box
@@ -145,7 +132,6 @@ $(document).ready(() => {
       });
     });
 
-    // //function to catch the date set for filtering
     // async function sortByDateAjax(){
     //   $('#sort-by-date').on('click', function(){
     //     let fromDate=$('#fromDate').val();
@@ -218,8 +204,6 @@ $(document).ready(() => {
           }   
         } 
     }
-
-    
 
   });
 });

@@ -71,7 +71,7 @@ async function sortByDateAjax(){
     $("#myTable").empty();
     buildData(sortOrder);
     });
-    }, 20000)
+    }, 10000)
 
     });
     }

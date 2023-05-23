@@ -33,44 +33,32 @@
         <h3 class="text-center">Order Fulfilling Centre</h3>
         <div class="col-12">
           <form method="post" action="/user">
-            <div class="mb-3">
+            <!-- <div class="mb-3" id="username">
               <label for="exampleInputUsername" class="form-label">Username</label>
-              <input
-                type="text"
-                name="username"
-                class="form-control "
-                id="exampleInputUsername"
-                aria-describedby="emailHelp"
-                required
-              />
-            </div>
-            <!-- <div class="mb-3">
-              <label for="exampleInputPassword1" class="form-label"
-                >Password</label
-              >
-              <input
-                type="password"
-                name="password"
-                class="form-control"
-                id="exampleInputPassword1"
-                required
-              />
+              <input type="text"  name="username" class="form-control" id="exampleInputUsername" aria-describedby="emailHelp" required />
             </div> -->
+
+
             <div class="mb-3">
-              <select
-                class="form-control form-select"
-                id="selector"
-                aria-label=".form-select-sm example"
-                name="selector"
-                required 
-              >
-                <option value="Admin">Admin</option>
-                <option value="Cutter">Cutter</option>
-                <option value="Picker">Picker</option>
-                <option value="Packer">Packer</option>
+              <select class="form-control form-select" id="user" aria-label=".form-select-sm example" name="username" required>
+                <option>-Select-</option>
+                <option value="sunny">Sunny</option>
+                <option value="esther">Esther</option>
+                <!-- <option value="Picker">Picker</option>
+                <option value="Packer">Packer</option> -->
               </select>
             </div>
-            <button class="btn btn-primary">Submit</button>
+
+            <div class="mb-3">
+              <select class="form-control form-select" id="selector" aria-label=".form-select-sm example" name="selector" required>
+                <option>-Select-</option>
+                <option value="Cutter" selected>Cutter</option>
+                <!-- <option value="esther">Esther</option> -->
+                <option value="Picker">Picker</option>
+                <!-- <option value="Packer">Packer</option> -->
+              </select>
+            </div>
+            <button class="btn btn-primary" id="sub">Submit</button>
           </form>
         </div>
       </div>

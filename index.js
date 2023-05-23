@@ -14,6 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true }));
 
 //ejs
 app.set("view engine", "ejs");
+
 app.use(express.json({ limit: "1mb" }));
 
 //clear cache memory
@@ -145,6 +146,11 @@ app.get('/', (req, res) => {
 
 //ADMIN OPERATIONS
 // view all orders
+
+app.get('/admin', (req, res)=>{
+  res.render("admin")
+})
+
 app.get("/orderlist", (req, res) => {
   res.render("adminOrder", {});
 });
@@ -193,21 +199,21 @@ app.get('/performance', (req, res)=>{
   res.sendFile(`${__dirname}/public/performance.html`)
 });
 
-app.post('/sendPerformance', (req, res)=>{
-  console.log(req.body);
-  let perf=fs.readFileSync(`${__dirname}/public/performance.json`);
-  let NewPerfArray=JSON.parse(perf);
-  let newData = req.body;
-  NewPerfArray.unshift(newData);
+// app.post('/sendPerformance', (req, res)=>{
+//   console.log(req.body);
+//   let perf=fs.readFileSync(`${__dirname}/public/performance.json`);
+//   let NewPerfArray=JSON.parse(perf);
+//   let newData = req.body;
+//   NewPerfArray.unshift(newData);
 
-  let newPafData = JSON.stringify(NewPerfArray);
-  const path = `${__dirname}/public/performance.json`;
-  fs.writeFile(path, newPafData, (err) => {
-    if (err) console.log(err);
-    console.log("Perfomance Writen");
-  });
+//   let newPafData = JSON.stringify(NewPerfArray);
+//   const path = `${__dirname}/public/performance.json`;
+//   fs.writeFile(path, newPafData, (err) => {
+//     if (err) console.log(err);
+//     console.log("Perfomance Writen");
+//   });
 
-});
+// });
 
 
 
@@ -218,7 +224,7 @@ app.post("/user", (req, res) => {
   let user = req.body.username;
   let selected = req.body.selector;
   console.log(selected);
-  console.log(user);
+  // console.log(user);
 
   let userName = user;
   let accessAs = selected;
@@ -229,7 +235,7 @@ app.post("/user", (req, res) => {
   const path = `${__dirname}/public/currentUser.json`;
   fs.writeFile(path, JSON.stringify(data), (error) => {
     if (error) console.log("User not loged");
-    console.log("User saved");
+    // console.log("User saved");
   });
 
   if (selected === "Picker") {
@@ -287,8 +293,10 @@ app.post("/complete", (req, res) => {
     console.log("front page file written");
   });
 
+  // res.redirect('/')
   // res.sendFile(`${__dirname}/public/index.html`);//access index.html
 });
+
 
 // sort order by day
 app.post("/dateSort", (req, res)=>{
