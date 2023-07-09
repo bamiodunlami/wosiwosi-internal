@@ -35,6 +35,22 @@ const woocommerce = new WooCommerRestApi({
       }
     })
   }
+
+  function singleOrder(requester){
+        woocommerce.get(`orders/${requester}`)
+        .then((response) => {
+          anOrder= response.data;// store response in order
+          //save retrieved an order to picker.json
+          let path=appRoot + '/public/singleOrder.json';
+          let anData=JSON.stringify(anOrder);
+          fs.writeFile(path,anData, (err)=>{
+          if (err) {console.log("cannot get single order")}
+          else {console.log("Single Order saved")}
+          });
+        });
+  }
+
 module.exports = {
-  GeneralOrder:GenOrder
+  GeneralOrder:GenOrder,
+  singleOrder:singleOrder
 }

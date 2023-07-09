@@ -4,6 +4,8 @@ const app = express();
 
 const mainRoute =  require(`${__dirname}/router/main.js`)
 const adminRoute =  require(`${__dirname}/router/admin.js`)
+const operationRoute =  require(`${__dirname}/router/operation.js`)
+
 
 
 const port=process.env.PORT || 3000;
@@ -23,7 +25,7 @@ app.use(express.static('public'));
 
 app.use(adminRoute)
 app.use(mainRoute)
-
+app.use(operationRoute)
 
 // const time = new Date();
 // let date = `${time.getDate()} / ${time.getMonth() + 1} / ${time.getFullYear()}`;
@@ -126,163 +128,6 @@ app.use(mainRoute)
 
 
 
-//OTHER OPERATIONS
-//Handle Post  request Login from homepage
-// app.post("/user", (req, res) => {
-//   let user = req.body.username;
-//   let selected = req.body.selector;
-//   console.log(selected);
-//   // console.log(user);
-
-//   let userName = user;
-//   let accessAs = selected;
-//   const data = {
-//     name: userName,
-//     position: accessAs,
-//   };
-//   const path = `${__dirname}/public/currentUser.json`;
-//   fs.writeFile(path, JSON.stringify(data), (error) => {
-//     if (error) console.log("User not loged");
-//     // console.log("User saved");
-//   });
-
-//   if (selected === "Picker") {
-//     res.render("genOrderPage", {
-//       logOffice: selected,
-//       logUser: user,
-//       logDate: date,
-//     });
-//   } else if (selected === "Admin" && user == "admin") {
-//     //for the admin page
-//     res.render("admin", {
-//       logOffice: selected,
-//       logUser: user,
-//       logDate: date,
-//     });
-//     // res.sendFile(`${__dirname}/public/genOrderPage.html`);//access index.html
-//   } else if (selected === "Packer") {
-//     res.render("genOrderPage", {
-//       logOffice: selected,
-//       logUser: user,
-//       logDate: date,
-//     });
-//     // res.sendFile(`${__dirname}/public/genOrderPage.html`);//access index.html
-//   } else if (selected === "Cutter") {
-//     res.render("genOrderPage", {
-//       logOffice: selected,
-//       logUser: user,
-//       logDate: date,
-//     });
-//     // res.sendFile(`${__dirname}/public/genOrderPage.html`);//access index.html
-//   } else {
-//     res.send("No access");
-//   }
-// });
-
-
-// //logout
-// app.get("/logout", (req, res) => {
-//   res.redirect("/"); //access index.html
-//   // res.clearCookie();
-// });
-
-// //staff completed an order
-// app.post("/complete", (req, res) => {
-//   console.log(req.body);
-//   let data = fs.readFileSync(`${__dirname}/public/activity.json`);
-//   let myArray = JSON.parse(data);
-//   let newData = req.body;
-//   myArray.unshift(newData);
-
-//   let finalData = JSON.stringify(myArray);
-//   const path = `${__dirname}/public/activity.json`;
-//   fs.writeFile(path, finalData, (err) => {
-//     if (err) console.log(err);
-//     console.log("front page file written");
-//   });
-
-//   // res.redirect('/')
-//   // res.sendFile(`${__dirname}/public/index.html`);//access index.html
-// });
-
-
-// // sort order by day
-// app.post("/dateSort", (req, res)=>{
-//   console.log(req.body);
-//   dates=req.body.from;
-//   dates2=req.body.to;
-//   timer1=req.body.timing1;
-//   timer2=req.body.timing2;
-//   sortOrders();
-//   // finalOrderSorting();
-//   res.send();
-// });
-
-// //post request from web page for single order
-// app.post('/getSingleOrder', (req, res)=>{
-//   let requester=req.body.orderNumber;
-//       console.log(requester);
-//         woocommerce.get(`orders/${requester}`)
-//         .then((response) => {
-//           // anOrder= response.data;// store response in order
-
-//           //save retrieved an order to picker.json
-//           let path=`${__dirname}/public/singleOrder.json`;
-//           let anData=JSON.stringify(response.data);
-//           fs.writeFile(path,anData, (err)=>{
-//           if (err) {console.log("cannot get single order")}
-//           else {console.log("Single Order saved")}
-//           });
-//         }).catch((error)=>{
-//           console.log(error.response.data)
-//         });
-
-//       res.render('singleOrderPage',{
-//       logDate: date
-//       });
-// })
-
-// // //grap each customer request
-// app.get("/singleOrderPage", (req, res)=>{
-// //     console.log (`the param is${req.params.id}`);
-// //       // let requester=req.url;
-// //       // console.log(requester);
-      
-// //       //   woocommerce.get(`orders${requester}`)
-// //       //   .then((response) => {
-// //       //     anOrder= response.data;// store response in order
-
-// //       //     //save retrieved an order to picker.json
-// //       //     let path=`${__dirname}/singleOrder.json`;
-// //       //     let anData=JSON.stringify(anOrder);
-// //       //     fs.writeFile(path,anData, (err)=>{
-// //       //     if (err) {console.log("cannot get single order")}
-// //       //     else {console.log("Single Order saved")}
-// //       //     });
-// //       //   });
-//       res.render('singleOrderPage',{
-//       logDate: date
-//       });
-//     });
-
-
-
-//     // my control
-//     app.get('/mycontrol', (req, res)=>{
-//         res.sendFile(`${__dirname}/public/mycontrol.html`)
-//     });
-
-//     app.post('/savemycontrol', (req, res)=>{
-//       console.log(req.body);
-//       let newData = req.body;
-//       let newPafData = JSON.stringify(newData);
-//       const path = `${__dirname}/public/performance.json`;
-//       fs.writeFile(path, newPafData, (err) => {
-//         if (err) console.log(err);
-//         console.log("Perfomance Writen");
-//       });
-    
-//     });
 
 
 app.listen(port, () => {

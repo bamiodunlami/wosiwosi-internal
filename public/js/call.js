@@ -30,7 +30,7 @@ $(document).ready(() => {
       $("#orderUnit").text(counter+1);
       for (let i = counter; i>=0; i--) {
         let row = `<tr id="trow">
-                      <td class="customer-id-link" id="ln${i}"> ${data[i].id}</a></td>
+                    <td class="customer-id-link" id="ln${i}"><a href="/singleOrder?on=${data[i].id}">${data[i].id}</a></td>
                     <td>${data[i].billing.first_name} ${data[i].billing.last_name}</td>
                     <td>${data[i].date_paid.slice(0, 10).slice(5, 10)}</td>
                     <td><input type="checkbox" id="checkbox-cu" name="status" vlaue="status" disabled ></td>
@@ -40,45 +40,6 @@ $(document).ready(() => {
                 </tr>`;
         table.innerHTML += row;
       }
-
-        //Single order click, fetch and reroute
-      let rowNumber= $("tr#trow")
-      //capture row clicked
-      for (let i=0; i<rowNumber.length; i++){
-        $(rowNumber[i]).on('click', function(){
-          orderNumberSelected=$(rowNumber[i]).children()[0].innerText;
-          //send details for perfomace evaluation
-          // let performances={
-          //   nameOfStaff:$('#username').text(),
-          //   rollOfStaff:$('#staffRole').text().slice(0,6),
-          //   theDate:$('#logDate').text(),
-          //   activity: `${$('#username').text()} clicked on ${orderNumberSelected}`,
-          //   orderNumber:orderNumberSelected
-          // }
-          // console.log(JSON.stringify(performances))
-          // fetch('/sendPerformance', {
-          //   method: 'POST',
-          //   headers: {
-          //     'Content-Type':'application/json',
-          //   },
-          //   body: JSON.stringify(performances)
-          // });
-
-         //send details for single order page
-          let orderSelected={
-            orderNumber: orderNumberSelected,
-          }
-          // send the order number in json formart
-          fetch('/getSingleOrder', {
-            method:"POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body:JSON.stringify(orderSelected)
-          });
-          window.location.href="/singleOrderPage" //redirect to single order page
-        });
-      } 
 
       checkDoneOrders();
 
