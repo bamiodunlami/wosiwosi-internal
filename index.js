@@ -1,15 +1,16 @@
+require('dotenv').config();
 const express = require("express");
 const app = express();
-const fs = require("fs"); //writing to file intenal package
+
+const mainRoute =  require(`${__dirname}/router/main.js`)
+const adminRoute =  require(`${__dirname}/router/admin.js`)
+
+
 const port=process.env.PORT || 3000;
-const nocache=require('nocache')
-const WooCommerRestApi = require("@woocommerce/woocommerce-rest-api").default;
 
 
 // require body parser
 const bodyParser = require("body-parser");
-// const { json } = require("body-parser"); // auto added
-// const { response } = require("express"); //auto added
 app.use(bodyParser.urlencoded({ extended: true }));
 
 //ejs
@@ -17,187 +18,94 @@ app.set("view engine", "ejs");
 
 app.use(express.json({ limit: "1mb" }));
 
-//clear cache memory
-app.use(nocache());
-
 //access public diroctory and use static files (CSS JS )
 app.use(express.static('public'));
 
-//wooommerce api
-const woocommerce = new WooCommerRestApi({
-  url: "https://wosiwosi.co.uk",
-  consumerKey: "ck_f41a79e671f0bd0194b53e96c45805e265a78bf1",
-  consumerSecret: "cs_4368e2b1e72c226cfbc64197e76b57635cc7d233",
-  version: "wc/v3",
-});
+app.use(adminRoute)
+app.use(mainRoute)
 
-const time = new Date();
-let date = `${time.getDate()} / ${time.getMonth() + 1} / ${time.getFullYear()}`;
 
-let dates, dates2, timer1, timer2;
+// const time = new Date();
+// let date = `${time.getDate()} / ${time.getMonth() + 1} / ${time.getFullYear()}`;
 
-// ?after=${dates}T00:00:00&before=${dates2}T23:59:59
+// let dates, dates2, timer1, timer2;
 
-// fucntion to log recent order
- function getOrders() {
-      //get the woocommerce order
-    woocommerce.get("orders", {
-      per_page: 100, //number of order par page
-      status: "completed processing", //select completed only
-    }).then((response) => {
-      order = response.data; // store response in order
-    })
-    .catch((error) => {
-      console.log(`${console.log("Error Connection to woocommerce")}`);
-    });
+// // ?after=${dates}T00:00:00&before=${dates2}T23:59:59
 
-  try {
-    data = JSON.stringify(order);
-    path = `${__dirname}/public/products.json`;
-    fs.writeFile(path, data, (err) => {
-      if (err) console.log(err);
-      else {
-        console.log("File written");
-      }
-    });
-  } catch (er) {
-    console.log("cannot get order");
-  }
-}
 
-//fuction for sorting order by date
-async function sortOrders(){
-        console.log(dates);
-        console.log(dates2);
-        console.log(timer1);
-        console.log(timer2);
+// //fuction for sorting order by date
+// async function sortOrders(){
+//         console.log(dates);
+//         console.log(dates2);
+//         console.log(timer1);
+//         console.log(timer2);
 
-      //sorted order
-      woocommerce.get(`orders?after=${dates}T${timer1}:00&before=${dates2}T${timer2}:59`, {
-        per_page: 100, //number of order par page
-        status: "completed processing", //select completed only
-      })  .then((response) => {
-       sortOrder=response.data;
-      //  console.log(sortOrder)
-      })
-      .catch((error) => {
-        console.log("Not sorted");
-      });
+//       //sorted order
+//       woocommerce.get(`orders?after=${dates}T${timer1}:00&before=${dates2}T${timer2}:59`, {
+//         per_page: 100, //number of order par page
+//         status: "completed processing", //select completed only
+//       })  .then((response) => {
+//        sortOrder=response.data;
+//       //  console.log(sortOrder)
+//       })
+//       .catch((error) => {
+//         console.log("Not sorted");
+//       });
 
-     setTimeout(() => {
-      try {
-        data = JSON.stringify(sortOrder);
-        path = `${__dirname}/public/sortProducts.json`;
-        fs.writeFile(path, data, (err) => {
-          if (err) console.log(err);
-          else {
-            console.log("Sort written");
-          }
-        });
-      } catch (er) {
-        console.log(er);
-      }
-    }, 15000); 
+//      setTimeout(() => {
+//       try {
+//         data = JSON.stringify(sortOrder);
+//         path = `${__dirname}/public/sortProducts.json`;
+//         fs.writeFile(path, data, (err) => {
+//           if (err) console.log(err);
+//           else {
+//             console.log("Sort written");
+//           }
+//         });
+//       } catch (er) {
+//         console.log(er);
+//       }
+//     }, 15000); 
     
-}
+// }
 
-//admin settings order preferences
-async function sortOrders2(){
-  console.log(dates);
-  console.log(dates2);
-  console.log(timer1);
-  console.log(timer2);
+// //admin settings order preferences
+// async function sortOrders2(){
+//   console.log(dates);
+//   console.log(dates2);
+//   console.log(timer1);
+//   console.log(timer2);
 
-//sorted order
-woocommerce.get(`orders?after=${dates}T${timer1}:00&before=${dates2}T${timer2}:59`, {
-  per_page: 100, //number of order par page
-  status: "completed processing", //select completed only
-})  .then((response) => {
- sortOrder=response.data;
-//  console.log(sortOrder)
-})
-.catch((error) => {
-  console.log("Not sorted");
-});
+// //sorted order
+// woocommerce.get(`orders?after=${dates}T${timer1}:00&before=${dates2}T${timer2}:59`, {
+//   per_page: 100, //number of order par page
+//   status: "completed processing", //select completed only
+// })  .then((response) => {
+//  sortOrder=response.data;
+// //  console.log(sortOrder)
+// })
+// .catch((error) => {
+//   console.log("Not sorted");
+// });
 
-setTimeout(() => {
-try {
-  data = JSON.stringify(sortOrder);
-  path = `${__dirname}/public/adminsettings.json`;
-  fs.writeFile(path, data, (err) => {
-    if (err) console.log(err);
-    else {
-      console.log("Sort written");
-    }
-  });
-} catch (er) {
-  console.log(er);
-}
-}, 15000); 
+// setTimeout(() => {
+// try {
+//   data = JSON.stringify(sortOrder);
+//   path = `${__dirname}/public/adminsettings.json`;
+//   fs.writeFile(path, data, (err) => {
+//     if (err) console.log(err);
+//     else {
+//       console.log("Sort written");
+//     }
+//   });
+// } catch (er) {
+//   console.log(er);
+// }
+// }, 15000); 
 
-}
-
-// get requst from browser to lead homepage
-app.get('/', (req, res) => {
-  getOrders();
-  res.sendFile(`${__dirname}/public/homer.html`); //access index.html
-});
+// }
 
 
-//ADMIN OPERATIONS
-// view all orders
-
-app.get('/admin', (req, res)=>{
-  res.render("admin")
-})
-
-app.get("/orderlist", (req, res) => {
-  res.render("adminOrder", {});
-});
-
-// Admin view completed orders
-app.get("/adminCompletedOrder", (req, res) => {
-  res.sendFile(`${__dirname}/public/completedOrders.html`);
-});
-
-//Admin settings
-app.get('/settings', (req, res)=>{
-  res.sendFile(`${__dirname}/public/adminsettings.html`)
-})
-
-app.post('/adminSettingData', (req, res)=>{
-    console.log(req.body);
-    let setData={
-      fromDate:req.body.fromDate,
-      toDate:req.body.toDate,
-      orderQty:req.body.orderQty
-    }
-    let paths=`${__dirname}/public/adminsettings.json`
-    fs.writeFile(paths, JSON.stringify(setData), (err)=>{
-      if(err) console.log(err);
-      else{console.log("settings saved")}
-    })
-
-    
-
-});
-
-// Admin order preference setting
-app.post("/adminDateSort", (req, res)=>{
-  console.log(req.body);
-  dates=req.body.from;
-  dates2=req.body.to;
-  timer1=req.body.timing1;
-  timer2=req.body.timing2;
-  sortOrders2();
-  // finalOrderSorting();
-  res.send();
-});
-
-//staff perefomance report
-app.get('/performance', (req, res)=>{
-  res.sendFile(`${__dirname}/public/performance.html`)
-});
 
 // app.post('/sendPerformance', (req, res)=>{
 //   console.log(req.body);
@@ -220,161 +128,161 @@ app.get('/performance', (req, res)=>{
 
 //OTHER OPERATIONS
 //Handle Post  request Login from homepage
-app.post("/user", (req, res) => {
-  let user = req.body.username;
-  let selected = req.body.selector;
-  console.log(selected);
-  // console.log(user);
+// app.post("/user", (req, res) => {
+//   let user = req.body.username;
+//   let selected = req.body.selector;
+//   console.log(selected);
+//   // console.log(user);
 
-  let userName = user;
-  let accessAs = selected;
-  const data = {
-    name: userName,
-    position: accessAs,
-  };
-  const path = `${__dirname}/public/currentUser.json`;
-  fs.writeFile(path, JSON.stringify(data), (error) => {
-    if (error) console.log("User not loged");
-    // console.log("User saved");
-  });
+//   let userName = user;
+//   let accessAs = selected;
+//   const data = {
+//     name: userName,
+//     position: accessAs,
+//   };
+//   const path = `${__dirname}/public/currentUser.json`;
+//   fs.writeFile(path, JSON.stringify(data), (error) => {
+//     if (error) console.log("User not loged");
+//     // console.log("User saved");
+//   });
 
-  if (selected === "Picker") {
-    res.render("genOrderPage", {
-      logOffice: selected,
-      logUser: user,
-      logDate: date,
-    });
-  } else if (selected === "Admin" && user == "admin") {
-    //for the admin page
-    res.render("admin", {
-      logOffice: selected,
-      logUser: user,
-      logDate: date,
-    });
-    // res.sendFile(`${__dirname}/public/genOrderPage.html`);//access index.html
-  } else if (selected === "Packer") {
-    res.render("genOrderPage", {
-      logOffice: selected,
-      logUser: user,
-      logDate: date,
-    });
-    // res.sendFile(`${__dirname}/public/genOrderPage.html`);//access index.html
-  } else if (selected === "Cutter") {
-    res.render("genOrderPage", {
-      logOffice: selected,
-      logUser: user,
-      logDate: date,
-    });
-    // res.sendFile(`${__dirname}/public/genOrderPage.html`);//access index.html
-  } else {
-    res.send("No access");
-  }
-});
-
-
-//logout
-app.get("/logout", (req, res) => {
-  res.redirect("/"); //access index.html
-  // res.clearCookie();
-});
-
-//staff completed an order
-app.post("/complete", (req, res) => {
-  console.log(req.body);
-  let data = fs.readFileSync(`${__dirname}/public/activity.json`);
-  let myArray = JSON.parse(data);
-  let newData = req.body;
-  myArray.unshift(newData);
-
-  let finalData = JSON.stringify(myArray);
-  const path = `${__dirname}/public/activity.json`;
-  fs.writeFile(path, finalData, (err) => {
-    if (err) console.log(err);
-    console.log("front page file written");
-  });
-
-  // res.redirect('/')
-  // res.sendFile(`${__dirname}/public/index.html`);//access index.html
-});
+//   if (selected === "Picker") {
+//     res.render("genOrderPage", {
+//       logOffice: selected,
+//       logUser: user,
+//       logDate: date,
+//     });
+//   } else if (selected === "Admin" && user == "admin") {
+//     //for the admin page
+//     res.render("admin", {
+//       logOffice: selected,
+//       logUser: user,
+//       logDate: date,
+//     });
+//     // res.sendFile(`${__dirname}/public/genOrderPage.html`);//access index.html
+//   } else if (selected === "Packer") {
+//     res.render("genOrderPage", {
+//       logOffice: selected,
+//       logUser: user,
+//       logDate: date,
+//     });
+//     // res.sendFile(`${__dirname}/public/genOrderPage.html`);//access index.html
+//   } else if (selected === "Cutter") {
+//     res.render("genOrderPage", {
+//       logOffice: selected,
+//       logUser: user,
+//       logDate: date,
+//     });
+//     // res.sendFile(`${__dirname}/public/genOrderPage.html`);//access index.html
+//   } else {
+//     res.send("No access");
+//   }
+// });
 
 
-// sort order by day
-app.post("/dateSort", (req, res)=>{
-  console.log(req.body);
-  dates=req.body.from;
-  dates2=req.body.to;
-  timer1=req.body.timing1;
-  timer2=req.body.timing2;
-  sortOrders();
-  // finalOrderSorting();
-  res.send();
-});
+// //logout
+// app.get("/logout", (req, res) => {
+//   res.redirect("/"); //access index.html
+//   // res.clearCookie();
+// });
 
-//post request from web page for single order
-app.post('/getSingleOrder', (req, res)=>{
-  let requester=req.body.orderNumber;
-      console.log(requester);
-        woocommerce.get(`orders/${requester}`)
-        .then((response) => {
-          // anOrder= response.data;// store response in order
+// //staff completed an order
+// app.post("/complete", (req, res) => {
+//   console.log(req.body);
+//   let data = fs.readFileSync(`${__dirname}/public/activity.json`);
+//   let myArray = JSON.parse(data);
+//   let newData = req.body;
+//   myArray.unshift(newData);
 
-          //save retrieved an order to picker.json
-          let path=`${__dirname}/public/singleOrder.json`;
-          let anData=JSON.stringify(response.data);
-          fs.writeFile(path,anData, (err)=>{
-          if (err) {console.log("cannot get single order")}
-          else {console.log("Single Order saved")}
-          });
-        }).catch((error)=>{
-          console.log(error.response.data)
-        });
+//   let finalData = JSON.stringify(myArray);
+//   const path = `${__dirname}/public/activity.json`;
+//   fs.writeFile(path, finalData, (err) => {
+//     if (err) console.log(err);
+//     console.log("front page file written");
+//   });
 
-      res.render('singleOrderPage',{
-      logDate: date
-      });
-})
+//   // res.redirect('/')
+//   // res.sendFile(`${__dirname}/public/index.html`);//access index.html
+// });
 
-// //grap each customer request
-app.get("/singleOrderPage", (req, res)=>{
-//     console.log (`the param is${req.params.id}`);
-//       // let requester=req.url;
-//       // console.log(requester);
+
+// // sort order by day
+// app.post("/dateSort", (req, res)=>{
+//   console.log(req.body);
+//   dates=req.body.from;
+//   dates2=req.body.to;
+//   timer1=req.body.timing1;
+//   timer2=req.body.timing2;
+//   sortOrders();
+//   // finalOrderSorting();
+//   res.send();
+// });
+
+// //post request from web page for single order
+// app.post('/getSingleOrder', (req, res)=>{
+//   let requester=req.body.orderNumber;
+//       console.log(requester);
+//         woocommerce.get(`orders/${requester}`)
+//         .then((response) => {
+//           // anOrder= response.data;// store response in order
+
+//           //save retrieved an order to picker.json
+//           let path=`${__dirname}/public/singleOrder.json`;
+//           let anData=JSON.stringify(response.data);
+//           fs.writeFile(path,anData, (err)=>{
+//           if (err) {console.log("cannot get single order")}
+//           else {console.log("Single Order saved")}
+//           });
+//         }).catch((error)=>{
+//           console.log(error.response.data)
+//         });
+
+//       res.render('singleOrderPage',{
+//       logDate: date
+//       });
+// })
+
+// // //grap each customer request
+// app.get("/singleOrderPage", (req, res)=>{
+// //     console.log (`the param is${req.params.id}`);
+// //       // let requester=req.url;
+// //       // console.log(requester);
       
-//       //   woocommerce.get(`orders${requester}`)
-//       //   .then((response) => {
-//       //     anOrder= response.data;// store response in order
+// //       //   woocommerce.get(`orders${requester}`)
+// //       //   .then((response) => {
+// //       //     anOrder= response.data;// store response in order
 
-//       //     //save retrieved an order to picker.json
-//       //     let path=`${__dirname}/singleOrder.json`;
-//       //     let anData=JSON.stringify(anOrder);
-//       //     fs.writeFile(path,anData, (err)=>{
-//       //     if (err) {console.log("cannot get single order")}
-//       //     else {console.log("Single Order saved")}
-//       //     });
-//       //   });
-      res.render('singleOrderPage',{
-      logDate: date
-      });
-    });
+// //       //     //save retrieved an order to picker.json
+// //       //     let path=`${__dirname}/singleOrder.json`;
+// //       //     let anData=JSON.stringify(anOrder);
+// //       //     fs.writeFile(path,anData, (err)=>{
+// //       //     if (err) {console.log("cannot get single order")}
+// //       //     else {console.log("Single Order saved")}
+// //       //     });
+// //       //   });
+//       res.render('singleOrderPage',{
+//       logDate: date
+//       });
+//     });
 
 
 
-    // my control
-    app.get('/mycontrol', (req, res)=>{
-        res.sendFile(`${__dirname}/public/mycontrol.html`)
-    });
+//     // my control
+//     app.get('/mycontrol', (req, res)=>{
+//         res.sendFile(`${__dirname}/public/mycontrol.html`)
+//     });
 
-    app.post('/savemycontrol', (req, res)=>{
-      console.log(req.body);
-      let newData = req.body;
-      let newPafData = JSON.stringify(newData);
-      const path = `${__dirname}/public/performance.json`;
-      fs.writeFile(path, newPafData, (err) => {
-        if (err) console.log(err);
-        console.log("Perfomance Writen");
-      });
+//     app.post('/savemycontrol', (req, res)=>{
+//       console.log(req.body);
+//       let newData = req.body;
+//       let newPafData = JSON.stringify(newData);
+//       const path = `${__dirname}/public/performance.json`;
+//       fs.writeFile(path, newPafData, (err) => {
+//         if (err) console.log(err);
+//         console.log("Perfomance Writen");
+//       });
     
-    });
+//     });
 
 
 app.listen(port, () => {
