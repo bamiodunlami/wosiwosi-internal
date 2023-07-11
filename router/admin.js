@@ -8,6 +8,7 @@ appRoot.setPath(rootpath);
 
  const woocommerce = require (appRoot + '/controller/woo.js')
  const woo = woocommerce.GeneralOrder
+ const adminSortOrder=woocommerce.sortOrder
 
 router.get('/admin', (req, res)=>{
     woo();
@@ -29,29 +30,29 @@ router.get('/admin', (req, res)=>{
   })
   
   router.post('/adminSettingData', (req, res)=>{
-      console.log(req.body);
-      let setData={
-        fromDate:req.body.fromDate,
-        toDate:req.body.toDate,
-        orderQty:req.body.orderQty
-      }
-      let paths=`${__dirname}/public/adminsettings.json`
-      fs.writeFile(paths, JSON.stringify(setData), (err)=>{
-        if(err) console.log(err);
-        else{console.log("settings saved")}
-      })
+    console.log("clicked")
+      // console.log(req.body);
+      // let setData={
+      //   fromDate:req.body.fromDate,
+      //   toDate:req.body.toDate,
+      //   orderQty:req.body.orderQty
+      // }
+      // let paths=`${__dirname}/public/adminsettings.json`
+      // fs.writeFile(paths, JSON.stringify(setData), (err)=>{
+      //   if(err) console.log(err);
+      //   else{console.log("settings saved")}
+      // })
   });
   
   // Admin order preference setting
   router.post("/adminDateSort", (req, res)=>{
-    console.log(req.body);
-    dates=req.body.from;
-    dates2=req.body.to;
-    timer1=req.body.timing1;
-    timer2=req.body.timing2;
-    sortOrders2();
+    const from = req.body.from
+    const to = req.body.to
+    const time1 = req.body.timing1
+    const time2 = req.body.timing2
+    adminSortOrder(from, time1, to, time2);
     // finalOrderSorting();
-    res.send();
+    // res.send();
   });
   
   //staff perefomance report

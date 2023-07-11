@@ -34,10 +34,6 @@ $(document).ready(()=>{
       ajaxCall();
       ajaxCallTwo();
 
-      $('#logout').click(()=>{
-          window.location.href="/logout"
-      });
-  
       let counter=0; //counter for filter
       let counter2=0
         

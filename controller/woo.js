@@ -50,7 +50,38 @@ const woocommerce = new WooCommerRestApi({
         });
   }
 
+//admin settings order preferences
+async function sortOrder(f, t1, t, t2){
+  console.log(f, t1, t, t2)
+//sorted order
+woocommerce.get(`orders?after=${f}T${t1}:59&before=${t}T${t2}:59`, {
+  per_page: 100, //number of order par page
+  status: "completed processing", //select completed only
+})  
+  .then((response) => {
+  sortOrder=response.data;
+      try {
+        let data = JSON.stringify(sortOrder);
+        let filePath = appRoot + '/public/adminsettings.json';
+        fs.writeFile(filePath, data, (err) => {
+          if (err) console.log(err);
+          else {
+            console.log("Sort written");
+          }
+        });
+      } catch (er) {
+        console.log(er);
+      }
+  })
+.catch((error) => {
+  console.log("Not sorted");
+});
+
+
+}
+
 module.exports = {
   GeneralOrder:GenOrder,
-  singleOrder:singleOrder
+  singleOrder:singleOrder,
+  sortOrder:sortOrder,
 }

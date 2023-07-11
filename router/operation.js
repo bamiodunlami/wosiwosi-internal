@@ -117,22 +117,5 @@ router.get("/singleOrder", (req, res)=>{
     });
 });
 
-    // my control
-    router.get('/mycontrol', (req, res)=>{
-        res.render('mycontrol')
-    });
-
-    router.post('/savemycontrol', (req, res)=>{
-      console.log(req.body);
-      let newData = req.body;
-      let newPafData = JSON.stringify(newData);
-      const path = appRoot + '/public/performance.json';
-      fs.writeFile(path, newPafData, (err) => {
-        if (err) console.log(err);
-        console.log("Perfomance Writen");
-      });
-    
-    });
-
 
 module.exports=router

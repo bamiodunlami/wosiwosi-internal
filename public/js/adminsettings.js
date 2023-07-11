@@ -1,20 +1,22 @@
 $(document).ready(()=>{
     
-    $('#saveSetting').on('click', function(){
-       window.location.href='/logout'
-      })
+    // $('#saveSetting').on('click', function(){
+    //    window.location.href='/logout'
+    //   })
 
       let day=new Date();
 
       let thisDay=day.getDate();
       let thisMonth=String(day.getMonth()+1).padStart(2, "0");
       let thisYear= day.getFullYear();
-      let thisMin=day.getMinutes();
+      let thisMin=String(day.getMinutes()).padStart(2, "0");
       let thisHour=day.getHours();
 
 sortByDateAjax();
 
-async function sortByDateAjax(){
+
+  // Sort Button
+  async function sortByDateAjax(){
     $('#filter-by-date').on('click', function(){
     let fromDate=$('#fromDate').val();
     let toDate=$('#toDate').val();
@@ -71,12 +73,12 @@ async function sortByDateAjax(){
     $("#myTable").empty();
     buildData(sortOrder);
     });
-    }, 10000)
+    }, 8000)
 
     });
     }
 
-
+  // build table
     function buildData(data){
         let table=document.querySelector("#myTable");
        $('#qtyVal').text(data.length);
