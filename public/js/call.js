@@ -43,46 +43,46 @@ $(document).ready(() => {
 
       checkDoneOrders();
 
-      //    function checkActivity(){
-      //    let orderTableRow=$('tr#trow')
-      //   for (let i=0; i<orderTableRow.length; i++){  
-      //   let orderNumberAvailable=$(orderTableRow[i]).children()[0].innerText;
-      //   $.getJSON('/performance.json', (response2)=>{
-      //     // console.log(response2)
-      //     for (let x=0; x<response2.length; x++){
-      //       let doneOrder=response2[x].orderNumber;
+         function checkActivity(){
+         let orderTableRow=$('tr#trow')
+        for (let i=0; i<orderTableRow.length; i++){  
+        let orderNumberAvailable=$(orderTableRow[i]).children()[0].innerText;
+        $.getJSON('/performance.json', (response2)=>{
+          // console.log(response2)
+          for (let x=0; x<response2.length; x++){
+            let doneOrder=response2[x].orderNumber;
 
-      //       if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Cutter' && response2[x].rollOfStaff=='Cutter' ){ 
-      //         $(orderTableRow[i]).off('click');
-      //         $(orderTableRow[i]).on('click', ()=>{
-      //           alert(`${response2[x].nameOfStaff} is working or left this order`);
-      //         });
-      //       }
+            if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Cutter' && response2[x].rollOfStaff=='Cutter' ){ 
+              $(orderTableRow[i]).off('click');
+              $(orderTableRow[i]).on('click', ()=>{
+                alert(`${response2[x].nameOfStaff} is working or left this order`);
+              });
+            }
 
-      //       if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Picker' && response2[x].rollOfStaff=='Picker' ){ 
-      //         $(orderTableRow[i]).off('click');
-      //         $(orderTableRow[i]).on('click', ()=>{
-      //           alert(`${response2[x].nameOfStaff} is working or left this order`);
-      //         });
-      //       }
+            if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Picker' && response2[x].rollOfStaff=='Picker' ){ 
+              $(orderTableRow[i]).off('click');
+              $(orderTableRow[i]).on('click', ()=>{
+                alert(`${response2[x].nameOfStaff} is working or left this order`);
+              });
+            }
 
-      //       if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Packer' && response2[x].rollOfStaff=='Packer' ){ 
-      //         $(orderTableRow[i]).off('click');
-      //         $(orderTableRow[i]).on('click', ()=>{
-      //           alert(`${response2[x].nameOfStaff} is working or left this order`);
-      //         });
-      //       }
+            if (doneOrder===orderNumberAvailable && $('#staffRole').text().slice(0,6)=='Packer' && response2[x].rollOfStaff=='Packer' ){ 
+              $(orderTableRow[i]).off('click');
+              $(orderTableRow[i]).on('click', ()=>{
+                alert(`${response2[x].nameOfStaff} is working or left this order`);
+              });
+            }
 
-      //     }
-      //   });
-      // } 
-      //   }      
+          }
+        });
+      } 
+        }      
         
       
-      // checkActivity();
-      //   setInterval(() => {                
-      //     checkActivity();
-      //     }, 2000);  
+      checkActivity();
+        setInterval(() => {                
+          checkActivity();
+          }, 2000);  
   }
 
   //serch box

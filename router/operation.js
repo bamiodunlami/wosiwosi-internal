@@ -78,13 +78,13 @@ router.get("/logout", (req, res) => {
 //staff completed an order
 router.post("/complete", (req, res) => {
   console.log(req.body);
-  let data = fs.readFileSync(rootpath + 'public/activity.json');
+  let data = fs.readFileSync(appRoot + '/public/activity.json');
   let myArray = JSON.parse(data);
   let newData = req.body;
   myArray.unshift(newData);
 
   let finalData = JSON.stringify(myArray);
-  const path = rootpath + '/public/activity.json';
+  const path = appRoot + '/public/activity.json';
   fs.writeFile(path, finalData, (err) => {
     if (err) console.log(err);
     console.log("front page file written");

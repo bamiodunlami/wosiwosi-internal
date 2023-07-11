@@ -106,17 +106,18 @@ $(document).ready(()=>{
             let conVal=$($(confBox)[x]).val();
             let qtyVal =$($(qtyField)[x]).text();
 
-            //  if(conVal !=qtyVal && position!="Cutter"){
-                if(position=="Picker"){
+             if(conVal !=qtyVal && position!="Cutter"){
+                // if(position=="Picker"){
                 alert(`Quantity in row ${x+1} not confirmed`)
                 // cutterIdentify=0;
-                // break;
+                break;
               } else {
                 note=$('textarea#text-area').val();
                 freezerNo=$('#freezerNumber').val();
                 $('#btn-comp').prop("disabled", true);
                 $('#con-btn').prop('disabled', false)
               }
+            // }
             }
         });
 
