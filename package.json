@@ -2,9 +2,10 @@
   "name": "woocommerce",
   "version": "1.0.0",
   "description": "Woocommerce Rest API",
-  "main": "index.js",
+  "main": "server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "author": "Bamidele",
   "license": "ISC",
@@ -16,5 +17,6 @@
     "ejs": "^3.1.8",
     "express": "^4.18.2",
     "node-express-reload": "^0.1.22"
-  }
+  },
+  "devDependencies": {}
 }
