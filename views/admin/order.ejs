@@ -1,0 +1,101 @@
+
+<%- include('include/header') -%>
+    <section class="order-page">
+        <div class="container">
+            <h6 class="alert alert-success text-center">Order</h6>
+            <div class="row d-flex justify-content-center alert alert-light">
+                <div class="col-md-6 dateFilter text-center">
+                    <p >Date and time filter</p>
+                    <div class="dateFilter-container">
+                        <form action="/order" method="get" class="row">
+                            <div class="dateFilter-item col-md-5 col-sm-12">
+                                <input type="date" class="form-control" name="fromDate" value="<%=fromDate%>">
+                                <input style="margin-top: 2px;" type="time" class="form-control" name="fromTime" value="<%=fromTime%>">
+                            </div>
+                            <div class="dateFilter-item col-md-5 col-sm-12">
+                                <input type="date" class="form-control" name="toDate" value="<%=toDate%>">
+                                <input style="margin-top: 2px;" type="time" class="form-control" name="toTime" value="<%=toTime%>">
+                            </div>
+                            <input type="hidden" name="page" value="1">
+                            <div class="dateFilter-item  col-md-2 col-sm-12">
+                                <button type="submit" class="btn btn-success">Filter</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- table -->
+            <div class="row order-table">
+                <div class="col-12">
+                    <table class="table table-striped table-hover ">
+                        <thead>
+                        <tr>
+                            <th scope="col">Order</th>
+                            <th scope="col">Customer</th>
+                            <th scope="col">Amount</th>
+                            <th scope="col" class="order-status">Status</th>
+                            <th scope="col">Order Note</th>
+                            <th scope="col" class="order-date">Date</th>
+                            <th scope="col" class="order-time">Time</th>
+                        </tr>
+                        </thead>
+                        <tbody class="">
+                            <% for(i =0; i<order.length; i++ ){%>
+                                <tr>
+                                    <td><a href="/singleorder?id=<%=order[i].id%>&fromDate=<%=fromDate%>&toDate=<%=toDate%>&page=<%=page%>&fromTime=<%=fromTime%>&toTime=<%=toTime%>"><%=order[i].id%></a></td>
+                                    <td><%=order[i].billing.first_name%> <%=order[i].billing.last_name%></td>
+                                    <td>£<%=order[i].total%></td>
+                                    <td class="order-status"><%=order[i].status%></td>
+                                    <td>
+                                        <!-- if there is note -->
+                                        <% if(order[i].customer_note){%>
+                                            <p style="color: #ff0000;">Note</p>
+                                        <%}else{%>
+                                            <p>-</p>
+                                            <%}%>
+                                    <td class="order-date"><%=order[i].date_paid.slice(0,10)%></td>
+                                    <td class="order-time"><%=order[i].date_paid.slice(11,16)%></td>
+                                </tr>
+                            <%}%>
+                        </tbody>
+                    </table>
+                </div>
+                <!-- page -->
+                <div class="page-button col-12 text-center">
+                    <div>
+                        <% if(defalutNumber > order.length){%> 
+                            <!-- if result is less than define number for a page 1.e order is less than 30 -->
+                            <% if(page > 1 ){%>
+                                <!-- If you are already in page two or above and order is less than 30 -->
+                                <a href="/order?fromDate=<%=fromDate%>&toDate=<%=toDate%>&page=<%=page-1%>&fromTime=<%=fromTime%>&toTime=<%=toTime%>" class="btn btn-sm btn-secondary">Prev</a>
+                                <button class="btn btn-sm btn-secondary" disabled>Next</button>
+                            <%}%>
+
+                        <%} else {%>
+                            <p>Page <%=page%></p>
+                            <!-- if you are already in page one -->
+                            <% if(page <= 1 ){%>
+                                <button class="btn btn-sm btn-secondary" disabled>Prev</button>
+                                <a href="/order?fromDate=<%=fromDate%>&toDate=<%=toDate%>&page=<%=page+1%>&fromTime=<%=fromTime%>&toTime=<%=toTime%>" class="btn btn-sm btn-secondary">Next</a>
+                            <%}else{%>
+                            <a href="/order?fromDate=<%=fromDate%>&toDate=<%=toDate%>&page=<%=page-1%>&fromTime=<%=fromTime%>&toTime=<%=toTime%>" class="btn btn-sm btn-secondary">Prev</a>
+                            <a href="/order?fromDate=<%=fromDate%>&toDate=<%=toDate%>&page=<%=page+1%>&fromTime=<%=fromTime%>&toTime=<%=toTime%>" class="btn btn-sm btn-secondary">Next</a>
+                            <%}%>
+                        <%}%>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- back to dashboard -->
+            <div class="row">
+                <div class="text-center">
+                    <a class="btn btn-success btn-md" href="/admin">Back to dashboard</a>
+                    <a class="btn btn-danger btn-md" href="/saveorder?fromDate=<%=fromDate%>&toDate=<%=toDate%>&fromTime=<%=fromTime%>&toTime=<%=toTime%>&page=<%=page%>">Save all for processing</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <%- include('include/footerTemp') -%>
+    <%- include('include/footer') -%>

@@ -8,6 +8,12 @@ appRoot.setPath(rootpath);
 
 const admin = require(appRoot + "/controller/admin.controller.js");
 
-router.get("/admin", admin.adminDashboard);
+router
+.get("/admin", admin.adminDashboard)
+.get("/order", admin.renderOrderPage)
+.get('/singleorder', admin.singleOrder)
+.get('/saveorder', admin.saveAllForProcessing)
+.get('/processingorder', admin.orderAvailableToProcess)
+.get('/searchsingleorder', admin.searchSingleOrder)
 
 module.exports = router;

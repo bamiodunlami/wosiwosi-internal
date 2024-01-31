@@ -17,24 +17,25 @@ const woocommerce = new WooCommerRestApi({
 });
 
 //get the woocommerce order that came in today
-const getOrder = async (quantity) => {
-  const wooOrder = await woocommerce.get(`orders?after=${date.toJSON().slice(0,10)}T00:00:00&before=${date.toJSON().slice(0,10)}T${date.toLocaleTimeString()}`, {
-    per_page: quantity,
-    status: "completed processing",
-  });
-  console.log(`number of order today ${wooOrder.data.length}`)
+// const getOrder = async () => {
+//   const wooOrder = await woocommerce.get(`orders?after=${date.toJSON().slice(0,10)}T00:00:00&before=${date.toJSON().slice(0,10)}T${date.toLocaleTimeString()}`, {
+//     per_page: 100,
+//     status: "completed processing",
+//   });
+//    return "no workd"
 
   // write file
-  try {
-    data = JSON.stringify(wooOrder.data);
-    filePath = appRoot + "/public/data/allOrder.json";
-    fs.writeFileSync(filePath, data, () => {
-      console.log("File written");
-    });
-  } catch (er) {
-    console.log("cannot write order");
-  }
-};
+  // try {
+  //   data = JSON.stringify(wooOrder.data);
+  //   filePath = appRoot + "/public/data/allOrder.json";
+  //   fs.writeFileSync(filePath, data, () => {
+  //     console.log("File written");
+  //   });
+  // } catch (er) {
+  //   console.log("cannot write order");
+  // }
+  
+// };
 
 // function singleOrder(requester) {
 //   woocommerce.get(`orders/${requester}`).then((response) => {
@@ -81,8 +82,8 @@ const getOrder = async (quantity) => {
 //     });
 // }
 
-module.exports = {
-  getOrder: getOrder,
+module.exports = woocommerce
+  // getOrder: getOrder,
   // singleOrder: singleOrder,
   // sortOrder: sortOrder,
-};
+

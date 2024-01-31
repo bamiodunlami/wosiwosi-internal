@@ -1,12 +1,13 @@
 require('dotenv').config();
  express = require("express");
 const app = express();
-
+const passport =  require(`${__dirname}/util/passport.util.js`)
+const session = require ('express-session')
+const flash = require ('express-flash')
 const adminRoute =  require(`${__dirname}/router/admin.router.js`)
-
+const generalRoute =  require(`${__dirname}/router/general.router.js`)
 
 const port=process.env.PORT || 3000;
-
 
 // require body parser
 const bodyParser = require("body-parser");
@@ -16,17 +17,27 @@ app.use(bodyParser.urlencoded({ extended: true }));
 app.set("view engine", "ejs");
 
 app.use(express.json({ limit: "1mb" }));
-
-//access public diroctory and use static files (CSS JS )
 app.use(express.static('public'));
+app.use(session({
+  secret: process.env.SESSION_KEY,
+  resave: true,
+  saveUninitialized: true,
+  cookie: { maxAge:600000 }
+}));
+app.use(passport.session())
+app.use(flash());
+
+
 
 app.use(adminRoute)
+app.use(generalRoute)
 
 
 
 // 404
 app.use((req, res)=>{
-  res.redirect('/admin')
+  console.log("404")
+  res.send("404 page not available")
 })
 
 

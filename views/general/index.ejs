@@ -1,0 +1,33 @@
+<%-include('include/header')-%>
+
+<section class="">
+    <div class="container">
+        <div class="row login-main d-flex align-items-center">
+            <div class="col-sm-12 d-flex justify-content-center">
+                <div class="login-bar">
+                    <h5 class="text-center">Login</h5>
+                    <div class="login-form">
+                        <form action="/login" method="post">
+
+                            <% if (messages.error) {%>
+                                <p class="error"><%= messages.error %></p>
+                                <% } %> 
+
+                            <div class="mb-3">
+                              <label for="username" class="form-label">Enter username</label>
+                              <input type="text" name="username" class="form-control" id="username">
+                            </div>
+                            <div class="mb-3">
+                              <label for="password" class="form-label">Password</label>
+                              <input type="password" name="password" class="form-control" id="password">
+                            </div>
+                                <button type="submit" class="btn btn-success btn-sm">Submit</button>
+                          </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%-include('include/footer')-%>

@@ -2,7 +2,7 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
-    font-family: 'Montserrat', sans-serif;
+    font-family: 'Poppins', sans-serif;
 }
 
 h2 {
@@ -16,117 +16,50 @@ h3{
 } 
 
 h4{
-    font-size:20px;
+    font-size:22px;
     font-weight: 600;
 } 
 
-.row-one{
-border: 1px solid #d7d7d7;
-padding:20px; 
-max-width: 500px;
-margin: auto;
-margin-top: 20%;
-}
-
-.tabonly{
-    display: none;
-}
-
-
-/* .dashboard{
-    height: 100vh;
-    padding: 5% 4%;
-    overflow-y: scroll;
-}
-
-.row-dashboard{
-    border: 1px solid #d7d7d7;
-    padding:20px;
-    max-width: 1200px;
-    margin: auto;
-} */
-
-
-/*Orders page*/
-.order {
-    padding: 5% 18%;
-}
-
-.picker-details{
-    padding: 10px;
-    background-color: #016d35;
-    color: #ffff;
-}
-.username-name{
+h5{
+    font-size: 17px;
     font-weight: 600;
 }
 
-a.customer-id-link {
+h6{
+    font-size: 15px;
+    font-weight: 600;
+}
+p{
+    font-size: 16px;
+    line-height: 14px;
+}
+
+a{
     text-decoration: none;
+    color: #00641b
+}
+a.main-link{
+    text-decoration: underline;
+    color: #00641b
 }
 
-/* search base */
-.sort{
-    margin-bottom: 20px;
-}
-.amountToView{
-    padding:6px 15px;
-    border: 1px solid rgb(149, 149, 149);
-    border-radius: 10px;
-
+.error{
+    color: #ff0000;
 }
 
-/* admin page */
-.admin-section{
-    background-color: #efefef;
+/* Home */
+.login-main{
     height: 100vh;
-    padding: 30vh 30vw;
-
-}
-.admin-section-option{
-    border: solid 2px #d7d7d7;
-    padding: 10%;
-    border-radius: 20px;
-}
-.admin-section-option-main{
-    padding: 0;
 }
 
-.admin-section-option-item h4{
-    background-color: #d7d7d7;
-    font-weight: 600;
-    margin: 3px;
-    padding: 10%;
-    border-radius: 20px;
-    cursor: pointer;
+.login-bar{
+    width: 500px;
 }
-
-.admin-section-option-item h4:hover{
-    background-color: #016d35;
-    color:#ffff;
-    transition: 0.6s;
+.login-form{
+    padding: 30px;
+    border-radius: 10px;
+    border: solid 1px #e1e1e1;
 }
-
-
-
-/* single page */
-input.con{
-    width: 50px;
-    border: 1px solid;
-    padding: 10px;
-}
-
-input.check:checked{
-    background-color: #016d35;
-}
-
-.text-area{
-    height: 50px;
-    width: 300px;
-    padding: 10px;
-}
-
-
 
 /*Loading effect*/
 .loading-hide{
