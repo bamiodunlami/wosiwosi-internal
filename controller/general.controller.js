@@ -4,7 +4,7 @@ const rootpath = path.resolve(process.cwd());
 appRoot.setPath(rootpath);
 
 
-const User = require (appRoot + "/util/passport.util.js")
+const User = require (appRoot + "/model/userDb.model.js").User
 
 const renderHome =  (req, res)=>{
     if(req.isAuthenticated()){
@@ -23,11 +23,11 @@ const renderHome =  (req, res)=>{
 // register
 const registerUser = async (req, res)=>{
     const newUser = {
-        username:"bami",
-        fname:"Bamidele",
-        lname:"Odunlami"
+        username:"pat",
+        fname:"Patrick",
+        lname:"Odume"
     }
-    await User.register(newUser, "WosiWosi1", (err, user)=>{
+    await User.register(newUser, "pat1", (err, user)=>{
         if(err) {
             console.log("Error")
         }else{
@@ -38,10 +38,11 @@ const registerUser = async (req, res)=>{
 
 // login
 const login = async  (req, res)=>{
-    if(req.user.role ==="admin"){
+    if(req.user.role =="admin"){
         res.redirect('/admin')
     }else{
-        
+        // console.log("user")
+        res.redirect('/user')
     }
 }
 

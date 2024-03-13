@@ -12,10 +12,7 @@ const general = require (appRoot + "/controller/general.controller.js")
 router
 .get('/', general.renderHome)
 .get('/reg', general.registerUser )
-.post('/login', passport.authenticate("local", {failureRedirect:"/", failureFlash:true}), (req, res)=>{
-    res.redirect("/admin")
-})
-
+.post('/login', passport.authenticate("local", {failureRedirect:"/", failureFlash:true}), general.login)
 .get('/logout', (req, res)=>{
     req.logout((err) => {
         if (err) {

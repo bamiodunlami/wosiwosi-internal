@@ -5,6 +5,7 @@ const passport =  require(`${__dirname}/util/passport.util.js`)
 const session = require ('express-session')
 const flash = require ('express-flash')
 const adminRoute =  require(`${__dirname}/router/admin.router.js`)
+const userRoute =  require(`${__dirname}/router/user.router.js`)
 const generalRoute =  require(`${__dirname}/router/general.router.js`)
 
 const port=process.env.PORT || 3000;
@@ -31,6 +32,7 @@ app.use(flash());
 
 app.use(adminRoute)
 app.use(generalRoute)
+app.use(userRoute)
 
 
 
