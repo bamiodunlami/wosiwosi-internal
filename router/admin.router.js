@@ -15,5 +15,7 @@ router
 .get('/saveorder', admin.saveAllForProcessing)
 .get('/processingorder', admin.orderAvailableToProcess)
 .get('/searchsingleorder', admin.searchSingleOrder)
+.get('/add-to-order', admin.addToOrder)
+.get('/remove-from-order', admin.removeFromOrder)
 
 module.exports = router;

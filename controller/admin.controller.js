@@ -156,6 +156,7 @@ const orderAvailableToProcess =  async (req, res)=>{
     }
 }
 
+// single order display
 const searchSingleOrder = async(req, res, next)=>{
     if(req.isAuthenticated()){
         try{
@@ -176,11 +177,23 @@ const searchSingleOrder = async(req, res, next)=>{
     }
 }
 
+// Add single order to the orders to be done that day
+const addToOrder = async (req, res, next)=>{
+    console.log(req.query.order)
+}
+
+// remove single order from the orders to be done that day
+const removeFromOrder = async (req, res, next)=>{
+    console.log(req.query.order)
+}
+
 module.exports ={
     adminDashboard:adminDashboard,
     renderOrderPage:renderOrderPage,
     singleOrder:singleOrder,
     saveAllForProcessing:saveAllForProcessing,
     orderAvailableToProcess:orderAvailableToProcess,
-    searchSingleOrder:searchSingleOrder
+    searchSingleOrder:searchSingleOrder,
+    addToOrder:addToOrder,
+    removeFromOrder:removeFromOrder,
 }

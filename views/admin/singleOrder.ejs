@@ -73,11 +73,8 @@
             <%} else if(action == "search"){%>
                 <div> 
                     <a href="/admin" class="btn btn-success btn-sm">Back</a>
-                    <a href="" class="main-link">Add to order to be process today</a>
-                </div>
-                <div> 
-                    <a href="/admin" class="btn btn-success btn-sm">Back</a>
-                    <a href="" class="main-link">Remove from order to be process today</a>
+                    <a href="/add-to-order?order=<%=order.id%>" class="btn btn-warning btn-sm">Add to order to be process today</a>
+                    <a href="/remove-from-order?order=<%=order.id%>" class="btn btn-danger btn-sm">Remove from order to be process today</a>
                 </div>
             <%}%>
 
