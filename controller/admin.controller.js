@@ -184,7 +184,7 @@ const addToOrder = async (req, res, next)=>{
 
 // remove single order from the orders to be done that day
 const removeFromOrder = async (req, res, next)=>{
-    console.log(req.query.order)
+    console.log(req.query)
 }
 
 module.exports ={
