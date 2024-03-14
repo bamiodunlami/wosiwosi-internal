@@ -38,7 +38,7 @@ app.use(userRoute)
 
 // 404
 app.use((req, res)=>{
-  console.log("404")
+  // console.log("404")
   res.send("404 page not available")
 })
 

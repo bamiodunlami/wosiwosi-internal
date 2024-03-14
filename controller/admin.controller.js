@@ -13,7 +13,7 @@ const woocommerce = require (appRoot + '/util/woo.util.js')
 // admin dashboard
 const adminDashboard =  async (req, res)=>{
     if(req.isAuthenticated()){
-        console.log(req.user)
+        // console.log(req.user)
         res.render('admin/admin', {
             title:"Admin",
             date:date.toJSON().slice(0,10),
