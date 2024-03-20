@@ -1,0 +1,52 @@
+/* Home */
+.home-option-section{
+    background-color: #efefef;
+    height: 100vh;
+    padding: 30vh 30vw;
+}
+
+.home-option{
+    padding: 10px;
+}
+
+.home-option:hover{
+    background-color: #00a971;
+}
+
+.option-item{
+    padding: 20px;
+    background-color: #ffffff;
+    border: solid 1px #d7d7d7;
+    border-radius: 5px;
+}
+
+
+/* login */
+.login-main{
+    height: 100vh;
+}
+
+.login-bar{
+    width: 500px;
+}
+
+.login-form{
+    padding: 30px;
+    border-radius: 10px;
+    border: solid 1px #e1e1e1;
+}
+
+
+/* tab view */
+@media (max-width:800px){
+    .home-option-section{
+        background-color: #efefef;
+        height: 100vh;
+        padding: 5vh 10vw;
+    }
+}
+
+/* mobile view */
+@media (max-width:480px){
+
+}

@@ -6,18 +6,22 @@ appRoot.setPath(rootpath);
 
 const User = require (appRoot + "/model/userDb.model.js").User
 
+// home
 const renderHome =  (req, res)=>{
-    if(req.isAuthenticated()){
-        if(req.user.role ==="admin"){
-            res.redirect('/admin')
-        }else{
+    res.render('general/home',{
+    title:"Home"
+    })
+    // if(req.isAuthenticated()){
+    //     if(req.user.role ==="admin"){
+    //         res.redirect('/admin')
+    //     }else{
 
-        }
-    }else{
-        res.render('general/index',{
-            title:"Home"
-        })
-    }
+    //     }
+    // }else{
+    //     res.render('general/index',{
+    //         title:"Home"
+    //     })
+    // }
 }
 
 // register
@@ -36,8 +40,15 @@ const registerUser = async (req, res)=>{
     } )
 }
 
-// login
-const login = async  (req, res)=>{
+// render login page
+const loginPage = (req, res)=>{
+    res.render("general/login", {
+        title:"Login"
+    });
+}
+
+// login redirect
+const loginRedirect = async  (req, res)=>{
     if(req.user.role =="admin"){
         res.redirect('/admin')
     }else{
@@ -46,8 +57,16 @@ const login = async  (req, res)=>{
     }
 }
 
+//render walkie talkie page
+const walkieTalkie = async (req, res)=>{
+    console.log("Walkie Talkie")
+}
+
+// Export module
 module.exports ={
     renderHome:renderHome,
     registerUser:registerUser,
-    login:login
+    loginPage:loginPage,
+    loginRedirect:loginRedirect,
+    walkieTalkie:walkieTalkie
 }

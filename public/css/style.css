@@ -36,7 +36,7 @@ p{
 
 a{
     text-decoration: none;
-    color: #00641b
+    color: #000000
 }
 a.main-link{
     text-decoration: underline;
@@ -47,19 +47,7 @@ a.main-link{
     color: #ff0000;
 }
 
-/* Home */
-.login-main{
-    height: 100vh;
-}
 
-.login-bar{
-    width: 500px;
-}
-.login-form{
-    padding: 30px;
-    border-radius: 10px;
-    border: solid 1px #e1e1e1;
-}
 
 /*Loading effect*/
 .loading-hide{

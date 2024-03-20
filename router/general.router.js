@@ -10,9 +10,14 @@ const passport = require (appRoot + '/util/passport.util.js')
 const general = require (appRoot + "/controller/general.controller.js")
 
 router
-.get('/', general.renderHome)
-.get('/reg', general.registerUser )
-.post('/login', passport.authenticate("local", {failureRedirect:"/", failureFlash:true}), general.login)
+.get('/', general.renderHome) //render login home
+.get('/reg', general.registerUser ) //redner register page
+.get("/login", general.loginPage) // render login page
+.post('/login', passport.authenticate("local", {failureRedirect:"/", failureFlash:true}), general.loginRedirect) //handle login 
+.get('/walkietalkie', general.walkieTalkie)
+
+
+
 .get('/logout', (req, res)=>{
     req.logout((err) => {
         if (err) {
