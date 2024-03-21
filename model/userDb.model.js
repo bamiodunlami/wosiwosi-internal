@@ -14,6 +14,13 @@ const userSchema = mongoose.Schema({
     lname:String,
     role:String,
     status:Boolean,
+    walkieTalkie:{
+      number:Number,
+      date:String,
+      takeTime:String,
+      returnTime:String,
+      status:Boolean
+    }
 })
 
 userSchema.plugin(passportLocalMongoose)
@@ -25,7 +32,13 @@ async function migrateUsers() {
     try {
       const mig = await User.find();
       for (let i=0; i<mig.length; i++) {
-        mig[i].status = true;
+        mig[i].walkieTalkie = {
+          number:1,
+          date:"",
+          takeTime:"",
+          returnTime:"",
+          status:true
+        }
         await mig[i].save()
       }
       console.log('Data migration completed successfully.');
@@ -37,7 +50,7 @@ async function migrateUsers() {
       console.error('Data migration failed:', error);
     }
   }
-//   migrateUsers();
+  // migrateUsers();
 
 
 

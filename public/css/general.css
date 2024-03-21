@@ -21,6 +21,31 @@
 }
 
 
+/* Walkie Talkie */
+
+.walkie-form{
+    padding: 10% 25%;
+}
+
+.walkie-form-item{
+    border: solid 1px #515151;
+    padding: 10px;
+}
+.walkie-form-item-title{
+    background-color: #515151;
+    color: #ffffff;
+    padding: 10px;
+}
+.walkie-form-item-form{
+    padding: 15px;
+}
+
+/* success page */
+.success{
+    padding: 25vh;
+}
+
+
 /* login */
 .login-main{
     height: 100vh;
@@ -48,5 +73,13 @@
 
 /* mobile view */
 @media (max-width:480px){
+
+    .walkie-form{
+        padding: 20vh 8%;
+    }
+
+    .success{
+        padding: 25vh 0;
+    }
 
 }

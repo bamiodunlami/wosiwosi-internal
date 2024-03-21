@@ -15,6 +15,8 @@ const talkSchema = mongoose.Schema({
 
 const Talk = new mongoose.model("Talk", talkSchema)
 
+console.log("hello")
+
 module.exports ={
     Talk:Talk
 }

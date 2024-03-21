@@ -1,0 +1,39 @@
+<%- include('include/header') -%>
+
+<section class="walkie">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12 walkie-form"> 
+                <div class="walkie-form-item">
+                    <div class="walkie-form-item-title">
+                        <h5 class="text-center">WALKIE TALKIE SIGNING FORM</h5>
+                    </div>
+                    <div class="walkie-form-item-form">
+                    <form method="post" action="/walkietalkie">
+                        <div class="mb-3">
+                            <select class="form-select" aria-label="Default select example" name="user" id="selectedOption">
+                                <option value="0" selected>Select your name</option>
+                                <% for (let i = 0; i<user.length; i++){%>
+                                    <option value="<%=user[i].username%>"><%=user[i].fname%></option>
+                                <%}%>
+                              </select>
+                          </div>
+
+                          <div class="alert alert-warning">
+                            <h6>Walkie Talkie: <span id="walkieTalkieNumber"></span></h6>
+                          </div>
+
+                          <div class="formInfo" id="formInfo">
+
+                          </div>
+                    </form>
+                    </div>
+                  </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<%- include('include/footerTemp') -%>
+    <script src="js/walkie.js"></script>
+<%- include('include/footer') -%>
