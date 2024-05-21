@@ -47,6 +47,9 @@ a.main-link{
     color: #ff0000;
 }
 
+.default-page-padding{
+    padding: 10%;
+}
 
 
 /*Loading effect*/
@@ -56,6 +59,96 @@ a.main-link{
 
 .loading{
         display:block;
+}
+
+/* Genral dashboard */
+.dashboard-option-section{
+    background-color: #efefef;
+    padding: 30vh 30vw;
+    height: 100vh;
+}
+
+.dashboard-option{
+    padding: 10px;
+}
+
+.dashboard-option:hover{
+    background-color: #00a971;
+}
+
+.option-item{
+    padding: 20px;
+    background-color: #ffffff;
+    border: solid 1px #d7d7d7;
+    border-radius: 5px;
+}
+
+
+
+
+/* success page */
+.success{
+    padding: 25vh;
+}
+
+
+/* login */
+.login-main{
+    height: 100vh;
+}
+
+.login-bar{
+    width: 500px;
+}
+
+.login-form{
+    padding: 20px;
+    border-radius: 10px;
+    border: solid 1px #e1e1e1;
+}
+
+
+/* tab view */
+@media (max-width:800px){
+
+    .default-page-padding{
+        padding: 8%;
+    }
+
+    /* dashboard */
+    .dashboard-option-section{
+        background-color: #efefef;
+        padding: 5vh 10vw;
+    }
+
+    /* login */
+    .login-bar{
+        padding: 0 5%;
+    }
+}
+
+/* mobile view */
+@media (max-width:480px){
+
+    .default-page-padding{
+        padding: 10% 5%;
+    }
+    
+    /* login */
+    .login-bar{
+        padding: 0 5%;
+    }
+
+    /* walkie talkie */
+    .walkie-form{
+        padding: 20vh 8%;
+    }
+
+    /* success page */
+    .success{
+        padding: 25vh 0;
+    }
+
 }
 
 

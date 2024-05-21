@@ -1,20 +1,22 @@
-const appRoot = require("app-root-path");
-const passport = require ('passport')
-const express = require ('express')
-
-const path = require("path");
-const rootpath = path.resolve(process.cwd());
-appRoot.setPath(rootpath);
-
-const User = require (appRoot + "/model/userDb.model.js").User
+const express = require ('express');
 const app = express()
+const passport = require ('passport')
+
+const appRoot = require ('app-root-path')
+const path = require ('path');
+const rootPath = path.resolve(process.cwd())
+appRoot.setPath(rootPath)
+
+const User = require (appRoot + '/model/user.model.js');
 
 app.use(passport.initialize());
 
+// app.use(passport.session());
 
 passport.use(User.createStrategy());
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
 
-module.exports =  passport
+
+module.exports = passport

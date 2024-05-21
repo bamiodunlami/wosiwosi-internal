@@ -1,0 +1,18 @@
+<%- include("include/influencerHeader") -%>
+
+<div class="section default-padding">
+    <div class="container">
+        <div class="row">
+            <div class="back text-center" style="margin-bottom: 10px;">
+                <a href="/influencer" class="btn btn-sm btn-dark text-center">Back</a>
+            </div>
+
+            <div class="col-sm-12 ">
+                <div class="influencer-intro alert alert-light">
+                    <h6 class="text-center influencer-name">Coupon used by</h6>
+                    <h5 class="text-center"><%=customer.data.first_name%> <%=customer.data.last_name%></h6>
+                </div>
+            </div>
+
+<%- include("include/influencerFooter") -%>
+<%- include("include/footer") -%>

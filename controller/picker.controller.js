@@ -49,7 +49,7 @@ const renderOrderPage =  async (req, res)=>{
         status: "completed processing",
         });
         // console.log(wooOrder.data)
-        res.render('user/user', {
+        res.render('picker/user', {
             title:"Order", 
             order:wooOrder.data,
             defalutNumber:numberPerPage,

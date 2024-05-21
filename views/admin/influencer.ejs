@@ -1,0 +1,87 @@
+<%- include("include/header") -%>
+
+<div class="default-page-padding">
+    <div class="container">
+    
+          <div class="row">
+              <!-- influencer list -->
+              <div class="col-md-6 influencer-col">
+                <h6 class="text-center alert alert-dark">Influencer Monitor</h6>
+                <div class="interest-page-bar">
+                  <!-- <p class="text-center">Data of form filled by people interested in partnership</p> -->
+                    <div class="interest-table">
+                      <table class="table table-striped table-hover ">
+                        <thead>
+                          <tr>
+                            <th scope="col">SN</th>
+                            <th scope="col">Name</th>
+                            <th scope="col">Coupon</th>
+                            <th scope="col">Usage</th>
+                            <th scope="col">Commision</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <% for (i=0; i<influencer.length; i++){%>
+                              <tr>
+                                <td><%=i+1%></td>
+                                <td><%=influencer[i].fname%></td>
+                                <td><%=influencer[i].code%></td>
+                                <td></td>
+                                <td></td>
+                              </tr>
+                            <%}%>
+                        </tbody>
+                      </table>
+                    </div>
+                </div>
+              </div>
+    
+              <!-- create influencer -->
+              <div class="col-md-6 influencer-col">
+                <h6 class="text-center alert alert-dark">Create influencer</h6>
+                <div>
+                  <form action="/createinfluencer" method="post">
+
+                    <div class="mb-2">
+                      <label for="exampleFormControlTextarea1" class="form-label">First name</label>
+                      <input type="text" class="form-control" name="fname" autocomplete="Off">
+                    </div>
+
+                    <div class="mb-2">
+                      <label for="exampleFormControlTextarea1" class="form-label">Last name</label>
+                      <input type="text" class="form-control" name="lname" autocomplete="Off">
+                    </div>
+    
+                    <div class="mb-2">
+                      <label for="exampleFormControlTextarea1" class="form-label">Username</label>
+                      <input type="email" class="form-control" name="username" autocomplete="Off">
+                    </div>
+    
+                    <div class="mb-2">
+                      <label for="exampleFormControlTextarea1" class="form-label">Coupon Code</label>
+                      <input type="text" class="form-control" name="coupon" autocomplete="Off">
+                    </div>
+    
+                    <div class="mb-2">
+                      <label for="exampleFormControlInput1" class="form-label">Influencer ID</label>
+                      <input type="number" class="form-control" name="id" autocomplete="off">
+                    </div>
+    
+                    <button type="submit" class="btn btn-md btn-success">Create</button>
+    
+                  </form>
+                </div>
+              </div>
+          </div>
+
+          <div class="row" style="padding: 20px;">
+              <a class="btn btn-dark btn-sm" href="/admin"><i class="fa-solid fa-arrow-left fa-lg"></i> Back</a>
+          </div>
+
+          
+  
+    </div>
+  </div>
+
+<%- include('include/footerTemp') -%>
+<%- include('include/footer') -%>

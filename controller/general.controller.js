@@ -5,8 +5,7 @@ appRoot.setPath(rootpath);
 
 const date = new Date()
 
-const User = require (appRoot + "/model/userDb.model.js").User
-// const otherDB = require (appRoot + "/model/otherDb.model.js")
+const User = require (appRoot + "/model/user.model.js")
 
 // user post request
 const pullUser = async (req, res)=>{
@@ -17,8 +16,8 @@ const pullUser = async (req, res)=>{
 
 // home
 const renderHome =  (req, res)=>{
-    res.render('general/home',{
-    title:"Home"
+    res.render('general/login',{
+    title:"Login"
     })
     // if(req.isAuthenticated()){
     //     if(req.user.role ==="admin"){
@@ -31,6 +30,17 @@ const renderHome =  (req, res)=>{
     //         title:"Home"
     //     })
     // }
+}
+
+// login redirect
+const loginRedirect = async  (req, res)=>{
+    if(req.user.role =="admin"){
+        res.redirect('/admin')
+    }else if (req.user.role =="staff"){
+        res.redirect('/user')
+    } else if(req.user.role =="influencer"){
+        res.redirect('/influencer')
+    }
 }
 
 // register
@@ -47,23 +57,6 @@ const registerUser = async (req, res)=>{
             res.redirect('/')
         }
     } )
-}
-
-// render login page
-const loginPage = (req, res)=>{
-    res.render("general/login", {
-        title:"Login"
-    });
-}
-
-// login redirect
-const loginRedirect = async  (req, res)=>{
-    if(req.user.role =="admin"){
-        res.redirect('/admin')
-    }else{
-        // console.log("user")
-        res.redirect('/user')
-    }
 }
 
 //render walkie talkie page
@@ -105,7 +98,6 @@ module.exports ={
     pullUser:pullUser,
     renderHome:renderHome,
     registerUser:registerUser,
-    loginPage:loginPage,
     loginRedirect:loginRedirect,
     walkieTalkie:walkieTalkie,
     walkieTalkieSign:walkieTalkieSign

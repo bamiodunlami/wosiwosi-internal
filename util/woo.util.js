@@ -1,6 +1,6 @@
 const fs = require("fs");
 
-const WooCommerRestApi = require("@woocommerce/woocommerce-rest-api").default;
+const WooCommerRestApi = require("woocommerce-rest-ts-api").default;
 const appRoot = require("app-root-path");
 const path = require("path");
 const rootpath = path.resolve(process.cwd());

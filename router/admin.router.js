@@ -10,6 +10,7 @@ const admin = require(appRoot + "/controller/admin.controller.js");
 
 router
 .get("/admin", admin.adminDashboard)
+.get("/admin/:operation", admin.adminOperation)
 .get("/order", admin.renderOrderPage)
 .get('/singleorder', admin.singleOrder)
 .get('/saveorder', admin.saveAllForProcessing)
@@ -17,5 +18,6 @@ router
 .get('/searchsingleorder', admin.searchSingleOrder)
 .get('/add-to-order', admin.addToOrder)
 .get('/remove-from-order', admin.removeFromOrder)
+.post("/createinfluencer", admin.createInfluencer)
 
 module.exports = router;

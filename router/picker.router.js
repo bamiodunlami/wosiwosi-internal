@@ -6,9 +6,9 @@ const path = require("path");
 const rootpath = path.resolve(process.cwd());
 appRoot.setPath(rootpath);
 
-const user = require(appRoot + "/controller/user.controller.js");
+const picker = require(appRoot + "/controller/picker.controller.js");
 
 router
-.get("/user", user.renderOrderPage)
+.get("/user", picker.renderOrderPage)
 
 module.exports = router;
