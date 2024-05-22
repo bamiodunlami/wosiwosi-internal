@@ -12,7 +12,7 @@ const woo= require (appRoot + "/util/woo.util.js")
 // influencer dashboard
 const influencerDashboard = async (req, res)=>{
     if(req.isAuthenticated()){
-        if(req.user.passChange == true){
+        if(req.user.passChange == true){ //if influencer changed password
             const coupon = await woo.get(`coupons/${req.user.id}`,{
             })
             res.render('influencer/dashboard', {
@@ -21,7 +21,7 @@ const influencerDashboard = async (req, res)=>{
                 coupon:coupon
             })
         }else{
-            res.redirect('/changepass')
+            res.redirect('/changepassword') //if influencer hasnt changed password
         }
     }else{
         res.redirect("/login")
