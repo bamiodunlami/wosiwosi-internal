@@ -9,6 +9,8 @@ const User = require(appRoot + "/model/user.model.js")
 
 const woo= require (appRoot + "/util/woo.util.js")
 
+const mailer = require (appRoot + "/util/mailer.util.js")
+
 // influencer dashboard
 const influencerDashboard = async (req, res)=>{
     if(req.isAuthenticated()){
@@ -24,7 +26,7 @@ const influencerDashboard = async (req, res)=>{
             res.redirect('/changepassword') //if influencer hasnt changed password
         }
     }else{
-        res.redirect("/login")
+        res.redirect("/")
     }
 }
 
@@ -34,6 +36,7 @@ const usedBy = async (req, res)=>{
         // console.log(req.query.number)
         try{
             const customer = await woo.get(`customers/${req.query.number}`)
+            // console.log(customer)
             res.render("influencer/order",{
                 title:"Used By",
                 customer:customer
@@ -43,12 +46,22 @@ const usedBy = async (req, res)=>{
         }
 
     }else{
-        res.redirect("/login")
+        res.redirect("/")
     }
 
 }
 
+const influencerRedeem = async (req, res)=>{
+   if(req.isAuthenticated()){
+    res.send("ok");
+    mailer.redeemRequest(req.user.username, "bamidele@wosiwosi.co.uk, odunlamibamidelejohn@gmail.com", req.user.fname, req.user.bonus*req.user.bonusType)
+   }else(
+    res.redirect("/")
+   )
+}
+
 module.exports={
     influencerDashboard:influencerDashboard,
-    usedBy:usedBy
+    usedBy:usedBy,
+    influencerRedeem:influencerRedeem,
 }

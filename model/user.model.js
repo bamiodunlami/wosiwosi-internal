@@ -25,7 +25,10 @@ const userSchema = mongoose.Schema({
     level:Number,
     id:String,
     code:String,
-    passChange:Boolean
+    passChange:Boolean,
+    bonus:Number,
+    bonusType:Number,
+
 
 })
 

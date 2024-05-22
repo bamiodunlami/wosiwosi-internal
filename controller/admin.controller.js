@@ -232,6 +232,8 @@ const createInfluencer = async (req, res) => {
     const influencerUsername = req.body.username;
     const influencerId = req.body.id;
     const coupon = req.body.coupon;
+    const bonus = Number(req.body.bonus)
+    const bonusType = Number(req.body.bonusType)
 
     const influnecerPassword = `${coupon}${influencerId}`;
 
@@ -244,6 +246,8 @@ const createInfluencer = async (req, res) => {
       role: "influencer",
       passChange: false,
       code: coupon,
+      bonus:bonus,
+      bonusType:bonusType,
     });
     const saveInfluencerDetails = await saveInfluencer.save();
     const newInfluencer = await User.findOne({

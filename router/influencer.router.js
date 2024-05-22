@@ -10,7 +10,7 @@ const influencer= require (appRoot + "/controller/influencer.controller.js")
 
 router
 .get('/influencer', influencer.influencerDashboard)
-.get("/order", influencer.usedBy)
-.get("/delete-influencer")
+.get("/customer", influencer.usedBy)
+.get("/influencer-redeem", influencer.influencerRedeem)
 
 module.exports = router

@@ -34,10 +34,13 @@ p{
     line-height: 18px;
 }
 
-a{
-    text-decoration: none;
-    color: #000000
+a, 
+.link{
+    text-decoration: underline;
+    color: #000000;
+    cursor: pointer;
 }
+
 a.main-link{
     text-decoration: underline;
     color: #00641b
@@ -47,8 +50,21 @@ a.main-link{
     color: #ff0000;
 }
 
+.hidden{
+    display: none;
+}
+
 .default-page-padding{
     padding: 10%;
+}
+
+.navbar{
+    padding: 15px 0px;
+}
+
+.logo{
+    width: 15%;
+    height: auto;
 }
 
 
@@ -84,13 +100,10 @@ a.main-link{
 }
 
 
-
-
 /* success page */
 .success{
     padding: 25vh;
 }
-
 
 
 /* login */
@@ -133,6 +146,17 @@ a.main-link{
 
     .default-page-padding{
         padding: 10% 5%;
+    }
+
+    /* logo */
+    .logo{
+        width: 40%;
+        height: auto;
+    }
+
+    /* default padding */
+    .default-padding{
+        padding: 3%;
     }
     
     /* login */

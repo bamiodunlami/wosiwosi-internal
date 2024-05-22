@@ -112,6 +112,7 @@ const mailInfluencerDetails= (to, bcc, influencer, email, pass) => {
             <body>
                 <div class="container">  
                     <p> Dear ${influencer},</p>
+                    <p>Welcome onboard, we are glad to have you as our Influencers</p>
                     <p>Your dashboard is ready to be viewed and below is the login details:</p>
                     <p>Email: ${email}</p>
                     <p>Password: ${pass}</p>
@@ -176,7 +177,7 @@ const passwordChange = (to, bcc, fname) => {
                     <p> Dear ${fname},</p>
                     <p>Your password has been successfully changed.</p>
                     <p>If this is not you, kindly contact us now.</p>
-                    <p>Regards,<br>Wosiwosi Investment Team<br>Wosiwosi Foods UK Limited</p>
+                    <p>Regards,<br>Wosiwosi Team<br>Wosiwosi Foods UK Limited</p>
                 </div>
             </body>
             </html>`
@@ -185,8 +186,65 @@ const passwordChange = (to, bcc, fname) => {
     transporter.sendMail(mailOptions);
 };
 
+const redeemRequest = (to, bcc, fname, amount) => {
+    const mailOptions = {
+        from: '"Wosiwosi" <info@wosiwosi.co.uk>',
+        to: to,
+        bcc:bcc,
+        subject: "INFLUENCER BONUS REDEEM REQUEST",
+        // attachments: [
+        //   {  
+        //       filename: 'brochure.pdf',
+        //       path: appRoot + "/file/brochure.pdf" // stream this file
+        //   }],
+        html: 
+            `<!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>REDEEN REQUEST</title>
+                <style>
+                    body {
+                        font-family: Poppins, sans-serif;
+                        line-height: 1.6;
+                    }
+                    .container {
+                        max-width: 600px;
+                        margin: 0 auto;
+                        padding: 20px;
+                        text-align: left;
+                    }
+                    .disclaimer{
+                        font-size:11px;
+                    }
+                    h1 {
+                        color: #007519;
+                    }
+                    p {
+                        margin: 15px 0;
+                        font-size:18px;
+                    }
+                </style>
+            </head>
+            <body>
+                <div class="container">  
+                    <p> Dear ${fname},</p>
+                    <p>Your Influencer bonus redeemption request has been received.</p>
+                    <p>Amount redeemable is ${amount} </p>
+                    <p>We will send you a voucher worth the above amount for shopping on wosiwosi.co.uk</p>
+                    <p>Regards,<br>Wosiwosi Team<br>Wosiwosi Foods UK Limited</p>
+                </div>
+            </body>
+            </html>`
+    };
+    
+    transporter.sendMail(mailOptions);
+};
+
+
 module.exports ={
     passwordReset:passwordReset,
     mailInfluencerDetails:mailInfluencerDetails,
-    passwordChange:passwordChange
+    passwordChange:passwordChange,
+    redeemRequest:redeemRequest
 }

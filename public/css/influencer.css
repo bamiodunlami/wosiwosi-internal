@@ -1,49 +1,5 @@
-*{
-    padding: 0;
-    margin: 0;
-    box-sizing: border-box;
-}
-
-body{
-    font-family: 'Poppins', sans-serif;
-}
-
-h2{
-    font-size: 44px;
-    font-weight: 700;
-}
-
-h3{
-    font-size: 38px;
-    font-weight: 500;
-}
-
-h4{
-    font-size: 28px;
-    font-weight: 500;
-}
-
-h5{
-    font-size: 21px;
-    font-weight: 500;
-}
-
-h6{
-    font-size: 18px;
-    font-weight: 500;
-}
-
-.navbar{
-    padding: 20px 0px;
-}
-
-.logo{
-    width: 17%;
-    height: auto;
-}
-
-.default-padding{
-    padding: 2% 20%;
+.default-page-padding{
+    padding: 2% 25%;
 }
 
 .influencer-name{
@@ -55,15 +11,13 @@ h6{
     overflow-y: scroll;
 }
 
-
+a{
+    text-decoration: underline;
+    color: #00884d;
+}
 
   /* mobile */
   @media (max-width:520px){
-
-    .logo{
-        width: 50%;
-        height: auto;
-    }
 
     .menu-row{
         padding: 0 5%;
@@ -76,9 +30,8 @@ h6{
         padding: 15px;
         background-color: #f3f3f3;
     }
-
-    .default-padding{
-        padding: 3%;
+    .default-page-padding{
+        padding: 2% 5%;
     }
     
     

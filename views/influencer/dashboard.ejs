@@ -1,21 +1,37 @@
 <%- include("include/influencerHeader") -%>
 
-<div class="section default-padding">
+<div class="section default-page-padding">
     <div class="container">
         <div class="row">
-            <h6 class="influencer-name text-center">Influencer Dashboard</h6>
+
+            <p class="influencer-name text-center">Influencer Dashboard</p>
+            <h5 class="text-center alert alert-light"><%=user.fname%> <%=user.lname%></h5>
+
+
+
+                <p class="hidden alert text-center" id="message"> </p>
+
             <!-- coupon details -->
                 <div class="col-md-6 col-sm-12 alert alert-light">
                     <h6 class="">Date creates: <%=coupon.data.date_created_gmt.slice(0,10)%></h6>
-                    <h6 class="">Coupon code: <%=user.coupon%></h6>
+                    <h6 class="">Coupon code: <%=user.code%></h6>
                     <h6 class="">Percentage Off: <%=coupon.data.amount%>%</h6>
                 </div>      
                 
                 <!-- Coupon usage and earning -->
                 <div class="col-md-6 col-sm-12 alert alert-light">
                     <h6 class="">Number of usage: <%=coupon.data.usage_count%> </h6>
-                    <h6 class="">Amount earned per usage: £3</h6>
-                    <h5 class="influencer-name">Total earning: £<%=coupon.data.used_by.length * 3%> </h5>
+
+                     <% if(user.bonusType == 1){%>
+                        <h6 class="">Amount earned per usage: <%=user.bonus%>%</h6>
+                    <%}else{%>
+                        <h6 class="">Amount earned per usage: £<%=user.bonus%></h6>
+                    <%}%> </h6>
+
+                    <h5 class="">Total earning: £<span id="bonus-value">
+                        <%=coupon.data.used_by.length * user.bonus%> 
+                        </span><span class="link influencer-name" id="redeam-link">redeem</span>
+                    </h5>
                 </div>   
 
                 <!-- Table -->
@@ -32,7 +48,7 @@
                             <% for (i=coupon.data.used_by.length-1; i>=0; i--){%>
                                 <tr class="subscrber-details">
                                     <td><%=coupon.data.used_by.length - i + 0%></td>
-                                    <td><a href="order?number=<%=coupon.data.used_by[i]%>"><%=coupon.data.used_by[i]%></a></td>
+                                    <td><a href="customer?number=<%=coupon.data.used_by[i]%>"><%=coupon.data.used_by[i]%></a></td>
                                 </tr>
                             <%}%>
                             </tbody>
@@ -51,4 +67,5 @@
 
 
 <%- include("include/influencerFooter") -%>
+<script src="/js/influencer.js"></script>
 <%- include("include/footer") -%>
