@@ -1,0 +1,1 @@
+try{$(document).ready((()=>{[...document.querySelectorAll('[data-bs-toggle="tooltip"]')].map((o=>new bootstrap.Tooltip(o)))}))}catch(o){console.log(o)}
