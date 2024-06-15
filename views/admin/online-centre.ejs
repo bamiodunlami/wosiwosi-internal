@@ -4,38 +4,51 @@
       <h6 class="page-title text-center" >Online Center</h6>
       <div class="row d-flex align-items-center text-center admin-section-option">
 
+        <!-- order to process -->
+        <p class="page-title"> Click to view orders available for <a class="main-link" href="/processingorder">processing</a></p>
+  
+
         <!-- search for order -->
-        <div class="search-bar  alert alert-secondary admin-section-option-item">
-          <h6 class="text-center">Search Order</h6>
-          <form class="row" method="get" action="/searchsingleorder">
-            <div class="col-md-9">
+        <div class="search-bar alert alert-light">
+          <form method="get"  action="/searchsingleorder">
               <input class="form-control" type="number" name="orderNumber" placeholder="search by order number" autocomplete="off">
-            </div>
-            <div class="col-md-3">
-              <button class="btn btn-warning btn-sm" type="submit">Search</button>
-            </div>
+               <button class="serach-btn btn btn-success btn-sm">Search</button>
           </form>
         </div>
 
-          <!-- order to process -->
-          <div class="col-md-12 alert alert-warning admin-section-option-item">
-            Click here to view orders available for <a class="main-link" href="/processingorder">workers to process</a>
-          </div>
-                  
-
-        <!-- action bar -->
+        <!-- Order -->
           <div class="col-md-6 col-sm-12 admin-section-option-main">
             <a href="/order?fromDate=<%=date%>&toDate=<%=date%>&page=1&fromTime=00:00&toTime=23:59">
               <div class="admin-section-option-item">
-                <h5 class="alert alert-secondary all-order">Set Orders</h5>
+                <h5 class="alert alert-secondary all-order">Orders</h5>
               </div>
             </a>
           </div>
+          
 
+          <!-- completed -->
           <div class="col-md-6 col-sm-12 admin-section-option-main">
             <a href="/">
               <div class="admin-section-option-item">
                 <h5 class="alert alert-secondary completed-orders">Completed</h5>
+              </div>
+            </a>
+          </div>
+
+          <!-- Refund -->
+          <div class="col-md-6 col-sm-12 admin-section-option-main">
+            <a href="/order?fromDate=<%=date%>&toDate=<%=date%>&page=1&fromTime=00:00&toTime=23:59">
+              <div class="admin-section-option-item">
+                <h5 class="alert alert-secondary all-order">Refunds</h5>
+              </div>
+            </a>
+          </div>
+
+          <!-- order to process -->
+          <div class="col-md-6 col-sm-12 admin-section-option-main">
+            <a href="/">
+              <div class="admin-section-option-item">
+                <h5 class="alert alert-secondary completed-orders">Replacement</h5>
               </div>
             </a>
           </div>

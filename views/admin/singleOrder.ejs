@@ -2,9 +2,17 @@
 <%- include('include/header') -%>
     <section class="order-page">
         <div class="container">
-            <h6 class="alert alert-success text-center">Order <%=order.id%> (<%=order.status%>)</h6>
+            <h6 class="alert alert-success text-center">Order <%=order.id%></h6>
             <!-- order details -->
             <div class="row">
+                <div class="col-md-6">
+                    <div class="alert alert-dark">Picked by:</div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="alert alert-dark">Packed by:</div>
+                </div>
+
                 <div class="col-md-6">
                     <div class="alert alert-secondary">
                         <p>Customer Name: <strong><%=order.billing.first_name%> <%=order.billing.last_name%></strong></p>

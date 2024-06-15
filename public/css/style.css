@@ -82,6 +82,9 @@ a.main-link{
         display:block;
 }
 
+
+
+
 /* Genral dashboard */
 .dashboard-option-section{
     background-color: #efefef;
@@ -183,6 +186,10 @@ a.main-link{
         padding: 25vh 0;
     }
 
+    /* action button */
+    .action-button{
+        margin-bottom: 10px;
+    }
 }
 
 

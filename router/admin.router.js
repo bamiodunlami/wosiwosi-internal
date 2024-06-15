@@ -9,15 +9,16 @@ appRoot.setPath(rootpath);
 const admin = require(appRoot + "/controller/admin.controller.js");
 
 router
-.get("/admin", admin.adminDashboard)
-.get("/admin/:operation", admin.adminOperation)
-.get("/order", admin.renderOrderPage)
-.get('/singleorder', admin.singleOrder)
-.get('/saveorder', admin.saveAllForProcessing)
+.get("/admin", admin.adminDashboard) //render admin dashboard
+.get("/admin/:operation", admin.adminOperation) //take care of admin operation
+.get("/order", admin.renderOrderPage) //main order page
+.get('/singleorder', admin.singleOrder) //get single order 
+.get('/ordersaved', admin.retrieveSavedForProcessing) //get order saved for processing, send to frontend to determine what's already sent for processing
+.post('/saveorder', admin.saveAllForProcessing)
 .get('/processingorder', admin.orderAvailableToProcess)
-.get('/searchsingleorder', admin.searchSingleOrder)
+.get('/searchsingleorder', admin.searchSingleOrder) //search for order number
 .get('/add-to-order', admin.addToOrder)
 .get('/remove-from-order', admin.removeFromOrder)
-.post("/createinfluencer", admin.createInfluencer)
+.post("/createinfluencer", admin.createInfluencer) //create influencer
 
 module.exports = router;

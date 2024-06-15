@@ -8,12 +8,12 @@ const date = new Date();
 const passport = require(appRoot + "/util/passport.util.js");
 const User = require(appRoot + "/model/user.model.js");
 const woocommerce = require(appRoot + "/util/woo.util.js");
-const mailer = require(appRoot + "/util/mailer.util.js")
+const mailer = require(appRoot + "/util/mailer.util.js");
 
 // admin dashboard
 const adminDashboard = async (req, res) => {
   if (req.isAuthenticated()) {
-    // console.log(req.user)
+    console.log(date.toJSON().slice(0, 10));
     res.render("admin/home", {
       title: "Admin",
       date: date.toJSON().slice(0, 10),
@@ -26,6 +26,7 @@ const adminDashboard = async (req, res) => {
 // online centre
 const adminOperation = async (req, res) => {
   if (req.isAuthenticated()) {
+    // console.log(date.toJSON().slice(0, 10));
     switch (req.params.operation) {
       // influencer
       case "influencer":
@@ -39,7 +40,6 @@ const adminOperation = async (req, res) => {
 
       // online center
       case "online":
-        console.log(req.user);
         res.render("admin/online-centre", {
           title: "Admin",
           date: date.toJSON().slice(0, 10),
@@ -47,7 +47,6 @@ const adminOperation = async (req, res) => {
 
       // default
       default:
-        console.log("Default");
         break;
     }
   } else {
@@ -105,7 +104,7 @@ const singleOrder = async (req, res) => {
     let page = req.query.page;
     let fromTime = req.query.fromTime;
     let toTime = req.query.toTime;
-    // console.log(req.query)
+    // console.log("serch for" + req.query)
     const order = await woocommerce.get(`orders/${id}`);
     // console.log(order.data.customer_note)
     res.render("admin/singleOrder", {
@@ -123,22 +122,49 @@ const singleOrder = async (req, res) => {
   }
 };
 
-// save order for processing
-const saveAllForProcessing = (req, res) => {
+// send nnson data of saved order to be processed to order page
+const retrieveSavedForProcessing = async (req, res) => {
   if (req.isAuthenticated()) {
-    const fromDate = req.query.fromDate;
-    const toDate = req.query.toDate;
-    const fromTime = req.query.fromTime;
-    const toTime = req.query.toTime;
-    let path = appRoot + "/public/data/orderToProcess.json";
-
-    data = JSON.stringify(req.query);
-    // Override what is currently in orderToProcess.json file
-    fs.writeFile(path, data, (err) => {
-      res.redirect("/admin");
+    const path = appRoot + "/public/data/orderToProcess.json";
+    fs.readFile(path, (err, data) => {
+      if (err) {
+        console.log(err);
+      } else {
+        res.send(data); //send data to frontend
+      }
     });
   } else {
     res.redirect("/");
+  }
+};
+
+// save order for processing
+const saveAllForProcessing = (req, res) => {
+  if (req.isAuthenticated()) {
+    // console.log(req.body.data)
+    let path = appRoot + "/public/data/orderToProcess.json";
+    // first read the json of path
+    fs.readFile(path, (err, data) => {
+      if (err) {
+        console.log("error reading data" + err);
+        res.send("Error! kindly refresh");
+      } else {
+        let formerData = JSON.parse(data);
+        let newData = [...new Set([...formerData, ...req.body.data])]; //merge without duplicate
+
+        // // Override what is currently in orderToProcess.json file
+        fs.writeFile(path, JSON.stringify(newData), (err) => {
+          if (err) {
+            console.log("error writing data" + err);
+            res.send("Error! kindly refresh");
+          } else {
+            res.send("Orders Saved");
+          }
+        });
+      }
+    });
+  } else {
+    res.send("Error! kindly refresh");
   }
 };
 
@@ -198,13 +224,17 @@ const searchSingleOrder = async (req, res, next) => {
   if (req.isAuthenticated()) {
     try {
       const id = req.query.orderNumber;
-      const order = await woocommerce.get(`orders/${id}`);
-      // console.log(order.data.customer_note)
-      res.render("admin/singleOrder", {
-        title: `Order ${id}`,
-        order: order.data,
-        action: "search", //this order was serched from main admin page so the only action expected is to add to processing order or not
-      });
+      if (!id) {
+        res.redirect(req.headers.referer);
+      } else {
+        const order = await woocommerce.get(`orders/${id}`);
+        // console.log(order.data.customer_note)
+        res.render("admin/singleOrder", {
+          title: `Order ${id}`,
+          order: order.data,
+          action: "search", //this order was serched from main admin page so the only action expected is to add to processing order or not
+        });
+      }
     } catch (e) {
       console.log(e);
       next();
@@ -232,8 +262,8 @@ const createInfluencer = async (req, res) => {
     const influencerUsername = req.body.username;
     const influencerId = req.body.id;
     const coupon = req.body.coupon;
-    const bonus = Number(req.body.bonus)
-    const bonusType = Number(req.body.bonusType)
+    const bonus = Number(req.body.bonus);
+    const bonusType = Number(req.body.bonusType);
 
     const influnecerPassword = `${coupon}${influencerId}`;
 
@@ -246,8 +276,8 @@ const createInfluencer = async (req, res) => {
       role: "influencer",
       passChange: false,
       code: coupon,
-      bonus:bonus,
-      bonusType:bonusType,
+      bonus: bonus,
+      bonusType: bonusType,
     });
     const saveInfluencerDetails = await saveInfluencer.save();
     const newInfluencer = await User.findOne({
@@ -259,8 +289,15 @@ const createInfluencer = async (req, res) => {
 
     if (newInfluencer) {
       res.redirect(req.headers.referer);
-      mailer.mailInfluencerDetails( influencerUsername,"media@wosiwosi.co.uk", influencerFname,influencerUsername, influnecerPassword);
-    } else {}
+      mailer.mailInfluencerDetails(
+        influencerUsername,
+        "media@wosiwosi.co.uk",
+        influencerFname,
+        influencerUsername,
+        influnecerPassword
+      );
+    } else {
+    }
   } else {
     res.redirect("/login");
   }
@@ -271,6 +308,7 @@ module.exports = {
   adminOperation: adminOperation,
   renderOrderPage: renderOrderPage,
   singleOrder: singleOrder,
+  retrieveSavedForProcessing: retrieveSavedForProcessing,
   saveAllForProcessing: saveAllForProcessing,
   orderAvailableToProcess: orderAvailableToProcess,
   searchSingleOrder: searchSingleOrder,

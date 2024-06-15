@@ -5,20 +5,27 @@ a{
 .admin-section{
     background-color: #efefef;
     height: 100vh;
-    padding: 30vh 30vw;
+    padding: 15vh 30vw;
 
 }
 
 .search-bar{
-    padding: 10px 20%;
+    padding: 10px;
+
 }
+.serach-btn{
+    width: 100%;
+    margin: 5px 0;
+}
+
 
 .admin-section-option{
     background-color: #ffffff;
     border: solid 1px #d7d7d7;
     padding: 10%;
-    border-radius: 20px;
+    border-radius: 10px;
 }
+
 .admin-section-option-main{
     padding: 0;
 }
@@ -38,14 +45,6 @@ a{
 }
 
 
-/* other page */
-.order-page{
-    padding: 5% 20%;
-}
-.page-button{
-    padding: 15px;
-}
-
 
 /* tab view */
 @media (max-width:800px){
@@ -59,15 +58,6 @@ a{
     .search-bar{
         padding: 10px 5%;
     }
-
-    /* other page */
-    .order-page{
-        padding: 5%;
-    }
-
-    .dateFilter-item {
-        padding: 3px;
-    }
 }
 
 /* mobile view */
@@ -75,21 +65,7 @@ a{
     .admin-section{
         background-color: #efefef;
         height: 100vh;
-        padding: 20% 9%;
+        padding: 5% 9%;
     
-    }
-
-    /* other page */
-    .order-page{
-        padding: 5%;
-    }
-
-    .dateFilter-item {
-        padding: 3px;
-    }
-    .order-status,
-    .order-date,
-    .order-time{
-        display: none;
     }
 }

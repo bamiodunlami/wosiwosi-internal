@@ -1,0 +1,44 @@
+/* other page */
+.order-page{
+    padding: 5% 20%;
+}
+
+input[type=checkbox]:checked{
+    background-color: #00884d;
+    border:1px solid #00884d;    
+}
+
+
+
+.page-button{
+    padding: 15px;
+}
+
+/* tab view */
+@media (max-width:800px){
+    /* other page */
+    .order-page{
+        padding: 5%;
+    }
+
+    .dateFilter-item {
+        padding: 3px;
+    }
+}
+
+/* mobile view */
+@media (max-width:480px){
+    
+    .order-page{
+        padding: 10px;
+    }
+
+    .dateFilter-item {
+        padding: 3px;
+    }
+    .order-amount,
+    .order-date,
+    .order-time{
+        display: none;
+    }
+}
