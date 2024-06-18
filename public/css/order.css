@@ -14,8 +14,12 @@ input[type=checkbox]:checked{
     padding: 15px;
 }
 
+.note-input{
+    width: 100%;
+}
+
 /* tab view */
-@media (max-width:800px){
+@media (min-width:700px){
     /* other page */
     .order-page{
         padding: 5%;
@@ -27,7 +31,7 @@ input[type=checkbox]:checked{
 }
 
 /* mobile view */
-@media (max-width:480px){
+@media (max-width:520px){
     
     .order-page{
         padding: 10px;

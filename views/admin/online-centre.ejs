@@ -4,10 +4,7 @@
       <h6 class="page-title text-center" >Online Center</h6>
       <div class="row d-flex align-items-center text-center admin-section-option">
 
-        <!-- order to process -->
-        <p class="page-title"> Click to view orders available for <a class="main-link" href="/processingorder">processing</a></p>
   
-
         <!-- search for order -->
         <div class="search-bar alert alert-light">
           <form method="get"  action="/searchsingleorder">
@@ -28,18 +25,18 @@
 
           <!-- completed -->
           <div class="col-md-6 col-sm-12 admin-section-option-main">
-            <a href="/">
+            <a href="/processingorder">
               <div class="admin-section-option-item">
-                <h5 class="alert alert-secondary completed-orders">Completed</h5>
+                <h5 class="alert alert-secondary completed-orders">Processing</h5>
               </div>
             </a>
           </div>
 
           <!-- Refund -->
           <div class="col-md-6 col-sm-12 admin-section-option-main">
-            <a href="/order?fromDate=<%=date%>&toDate=<%=date%>&page=1&fromTime=00:00&toTime=23:59">
+            <a href="/">
               <div class="admin-section-option-item">
-                <h5 class="alert alert-secondary all-order">Refunds</h5>
+                <h5 class="alert alert-secondary all-order">Completed</h5>
               </div>
             </a>
           </div>
@@ -48,7 +45,7 @@
           <div class="col-md-6 col-sm-12 admin-section-option-main">
             <a href="/">
               <div class="admin-section-option-item">
-                <h5 class="alert alert-secondary completed-orders">Replacement</h5>
+                <h5 class="alert alert-secondary completed-orders">Refund</h5>
               </div>
             </a>
           </div>

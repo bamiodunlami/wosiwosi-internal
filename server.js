@@ -13,10 +13,11 @@ let options = {
     bodyBlackList: blackList,
 }
 
-const adminRoute =  require(`${__dirname}/router/admin.router.js`)
-const pickerRoute =  require(`${__dirname}/router/picker.router.js`)
-const generalRoute =  require(`${__dirname}/router/general.router.js`)
-const influencerRoute = require(`${__dirname}/router/influencer.router.js`)
+const adminRoute =  require(`${__dirname}/router/admin.router.js`);
+const pickerRoute =  require(`${__dirname}/router/picker.router.js`);
+const generalRoute =  require(`${__dirname}/router/general.router.js`);
+const influencerRoute = require(`${__dirname}/router/influencer.router.js`);
+const generalOrder = require(`${__dirname}/router/general-order.router.js`);
 
 const port=process.env.PORT || 3000;
 
@@ -35,17 +36,18 @@ app.use(session({
   secret: process.env.SESSION_KEY,
   resave: true,
   saveUninitialized: true,
-  cookie: { maxAge:300000 }
+  // cookie: { maxAge:300000 }
 }));
 app.use(passport.session())
 app.use(flash());
 
 
 
-app.use(adminRoute)
-app.use(generalRoute)
-app.use(pickerRoute)
-app.use(influencerRoute)
+app.use(adminRoute);
+app.use(generalRoute);
+app.use(pickerRoute);
+app.use(influencerRoute);
+app.use(generalOrder);
 
 
 

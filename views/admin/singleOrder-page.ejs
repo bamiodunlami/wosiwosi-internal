@@ -1,0 +1,94 @@
+
+<%- include('include/header') -%>
+    <section class="order-page">
+        <div class="container">
+            <h6 class="alert alert-success text-center">Order <%=order.id%></h6>
+            <!-- order details -->
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="alert alert-dark">Picked by:</div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="alert alert-dark">Packed by:</div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="alert alert-secondary">
+                        <p>Customer Name: <strong><%=order.billing.first_name%> <%=order.billing.last_name%></strong></p>
+                        <p>Order Date: <strong><%=order.date_paid.slice(0,10)%> <%=order.date_paid.slice(12,16)%></strong></p>
+                        <p>Amount Paid: <strong>£<%=order.total%></strong></p>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="alert alert-secondary">
+                        <h6>Shipping Address:</h6>
+                        <p><%=order.shipping.address_1%> <%=order.shipping.address_2%>, <%=order.shipping.city%> <strong><%=order.shipping.postcode%></strong></p>
+                        <p>Shipping Amount: <strong>£<%=order.shipping_total%></strong> (<%=order.shipping_lines[0].method_title%>)</p>
+                    </div>
+                </div>
+            </div>
+
+
+        <!-- order details -->
+        <div class="row">
+            <div class="col-md-12">
+                <div class="alert alert-warning">
+                    <h6 class="text-center">Customer Note</h6>
+                    <div class="text-center"><%=order.customer_note%></div>
+                </div>
+            </div>
+        </div>
+
+            <!-- table -->
+            <div class="row order-table">
+                <div class="col-12">
+                    <table class="table table-striped table-hover ">
+                        <thead>
+                        <tr>
+                            <th scope="col">Image</th>
+                            <th scope="col">Product</th>
+                            <th scope="col">QTY</th>
+                            <th scope="col">Paid</th>
+                        </tr>
+                        </thead>
+                        <tbody class="">
+                            <% for(i =0; i<order.line_items.length; i++ ){%>
+                                <tr>
+                                    <td><a href="<%=order.line_items[i].image.src%>"><img src="<%=order.line_items[i].image.src%>" width="40px" height="40px" alt="image"></a></td>
+                                    <td><%=order.line_items[i].name%> 
+                                        <%if(order.line_items[i].meta_data.length>2){%>
+                                            <h6 style="color: #ff0000;"><%=order.line_items[i].meta_data[1].display_value%></h6>
+                                        <%}%>
+                                    </td>
+                                    <td style="background-color:rgb(190, 255, 229);"><%=order.line_items[i].quantity%></td>
+                                    <td>£<%=order.line_items[i].subtotal%></td>
+                                </tr>
+                            <%}%>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+            
+            <%if(action == "view"){%>
+            <!-- back to dashboard -->
+            <div class="row">
+                <div class="col-md-12 text-center alert alert-success">
+                    <a class="main-link" href="/order?fromDate=<%=fromDate%>&toDate=<%=toDate%>&page=<%=page%>&fromTime=<%=fromTime%>&toTime=<%=toTime%>">Back</a>
+                </div>
+            </div>
+            <%} else if(action == "search"){%>
+                <div> 
+                    <a href="/admin/online" class="btn btn-success btn-sm">Back</a>
+                    <a href="/add-to-order?order=<%=order.id%>" class="btn btn-warning btn-sm">Add to order to be process today</a>
+                    <a href="/remove-from-order?order=<%=order.id%>" class="btn btn-danger btn-sm">Remove from order to be process today</a>
+                </div>
+            <%}%>
+
+
+        </div>
+    </section>
+
+    <%- include('include/footerTemp') -%>
+    <%- include('include/footer') -%>

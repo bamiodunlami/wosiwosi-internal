@@ -13,7 +13,7 @@ const mailer = require(appRoot + "/util/mailer.util.js");
 // admin dashboard
 const adminDashboard = async (req, res) => {
   if (req.isAuthenticated()) {
-    console.log(date.toJSON().slice(0, 10));
+    // console.log(date.toJSON().slice(0, 10));
     res.render("admin/home", {
       title: "Admin",
       date: date.toJSON().slice(0, 10),
@@ -54,8 +54,33 @@ const adminOperation = async (req, res) => {
   }
 };
 
+// single order display
+const searchSingleOrder = async (req, res, next) => {
+  if (req.isAuthenticated()) {
+    try {
+      const id = req.query.orderNumber;
+      if (!id) {
+        res.redirect(req.headers.referer);
+      } else {
+        const order = await woocommerce.get(`orders/${id}`);
+        // console.log(order.data.customer_note)
+        res.render("admin/singleOrder", {
+          title: `Order ${id}`,
+          order: order.data,
+          action: "search", //this order was serched from main admin page so the only action expected is to add to processing order or not
+        });
+      }
+    } catch (e) {
+      console.log(e);
+      next();
+    }
+  } else {
+    res.redirect("/");
+  }
+};
+
 // order page
-const renderOrderPage = async (req, res) => {
+const renderOrderListPage = async (req, res) => {
   if (req.isAuthenticated()) {
     let fromDate = req.query.fromDate;
     let toDate = req.query.toDate;
@@ -80,7 +105,7 @@ const renderOrderPage = async (req, res) => {
       }
     );
     // console.log(wooOrder.data)
-    res.render("admin/order", {
+    res.render("admin/order-list", {
       title: "Order",
       order: wooOrder.data,
       defalutNumber: numberPerPage,
@@ -96,7 +121,7 @@ const renderOrderPage = async (req, res) => {
 };
 
 // single order
-const singleOrder = async (req, res) => {
+const singleOrderPage = async (req, res) => {
   if (req.isAuthenticated()) {
     let id = req.query.id;
     let fromDate = req.query.fromDate;
@@ -107,7 +132,7 @@ const singleOrder = async (req, res) => {
     // console.log("serch for" + req.query)
     const order = await woocommerce.get(`orders/${id}`);
     // console.log(order.data.customer_note)
-    res.render("admin/singleOrder", {
+    res.render("admin/singleOrder-page", {
       title: `Order ${req.query.id}`,
       order: order.data,
       fromDate: fromDate,
@@ -122,7 +147,7 @@ const singleOrder = async (req, res) => {
   }
 };
 
-// send nnson data of saved order to be processed to order page
+// send json data of saved order to be processed to order page
 const retrieveSavedForProcessing = async (req, res) => {
   if (req.isAuthenticated()) {
     const path = appRoot + "/public/data/orderToProcess.json";
@@ -168,90 +193,34 @@ const saveAllForProcessing = (req, res) => {
   }
 };
 
-// orders available for workers to process
-// order page
-const orderAvailableToProcess = async (req, res) => {
-  if (req.isAuthenticated()) {
-    let path = appRoot + "/public/data/orderToProcess.json";
-    fs.readFile(path, async (err, data) => {
-      let orderToProcess = JSON.parse(data);
-      // console.log(orderToProcess)
-
-      let fromDate = orderToProcess.fromDate;
-      let toDate = orderToProcess.toDate;
-      let fromTime = orderToProcess.fromTime;
-      let toTime = orderToProcess.toTime;
-
-      let pageNumber = req.query.page || 1;
-      let numberPerPage = 20;
-
-      if (req.query.page < 1) {
-        pageNumber = 1;
-      }
-
-      // start from here on monday,
-
-      const wooOrder = await woocommerce.get(
-        `orders?after=${fromDate}T${fromTime}:00&before=${toDate}T${toTime}:59`,
-        {
-          page: pageNumber,
-          per_page: numberPerPage,
-          status: "completed processing",
-        }
-      );
-      // console.log(wooOrder.data)
-      res.render("admin/orderToProcess", {
-        title: "Order",
-        order: wooOrder.data,
-        defalutNumber: numberPerPage,
-        page: Number(pageNumber),
-        fromDate: fromDate,
-        toDate: toDate,
-        fromTime: fromTime,
-        toTime: toTime,
-      });
-    });
-
-    // console.log(req.query)
-    // ${date.toLocaleTimeString()}
-  } else {
-    res.redirect("/");
-  }
-};
-
-// single order display
-const searchSingleOrder = async (req, res, next) => {
-  if (req.isAuthenticated()) {
-    try {
-      const id = req.query.orderNumber;
-      if (!id) {
-        res.redirect(req.headers.referer);
-      } else {
-        const order = await woocommerce.get(`orders/${id}`);
-        // console.log(order.data.customer_note)
-        res.render("admin/singleOrder", {
-          title: `Order ${id}`,
-          order: order.data,
-          action: "search", //this order was serched from main admin page so the only action expected is to add to processing order or not
-        });
-      }
-    } catch (e) {
-      console.log(e);
-      next();
-    }
-  } else {
-    res.redirect("/");
-  }
-};
-
-// Add single order to the orders to be done that day
-const addToOrder = async (req, res, next) => {
-  console.log(req.query.order);
-};
 
 // remove single order from the orders to be done that day
 const removeFromOrder = async (req, res, next) => {
-  console.log(req.query);
+  if(req.isAuthenticated()){
+    const path = appRoot + "/public/data/orderToProcess.json";
+    fs.readFile(path, (err, data)=>{ //read file availalble
+      if(err){
+        console.log(err);
+        res.redirect(req.headers.referer)
+      }else{
+        const orderToProcess = JSON.parse(data)
+        const orderNumberToRemove = req.query.order;
+        // remove the order numver from the arrau
+        const newOrderToProcess = orderToProcess.filter((order) =>{ 
+          return order !== orderNumberToRemove
+        })
+        // rewrite the file to order to process
+        fs.writeFile(path, JSON.stringify(newOrderToProcess), (err)=>{
+          if(err) console.log(err)
+            res.redirect('/processingorder')
+        })
+
+      }
+    });
+  }else{
+    res.redirect("/")
+  }
+
 };
 
 // create influencer
@@ -306,13 +275,12 @@ const createInfluencer = async (req, res) => {
 module.exports = {
   adminDashboard: adminDashboard,
   adminOperation: adminOperation,
-  renderOrderPage: renderOrderPage,
-  singleOrder: singleOrder,
+  searchSingleOrder: searchSingleOrder,
+  renderOrderListPage: renderOrderListPage,
+  singleOrderPage: singleOrderPage,
   retrieveSavedForProcessing: retrieveSavedForProcessing,
   saveAllForProcessing: saveAllForProcessing,
-  orderAvailableToProcess: orderAvailableToProcess,
-  searchSingleOrder: searchSingleOrder,
-  addToOrder: addToOrder,
+  // addToOrder: addToOrder,
   removeFromOrder: removeFromOrder,
   createInfluencer: createInfluencer,
 };

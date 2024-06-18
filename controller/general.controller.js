@@ -12,6 +12,7 @@ const User = require (appRoot + "/model/user.model.js") //db
 
 const mailer = require (appRoot + "/util/mailer.util.js")
 
+
 // user post request
 const pullUser = async (req, res)=>{
     // console.log(date.toJSON().slice(11,19))
@@ -149,6 +150,7 @@ const changePassword = async (req, res)=>{
         req.redirect('/')
     }
 }
+
 
 // Export module
 module.exports ={

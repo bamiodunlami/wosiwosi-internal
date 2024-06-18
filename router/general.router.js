@@ -27,7 +27,6 @@ router
 
 .post('/changepassword', general.changePassword) //handle password change
 
-
 .get('/logout', (req, res)=>{
     req.logout((err) => {
         if (err) {

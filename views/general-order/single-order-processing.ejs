@@ -2,33 +2,8 @@
 <%- include('include/header') -%>
     <section class="order-page">
         <div class="container">
-            <h6 class="alert alert-success text-center">Order <%=order.id%></h6>
+            <h6 class="alert alert-success text-center">Order <%=order.id%> (<%=order.billing.first_name%> <%=order.billing.last_name%>)</h6>
             <!-- order details -->
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="alert alert-dark">Picked by:</div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="alert alert-dark">Packed by:</div>
-                </div>
-
-                <div class="col-md-6">
-                    <div class="alert alert-secondary">
-                        <p>Customer Name: <strong><%=order.billing.first_name%> <%=order.billing.last_name%></strong></p>
-                        <p>Order Date: <strong><%=order.date_paid.slice(0,10)%> <%=order.date_paid.slice(12,16)%></strong></p>
-                        <p>Amount Paid: <strong>£<%=order.total%></strong></p>
-                    </div>
-                </div>
-                <div class="col-md-6">
-                    <div class="alert alert-secondary">
-                        <h6>Shipping Address:</h6>
-                        <p><%=order.shipping.address_1%> <%=order.shipping.address_2%>, <%=order.shipping.city%> <strong><%=order.shipping.postcode%></strong></p>
-                        <p>Shipping Amount: <strong>£<%=order.shipping_total%></strong> (<%=order.shipping_lines[0].method_title%>)</p>
-                    </div>
-                </div>
-            </div>
-
 
         <!-- order details -->
         <div class="row">
@@ -37,6 +12,32 @@
                     <h6 class="text-center">Customer Note</h6>
                     <div class="text-center"><%=order.customer_note%></div>
                 </div>
+            </div>
+
+            <div class="col-md-12 alert alert-dark">
+                    <div class="alert alert-light">
+                        <h6 class="text-center">Staff Note</h6>
+                        <div class="note-msg" id="note-msg">
+                            <!-- if note is available from db -->
+                            <%if(note){%>
+                                <% for (let i =0; i<note.note.length; i++){%>
+                                    <div class="alert alert-danger"> <%=note.note[i].fname%>: <%=note.note[i].note%></div>
+                                    <%}%>
+                            <%}%>
+                            <!--  -->
+                        </div>
+                    </div>
+
+                <div class="">
+                    <textarea class="note-input" id="note" maxlength="60" placeholder="Kindly add your note"></textarea>
+                    <input type="hidden" id="orderNumber" value="<%=order.id%>">
+                    <input type="hidden" id="userId" value="<%=user.username%>">
+                    <input type="hidden" id="fname" value="<%=user.fname%>">
+                    <div>
+                        <button class="btn btn-sm btn-warning" id="sendNoteBtn">Drop note</button>
+                    </div>
+                </div>
+
             </div>
         </div>
 
@@ -61,7 +62,7 @@
                                             <h6 style="color: #ff0000;"><%=order.line_items[i].meta_data[1].display_value%></h6>
                                         <%}%>
                                     </td>
-                                    <td style="background-color:rgb(190, 255, 229);"><%=order.line_items[i].quantity%></td>
+                                    <td style="background-color:#beffeac9;"><%=order.line_items[i].quantity%></td>
                                     <td>£<%=order.line_items[i].subtotal%></td>
                                 </tr>
                             <%}%>
@@ -70,25 +71,21 @@
                 </div>
 
             </div>
-            
-            <%if(action == "view"){%>
-            <!-- back to dashboard -->
-            <div class="row">
-                <div class="col-md-12 text-center alert alert-success">
-                    <a class="main-link" href="/order?fromDate=<%=fromDate%>&toDate=<%=toDate%>&page=<%=page%>&fromTime=<%=fromTime%>&toTime=<%=toTime%>">Back</a>
-                </div>
-            </div>
-            <%} else if(action == "search"){%>
-                <div> 
-                    <a href="/admin" class="btn btn-success btn-sm">Back</a>
-                    <a href="/add-to-order?order=<%=order.id%>" class="btn btn-warning btn-sm">Add to order to be process today</a>
+
+        <div> 
+            <%if(user.role == "admin"){%>
+              
+                    <a href="/processingorder" class="btn btn-warning btn-sm">Back</a>
                     <a href="/remove-from-order?order=<%=order.id%>" class="btn btn-danger btn-sm">Remove from order to be process today</a>
-                </div>
+                
             <%}%>
+            <button class="btn btn-success btn-sm" id="done-btn">Completed</a>
+            </div>
 
 
         </div>
     </section>
 
     <%- include('include/footerTemp') -%>
+    <script src="/js/singleOrderProcessing.js"></script>
     <%- include('include/footer') -%>
