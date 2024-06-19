@@ -72,6 +72,10 @@ a.main-link{
     height: auto;
 }
 
+.button{
+    margin: 3px;
+}
+
 
 /*Loading effect*/
 .loading-hide{

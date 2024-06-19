@@ -2,7 +2,7 @@
 <%- include('include/header') -%>
     <section class="order-page">
         <div class="container">
-            <h6 class="alert alert-success text-center">Order <%=order.id%></h6>
+            <h6 class="alert alert-success text-center">Order <span id="orderNumber"><%=order.id%></span></h6>
             <!-- order details -->
             <div class="row">
                 <div class="col-md-6">
@@ -79,10 +79,9 @@
                 </div>
             </div>
             <%} else if(action == "search"){%>
-                <div> 
-                    <a href="/admin/online" class="btn btn-success btn-sm">Back</a>
-                    <a href="/add-to-order?order=<%=order.id%>" class="btn btn-warning btn-sm">Add to order to be process today</a>
-                    <a href="/remove-from-order?order=<%=order.id%>" class="btn btn-danger btn-sm">Remove from order to be process today</a>
+                <div class=""> 
+                    <button class="button btn btn-success btn-sm" id="saveBtn">Add to process today</button>
+                    <a href="/admin/online" class="button btn btn-secondary btn-sm">Back</a>
                 </div>
             <%}%>
 
@@ -91,4 +90,5 @@
     </section>
 
     <%- include('include/footerTemp') -%>
+    <script src="/min/order.js"></script>
     <%- include('include/footer') -%>

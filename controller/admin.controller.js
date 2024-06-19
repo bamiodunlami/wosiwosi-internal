@@ -9,6 +9,7 @@ const passport = require(appRoot + "/util/passport.util.js");
 const User = require(appRoot + "/model/user.model.js");
 const woocommerce = require(appRoot + "/util/woo.util.js");
 const mailer = require(appRoot + "/util/mailer.util.js");
+const singlOrder = require(appRoot + "/model/order.model.js")
 
 // admin dashboard
 const adminDashboard = async (req, res) => {
@@ -54,7 +55,7 @@ const adminOperation = async (req, res) => {
   }
 };
 
-// single order display
+// search single order and display
 const searchSingleOrder = async (req, res, next) => {
   if (req.isAuthenticated()) {
     try {
@@ -64,7 +65,7 @@ const searchSingleOrder = async (req, res, next) => {
       } else {
         const order = await woocommerce.get(`orders/${id}`);
         // console.log(order.data.customer_note)
-        res.render("admin/singleOrder", {
+        res.render("admin/singleOrder-page", {
           title: `Order ${id}`,
           order: order.data,
           action: "search", //this order was serched from main admin page so the only action expected is to add to processing order or not
@@ -120,7 +121,7 @@ const renderOrderListPage = async (req, res) => {
   }
 };
 
-// single order
+// single order page
 const singleOrderPage = async (req, res) => {
   if (req.isAuthenticated()) {
     let id = req.query.id;
@@ -147,7 +148,7 @@ const singleOrderPage = async (req, res) => {
   }
 };
 
-// send json data of saved order to be processed to order page
+// (Ajax call from order.js) this is used to check and thick orders that are already saved for processing
 const retrieveSavedForProcessing = async (req, res) => {
   if (req.isAuthenticated()) {
     const path = appRoot + "/public/data/orderToProcess.json";
@@ -166,7 +167,7 @@ const retrieveSavedForProcessing = async (req, res) => {
 // save order for processing
 const saveAllForProcessing = (req, res) => {
   if (req.isAuthenticated()) {
-    // console.log(req.body.data)
+    // console.log(req.body)
     let path = appRoot + "/public/data/orderToProcess.json";
     // first read the json of path
     fs.readFile(path, (err, data) => {
@@ -197,6 +198,7 @@ const saveAllForProcessing = (req, res) => {
 // remove single order from the orders to be done that day
 const removeFromOrder = async (req, res, next) => {
   if(req.isAuthenticated()){
+    const removeOrderFromDb = await singlOrder.deleteOne({orderNumber:req.query.order})
     const path = appRoot + "/public/data/orderToProcess.json";
     fs.readFile(path, (err, data)=>{ //read file availalble
       if(err){

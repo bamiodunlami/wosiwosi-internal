@@ -25,6 +25,7 @@ const orderAvailableToProcess = async (req, res) => {
     fs.readFile(path, async (err, data) => {
       let orderToProcess = JSON.parse(data);
       // console.log(wooOrder.data)
+
       res.render("general-order/orderToProcess", {
         title: "Processing Order",
         order: orderToProcess,
@@ -38,6 +39,20 @@ const orderAvailableToProcess = async (req, res) => {
     res.redirect("/");
   }
 };
+
+// (ajax call from orderToProcess.js) this function is used to check status and details of order already done in the orderAvailableToProcess page
+const retrieveOrderProcessingStatus = async (req, res)=>{
+if(req.isAuthenticated){
+    const orderInfo = await singleOrder.find()
+    if(!orderInfo){
+        res.send("false")
+    } else{
+        res.json(orderInfo)
+    }
+}else{
+    res.redirect("/")
+}
+}
 
 // single order processing page 
 const singleOrderProcessing = async (req, res) => {
@@ -115,5 +130,7 @@ const orderNote = async (req, res) => {
 module.exports = {
   orderAvailableToProcess: orderAvailableToProcess,
   singleOrderProcessing: singleOrderProcessing,
+  retrieveOrderProcessingStatus:retrieveOrderProcessingStatus,
   orderNote: orderNote,
+  
 };

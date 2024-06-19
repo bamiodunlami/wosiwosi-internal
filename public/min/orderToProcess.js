@@ -1,0 +1,1 @@
+$(document).ready((()=>{try{!async function(){fetch("/orderInfo",{method:"get"}).then((e=>e.json())).then((e=>{!function(e){let n=$(".eachOrder");for(let t=0;t<n.length;t++){let r=n[t];for(let n=0;n<e.length;n++)e[n].orderNumber==r.children[0].innerText&&(r.children[3].innerText=`${e[n].note.length} note(s)`)}}(e)}))}()}catch(e){}}));

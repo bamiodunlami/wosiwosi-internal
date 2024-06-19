@@ -1,0 +1,1 @@
+try{const e=$("#redeam-link"),t=$("#bonus-value"),s=$("#message");e.on("click",(()=>{t.text()<10?(s.addClass("alert-danger"),s.text("Bonus below £10 cannot be redeemed"),s.removeClass("hidden")):fetch("/influencer-redeem",{method:"GET"}).then((e=>e.text())).then((e=>{"ok"==e&&(s.addClass("alert-success"),s.text("Redeem request sent"),s.removeClass("hidden"))}))}))}catch(e){}

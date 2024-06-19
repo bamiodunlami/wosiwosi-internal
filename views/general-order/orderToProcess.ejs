@@ -2,7 +2,17 @@
 <%- include('include/header') -%>
     <section class="order-page">
         <div class="container">
+
             <h6 class="alert alert-success text-center">Order to process</h6>
+
+            <div class="row" >
+                <div class="col-sm-6 col-6">
+                    <p class="alert alert-warning">Orders available: <strong><%=order.length%></strong></p>
+                </div>
+                <div class="col-sm-6 col-6">
+                    <p class="alert alert-warning">Orders done: <strong>0</strong></p>
+                </div>
+            </div>
             <!-- <div class="row d-flex justify-content-center alert alert-light">
                 <div class="col-md-6 dateFilter">
                         <form action="/order" method="get" class="row">
@@ -19,19 +29,23 @@
                         <thead>
                         <tr>
                             <th scope="col">Order</th>
-                            <th scope="col">-</th>
-                            <th scope="col">-</th>
-                            <th scope="col">-</th>
+                            <th scope="col">Picker</th>
+                            <th scope="col">Packer</th>
+                            <th scope="col">Note</th>
+                            <th scope="col">Status</th>
                         </tr>
                         </thead>
                         <tbody class="">
                             <% for(i =0; i<order.length; i++ ){%>
-                                <tr>
+                                <tr class="eachOrder">
                                     <td><a href="/single-order-processing?id=<%=order[i]%>"><%=order[i]%></a></td>
                                     <!-- ?id=<=order[i].id>&fromDate=<=fromDate>&toDate=<=toDate>&page=<=page>&fromTime=<=fromTime>&toTime=<=toTime> -->
-                                    <td>picked</td>
-                                    <td>Packed</td>
-                                    <td>no coment</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>
+                                            <input type="checkbox">
+                                        </td>
                                 </tr>
                             <%}%>
                         </tbody>
@@ -50,4 +64,5 @@
     </section>
 
     <%- include('include/footerTemp') -%>
+    <script src="/min/orderToProcess.js"></script>
     <%- include('include/footer') -%>
