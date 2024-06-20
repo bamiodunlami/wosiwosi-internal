@@ -1,0 +1,27 @@
+/* other page */
+.staff-page{
+    padding: 5% 20%;
+}
+
+
+
+/* tab view */
+@media (min-width:700px){
+    /* other page */
+    .staff-page{
+        padding: 5%;
+    }
+}
+
+/* mobile view */
+@media (max-width:520px){
+    
+    .staff-page{
+        padding: 10px;
+    }
+
+    .lname,
+    .email{
+        display: none;
+    }
+}

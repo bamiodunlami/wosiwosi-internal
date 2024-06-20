@@ -23,9 +23,11 @@ router
 
 .post('/walkietalkie', general.walkieTalkieSign)//walkie talkie sign in
 
-.get('/changepassword', general.renderChangePassword) //render password change
+.get("/resetpassword", general.forgotPassword) //forget password
 
-.post('/changepassword', general.changePassword) //handle password change
+.get('/changepassword', general.renderChangePassword) // render change password page for first login
+
+.post('/changepassword', general.changePassword) // Change first login user password
 
 .get('/logout', (req, res)=>{
     req.logout((err) => {

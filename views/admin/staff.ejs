@@ -1,0 +1,53 @@
+
+<%- include('include/header') -%>
+    <section class="staff-page">
+        <div class="container">
+            <h6 class="alert alert-success text-center">Wosiwosi Staffs</h6>
+
+            <!-- table -->
+            <div class="row staff-table">
+                <div class="col-12">
+                    <table class="table table-striped table-hover ">
+                        <thead>
+                        <tr>
+                            <th scope="col">First Name</th>
+                            <th scope="col" class="lname">Last Name</th>
+                            <th scope="col">Phone</th>
+                            <th scope="col">Duty</th>
+                            <% if(user.role == "admin" && user.level == 6){%>
+                                <th scope="col">Password</th>
+                            <%}%>
+                        </tr>
+                        </thead>
+                        <tbody class="">
+                            <% for(i=staff.length-1; i>=0; i-- ){%>
+                                <tr>
+                                    <td><a href="/staff-profile?id=<%=staff[i].username%>" class="link"><%=staff[i].fname%></a></td>
+                                    <td class="lname"></td>
+                                    <td></td>
+                                    <td><%=staff[i].duty.toUpperCase()%></td>
+                                    <% if(user.role == "admin" && user.level == 6){%>
+                                        <td><a href="/resetpassword?id=<%=staff[i].username%>" class="btn btn-warning btn-sm">Reset</a></td>
+                                    <%}%>
+                                    <!-- order status completed or processing =order[i].status -->
+                                </tr>
+                            <%}%>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        
+            <!-- back to dashboard -->
+            <div class="row">
+                <div class="text-center">
+                    <a class="btn btn-secondary btn-md action-button"  href="/admin">Back to dashboard</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <%- include('include/footerTemp') -%>
+    <!-- <script src="/min/general.js"></script>
+    <script src="/min/order.js"></script> -->
+    <%- include('include/footer') -%>

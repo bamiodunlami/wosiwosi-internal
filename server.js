@@ -18,6 +18,7 @@ const pickerRoute =  require(`${__dirname}/router/picker.router.js`);
 const generalRoute =  require(`${__dirname}/router/general.router.js`);
 const influencerRoute = require(`${__dirname}/router/influencer.router.js`);
 const generalOrder = require(`${__dirname}/router/general-order.router.js`);
+const staff = require (`${__dirname}/router/staff.router.js`)
 
 const port=process.env.PORT || 3000;
 
@@ -48,6 +49,7 @@ app.use(generalRoute);
 app.use(pickerRoute);
 app.use(influencerRoute);
 app.use(generalOrder);
+app.use(staff)
 
 
 

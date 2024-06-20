@@ -18,9 +18,9 @@ let transporter = nodemailer.createTransport({
 
 const passwordReset = (to, bcc, fname, password) => {
     const mailOptions = {
-        from: '"Wosiwosi Investment" <info@wosiwosi.co.uk>',
+        from: '"Wosiwosi" <info@wosiwosi.co.uk>',
         to: to,
-        bcc,
+        bcc:bcc,
         subject: "PASSWORD RESET",
         html: 
             `<!DOCTYPE html>
@@ -67,7 +67,6 @@ const passwordReset = (to, bcc, fname, password) => {
     
     transporter.sendMail(mailOptions);
 };
-
 
 const mailInfluencerDetails= (to, bcc, influencer, email, pass) => {
     const mailOptions = {

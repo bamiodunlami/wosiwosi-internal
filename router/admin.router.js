@@ -22,4 +22,6 @@ router
 .get('/remove-from-order', admin.removeFromOrder)
 .post("/createinfluencer", admin.createInfluencer) //create influencer
 
+// Staffs
+
 module.exports = router;

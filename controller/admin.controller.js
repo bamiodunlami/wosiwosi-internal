@@ -4,6 +4,7 @@ const rootpath = path.resolve(process.cwd());
 appRoot.setPath(rootpath);
 
 const fs = require("fs");
+const { title } = require("process");
 const date = new Date();
 const passport = require(appRoot + "/util/passport.util.js");
 const User = require(appRoot + "/model/user.model.js");
@@ -46,6 +47,14 @@ const adminOperation = async (req, res) => {
           date: date.toJSON().slice(0, 10),
         });
 
+      // staff
+      case "staff":
+        const staff = await User.find()
+        res.render("admin/staff", {
+          user:req.user,
+          title:"Staff",
+          staff:staff
+        })
       // default
       default:
         break;
@@ -273,6 +282,8 @@ const createInfluencer = async (req, res) => {
     res.redirect("/login");
   }
 };
+
+// reset staff password
 
 module.exports = {
   adminDashboard: adminDashboard,

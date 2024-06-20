@@ -13,6 +13,7 @@ const userSchema = mongoose.Schema({
     fname:String,
     lname:String,
     role:String,
+    duty:String,
     status:Boolean,
     walkieTalkie:{
       number:Number,
@@ -34,26 +35,27 @@ const userSchema = mongoose.Schema({
 
 userSchema.plugin(passportLocalMongoose)
 
+// const User = new mongoose.model('User', userSchema);
 module.exports = new mongoose.model('User', userSchema);
 
 // // Add to database
-// async function migrateUsers() {
-//     try {
-//       const mig = await User.findOne({username:"odunlamibamidelejohn@gmail.com"});
-//       // for (const i in mig) {
-//       //   mig[i].role = "staff"
-//       //   mig[i].level = "1"
-//       //   await mig[i].save()
-//       // }
-//       mig.setPassword("Abosede1234@@")
-//       mig.save()
-//       console.log('Data migration completed successfully.');
-//       console.log(mig);
+async function migrateUsers() {
+    try {
+      const mig = await User.find();
+      for (const i in mig) {
+        mig[i].passChange = "false"
+        await mig[i].save()
+      }
+      // mig.setPassword("Abosede1234@@")
+      // mig.save()
+      console.log('Data migration completed successfully.');
+      console.log(mig);
   
-//       // Disconnect from MongoDB
-//       await mongoose.disconnect();
-//     } catch (error) {
-//       console.error('Data migration failed:', error);
-//     }
-//   }
-  // migrateUsers();
+      // Disconnect from MongoDB
+      await mongoose.disconnect();
+    } catch (error) {
+      console.error('Data migration failed:', error);
+    }
+  }
+//   migrateUsers();
+//  module.exports = User
