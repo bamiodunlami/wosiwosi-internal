@@ -13,18 +13,21 @@ const singleOrderSchema = mongoose.Schema({
     note:[],
     meatPicker:{
         id:String,
+        fname:String,
         active:Boolean,
         time:String,
         status:Boolean
     },
     dryPicker:{
         id:String,
+        fname:String,
         active:Boolean,
         time:String,
         status:Boolean
     },
     packer:{
         id:String,
+        fname:String,
         active:Boolean,
         time:String,
         status:Boolean

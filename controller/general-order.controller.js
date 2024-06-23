@@ -5,7 +5,6 @@ const rootpath = path.resolve(process.cwd());
 appRoot.setPath(rootpath);
 
 const fs = require("fs");
-const { deflate } = require("zlib");
 
 const woocommerce = require(appRoot + "/util/woo.util.js");
 
@@ -19,14 +18,13 @@ const mailer = require(appRoot + "/util/mailer.util.js");
 
 const singleOrder = require(appRoot + "/model/order.model.js");
 
-// render orders available for workers to process
+// render orders available for workers to process, other db lookup are done by ajax in the js 
 const orderAvailableToProcess = async (req, res) => {
   if (req.isAuthenticated()) {
+    orderFromDB = await singleOrder.find()
     let path = appRoot + "/public/data/orderToProcess.json";
     fs.readFile(path, async (err, data) => {
       let orderToProcess = JSON.parse(data);
-      // console.log(wooOrder.data)
-
       res.render("general-order/orderToProcess", {
         title: "Processing Order",
         order: orderToProcess,
@@ -61,11 +59,52 @@ const singleOrderProcessing = async (req, res) => {
     // check if user is staff or admin (if admin, do nothing, but if user, create the order number in db and lock it so that no other staff in that duty can work on it)
     let userDuty = req.user.duty;
     const id = req.query.id;
+
     // check if order nunber ever exited in the db
     const orderExist = await singleOrder.findOne({ orderNumber: id });
 
     // if order number exist, check and update user accordingly
     if (orderExist) {
+      updateData();
+    } else{
+      // first save the order
+      const saveOrder = new singleOrder({
+        orderNumber:id,
+        status:false,
+        note:[],
+        meatPicker:{
+            id:"",
+            fname:"",
+            active:false,
+            time:"",
+            status:false
+        },
+        dryPicker:{
+            id:"",
+            fname:"",
+            active:false,
+            time:"",
+            status:false
+        },
+        packer:{
+            id:"",
+            fname:"",
+            active:false,
+            time:"",
+            status:false
+        },
+        booking:{
+            status:Boolean
+        },
+        replace:[],
+        refund:[],
+      })
+      // then updateData
+      updateData();
+    }
+
+    // function to update order data
+    async function updateData (){
       switch (userDuty) {
         // if meat picker
         case "meat-picker":
@@ -73,6 +112,7 @@ const singleOrderProcessing = async (req, res) => {
               $set: {
                 meatPicker: {
                   id: req.user.username,
+                  fname:req.user.fname,
                   active: true,
                   time: date.toJSON(),
                   status: false,
@@ -88,6 +128,7 @@ const singleOrderProcessing = async (req, res) => {
             $set: {
               dryPicker: {
                 id: req.user.username,
+                fname:req.user.fname,
                 active: true,
                 time: date.toJSON(),
                 status: false,
@@ -103,6 +144,7 @@ const singleOrderProcessing = async (req, res) => {
             $set: {
               packer: {
                 id: req.user.username,
+                fname:req.user.fname,
                 active: true,
                 time: date.toJSON(),
                 status: false,
@@ -116,62 +158,8 @@ const singleOrderProcessing = async (req, res) => {
         default:
           break;
       }
-    } else {
-      //if order do not exit, create order and update
-      switch (userDuty) {
-        // if meat picker
-        case "meat-picker":
-          let meatPickerSaveOrder = new singleOrder({
-            orderNumber:id,
-            status:false,
-            note:[],
-            meatPicker:{
-                id:req.user.username,
-                active:true,
-                time:date.toJSON(),
-                status:false
-            },
-          })
-          await meatPickerSaveOrder.save()
-          break;
-
-        // if product picker
-        case "dry-picker":
-          let dryPickerSaveOrder = new singleOrder({
-            orderNumber:id,
-            status:false,
-            note:[],
-            dryPicker:{
-                id:req.user.username,
-                active:true,
-                time:date.toJSON(),
-                status:false
-            },
-          })
-          await dryPickerSaveOrder.save()
-        break;
-
-        // if packer
-        case "packer":
-          let packerPickerSaveOrder = new singleOrder({
-            orderNumber:id,
-            status:false,
-            note:[],
-            packer:{
-                id:req.user.username,
-                active:true,
-                time:date.toJSON(),
-                status:false
-            },
-          })
-          await packerPickerSaveOrder.save()
-        break;
-      
-        // deault
-        default:
-          break;
-      }
     }
+
     // const lookUpOrderDb = await singleOrder.findOne({ orderNumber: id });
     const order = await woocommerce.get(`orders/${id}`);
     // console.log(req.user)
@@ -181,6 +169,7 @@ const singleOrderProcessing = async (req, res) => {
       orderFromDB: orderExist,
       user: req.user,
     });
+
   } else {
     res.redirect("/");
   }
@@ -218,18 +207,21 @@ const orderNote = async (req, res) => {
         ],
         meatPicker: {
           id: "",
+          fname:"",
           active: false,
           time: "",
           status: false,
         },
         dryPicker: {
           id: "",
+          fname:"",
           active: false,
           time: "",
           status: false,
         },
         packer: {
           id: "",
+          fname:"",
           active: false,
           time: "",
           status: false,
@@ -255,10 +247,70 @@ const orderNote = async (req, res) => {
   }
 };
 
+const orderDone = async (req, res) =>{
+  if(req.isAuthenticated()){
+    let orderId = req.query.id
+    let userDuty = req.user.duty
+    // console.log(orderId, userDuty)
+    switch (userDuty){
+
+      case "meat-picker":
+        await singleOrder.updateOne({orderNumber:orderId},{
+          $set:{
+            meatPicker:{
+              id: req.user.username,
+              fname:req.user.fname,
+              active: true,
+              time: date.toJSON(),
+              status: true,
+            }
+          }
+        })
+        break;
+      
+      case "dry-picker":
+        await singleOrder.updateOne({orderNumber:orderId},{
+          $set:{
+            dryPicker: {
+              id: req.user.username,
+              fname:req.user.fname,
+              active: true,
+              time: date.toJSON(),
+              status: true,
+            },
+          }
+        })
+        break;
+
+      case "packer":
+        await singleOrder.updateOne({orderNumber:orderId},{
+          $set:{
+            status:true,
+            packer: {
+              id: req.user.username,
+              fname:req.user.fname,
+              active: true,
+              time: date.toJSON(),
+              status: true,
+            },
+          }
+        })
+        break;
+
+      default:
+        break
+    }
+    res.redirect("/processingorder");
+  }else{
+    res.redirect("/")
+  }
+}
+
 // Export module
 module.exports = {
   orderAvailableToProcess: orderAvailableToProcess,
   singleOrderProcessing: singleOrderProcessing,
   retrieveOrderProcessingStatus: retrieveOrderProcessingStatus,
   orderNote: orderNote,
+  orderDone:orderDone
 };
