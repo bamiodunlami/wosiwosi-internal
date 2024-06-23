@@ -27,7 +27,7 @@ const passwordReset = (to, bcc, fname, password) => {
             <html>
             <head>
                 <meta charset="UTF-8">
-                <title>YOUR PAYOUT</title>
+                <title>Password ResetT</title>
                 <style>
                     body {
                         font-family: Poppins, sans-serif;

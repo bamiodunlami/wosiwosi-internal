@@ -12,6 +12,8 @@ const staff = require (appRoot +"/controller/staff.controller.js")
 router
 .get('/staff', staff.renderStaffPage)
 
+.get('/staff/:request', staff.staffDashboardRequest) //incoming request from staff dashboard
+
 
 
 module.exports = router

@@ -1,0 +1,65 @@
+
+<%- include('include/header') -%>
+    <section class="staff-section">
+      <h6 class="page-title text-center" >Online Center</h6>
+      <div class="row d-flex align-items-center text-center staff-section-option">
+
+  
+        <!-- search for order -->
+        <div class="search-bar alert alert-light">
+          <form method="get"  action="/searchsingleorder">
+              <input class="form-control" type="number" name="orderNumber" placeholder="search by order number" autocomplete="off">
+               <button class="serach-btn btn btn-success btn-sm">Search</button>
+          </form>
+        </div>
+
+        <!-- <div>
+            <h6 class="alert alert-warning"><a href="#" class="link">0 messages unread</a></h6>
+        </div> -->
+
+        <!-- Order -->
+          <div class="col-md-6 col-sm-12 staff-section-option-main">
+            <a href="/processingorder">
+              <div class="staff-section-option-item">
+                <h5 class="alert alert-secondary all-order">To process</h5>
+              </div>
+            </a>
+          </div>
+          
+
+          <!-- completed -->
+          <div class="col-md-6 col-sm-12 staff-section-option-main">
+            <a href="#">
+              <div class="staff-section-option-item">
+                <h5 class="alert alert-secondary completed-orders">Completed</h5>
+              </div>
+            </a>
+          </div>
+
+          <!-- Refund -->
+          <div class="col-md-6 col-sm-12 staff-section-option-main">
+            <a href="/">
+              <div class="staff-section-option-item">
+                <h5 class="alert alert-secondary all-order">My Work</h5>
+              </div>
+            </a>
+          </div>
+
+          <!-- order to process -->
+          <!-- <div class="col-md-6 col-sm-12 staff-section-option-main">
+            <a href="/">
+              <div class="staff-section-option-item">
+                <h5 class="alert alert-secondary completed-orders">Refund</h5>
+              </div>
+            </a>
+          </div> -->
+          
+          <div>
+            <a style="margin-top: 10px;" href="/staff" class="btn btn-secondary btn-sm">Back</a>
+          </div>
+
+      </div>
+    </section>
+
+    <%- include('include/footerTemp') -%>
+    <%- include('include/footer') -%>

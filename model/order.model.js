@@ -11,17 +11,29 @@ const singleOrderSchema = mongoose.Schema({
     orderNumber:String,
     status:Boolean,
     note:[],
-    picker:{
+    meatPicker:{
         id:String,
+        active:Boolean,
+        time:String,
+        status:Boolean
+    },
+    dryPicker:{
+        id:String,
+        active:Boolean,
+        time:String,
         status:Boolean
     },
     packer:{
         id:String,
-        status:Boolean,
+        active:Boolean,
+        time:String,
+        status:Boolean
     },
     booking:{
         status:Boolean
-    }
+    },
+    replace:[],
+    refund:[],
     
 })
 

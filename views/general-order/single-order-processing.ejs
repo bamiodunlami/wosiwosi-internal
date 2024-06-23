@@ -14,14 +14,15 @@
                 </div>
             </div>
 
+            <!-- notes -->
             <div class="col-md-12 alert alert-dark">
                     <div class="alert alert-light">
                         <h6 class="text-center">Staff Note</h6>
                         <div class="note-msg" id="note-msg">
                             <!-- if note is available from db -->
-                            <%if(note){%>
-                                <% for (let i =0; i<note.note.length; i++){%>
-                                    <div class="alert alert-danger"> <%=note.note[i].fname%>: <%=note.note[i].note%></div>
+                            <%if(orderFromDB){%>
+                                <% for (let i =0; i<orderFromDB.note.length; i++){%>
+                                    <div class="alert alert-danger"> <%=orderFromDB.note[i].fname%>: <%=orderFromDB.note[i].note%></div>
                                     <%}%>
                             <%}%>
                             <!--  -->
@@ -72,6 +73,7 @@
 
             </div>
 
+            <!-- actions -->
         <div> 
             <%if(user.role == "admin"){%>
               
@@ -80,7 +82,7 @@
                 
             <%}%>
             <button class="btn btn-success btn-sm" id="done-btn">Completed</a>
-            </div>
+        </div>
 
 
         </div>

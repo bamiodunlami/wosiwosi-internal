@@ -1,1 +1,68 @@
-welcome home
+
+<%- include('include/header') -%>
+    <section class="dashboard-option-section">
+      <h5 class="page-title text-center">STAFF PORTAL</h5>
+        <div class="row dashboar-main-bar d-flex align-items-center text-center">
+            <h6><%=staff.fname%> <%=staff.lname%></h6>
+            <!-- Online Fulfilment-->
+            <div class="col-md-6 col-sm-12  dashboard-option">
+                <a href="/staff/online"> 
+                    <div class="option-item">
+                        <h5>Online Centre</h5>
+                        <p>View and fulfil online order</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Shop and warehouse-->
+            <div class="col-md-6 col-sm-12  dashboard-option">
+                <a href=""> 
+                    <div class="option-item">
+                        <h5>Shop and Wharehouse</h5>
+                        <p>View shop operations</p>
+                    </div>
+                </a>
+            </div>
+
+
+            <!-- Staff-->
+            <div class="col-md-6 col-sm-12  dashboard-option">
+                <a href="/staff/my-profile"> 
+                    <div class="option-item">
+                        <h5>My Profile</h5>
+                        <p>View and edit profile</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- walkie talkie-->
+            <!-- <div class="col-md-6 col-sm-12  dashboard-option">
+                <a href="/walkietalkie"> 
+                    <div class="option-item">
+                        <h5>Walkie Talkie</h5>
+                        <p>Pick or submit walkie talkie</p>
+                    </div>
+                </a>
+            </div> -->
+
+            <!--information-->
+            <div class="col-md-6 col-sm-12  dashboard-option">
+                <a href="/staff/staff-info"> 
+                    <div class="option-item">
+                        <h5>Information</h5>
+                        <p>View available information</p>
+                    </div>
+                </a>
+            </div>         
+        </div>
+
+        <div class="col-sm-12 text-center">
+            <a href="/logout" class="btn btn-danger btn-md">Logout</a>
+        </div>
+
+
+
+    </section>
+
+    <%- include('include/footerTemp') -%>
+    <%- include('include/footer') -%>

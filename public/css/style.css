@@ -92,7 +92,7 @@ a.main-link{
 /* Genral dashboard */
 .dashboard-option-section{
     background-color: #efefef;
-    padding: 30vh 30vw;
+    padding: 25vh 20vw;
     height: 100vh;
 }
 
@@ -137,9 +137,37 @@ a.main-link{
     border: solid 1px #e1e1e1;
 }
 
-
 /* tab view */
 @media (max-width:800px){
+    h2 {
+        font-size:35px;
+        font-weight: 600;
+    }
+    
+    h3{
+        font-size:30px;
+        font-weight: 600;
+    } 
+    
+    h4{
+        font-size:28px;
+        font-weight: 600;
+    } 
+    
+    h5{
+        font-size: 20px;
+        font-weight: 600;
+    }
+    
+    h6{
+        font-size: 17px;
+        font-weight: 600;
+    }
+    
+    p{
+        font-size: 16px;
+        line-height: 18px;
+    }
 
     .default-page-padding{
         padding: 8%;
@@ -148,21 +176,17 @@ a.main-link{
     /* dashboard */
     .dashboard-option-section{
         background-color: #efefef;
-        padding: 5vh 10vw;
+        padding: 20vh 10vw;
     }
 
     /* login */
     .login-bar{
-        padding: 0 5%;
+        width: 500px;
     }
 }
 
 /* mobile view */
-@media (max-width:480px){
-
-    .default-page-padding{
-        padding: 10% 5%;
-    }
+@media (max-width:500px){
 
     /* logo */
     .logo{
@@ -194,7 +218,14 @@ a.main-link{
     .action-button{
         margin-bottom: 10px;
     }
+
+    /* dashboard */
+    .dashboard-option-section{
+        background-color: #efefef;
+        padding: 5vh 10vw;
+    }
 }
+
 
 
 

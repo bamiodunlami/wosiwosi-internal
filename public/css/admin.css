@@ -51,7 +51,7 @@ a{
     .admin-section{
         background-color: #efefef;
         height: 100vh;
-        padding: 20% 9%;
+        padding:10% 15%;
     
     }
 
@@ -61,11 +61,11 @@ a{
 }
 
 /* mobile view */
-@media (max-width:480px){
+@media (max-width:500px){
     .admin-section{
         background-color: #efefef;
         height: 100vh;
-        padding: 5% 9%;
+        padding: 10%;
     
     }
 }
