@@ -4,7 +4,7 @@
 <!-- First read the whole js before showing page -->
 <%- include('include/footerTemp') -%>
 
-<script src="/min/orderToProcess.js"></script>
+<script src="/js/orderToProcess.js"></script>
 <!-- show page after reading the js -->
 
     <section class="order-page">
@@ -48,10 +48,10 @@
                                 <tr class="eachOrder">
                                     <td><a href="/single-order-processing?id=<%=order[i]%>"><%=order[i]%></a></td>
                                     <!-- ?id=<=order[i].id>&fromDate=<=fromDate>&toDate=<=toDate>&page=<=page>&fromTime=<=fromTime>&toTime=<=toTime> -->
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
-                                        <td></td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
+                                        <td>-</td>
                                         <td>
                                             <input class="form-check-input" type="checkbox">
                                         </td>

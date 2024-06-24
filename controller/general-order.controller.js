@@ -5,6 +5,7 @@ const rootpath = path.resolve(process.cwd());
 appRoot.setPath(rootpath);
 
 const fs = require("fs");
+const { authorize } = require("passport");
 
 const woocommerce = require(appRoot + "/util/woo.util.js");
 
@@ -21,13 +22,15 @@ const singleOrder = require(appRoot + "/model/order.model.js");
 // render orders available for workers to process, other db lookup are done by ajax in the js 
 const orderAvailableToProcess = async (req, res) => {
   if (req.isAuthenticated()) {
-    orderFromDB = await singleOrder.find()
+    let orderFromDB = await singleOrder.find()
+    // console.log(orderFromDB);
     let path = appRoot + "/public/data/orderToProcess.json";
     fs.readFile(path, async (err, data) => {
       let orderToProcess = JSON.parse(data);
       res.render("general-order/orderToProcess", {
         title: "Processing Order",
         order: orderToProcess,
+        orderFromDB:orderFromDB,
         user: req.user,
       });
     });
@@ -59,13 +62,21 @@ const singleOrderProcessing = async (req, res) => {
     // check if user is staff or admin (if admin, do nothing, but if user, create the order number in db and lock it so that no other staff in that duty can work on it)
     let userDuty = req.user.duty;
     const id = req.query.id;
+    const user=req.user;
+    let authorize = true;
+    let activity = true
 
     // check if order nunber ever exited in the db
     const orderExist = await singleOrder.findOne({ orderNumber: id });
 
     // if order number exist, check and update user accordingly
     if (orderExist) {
-      updateData();
+        // check if order is already been globally done 
+        if(orderExist.status==true && userDuty != "manager"){
+          activity = false //no more activity
+        }else{
+          checkIfOrderHasNotBeenTaken();
+        }
     } else{
       // first save the order
       const saveOrder = new singleOrder({
@@ -94,12 +105,12 @@ const singleOrderProcessing = async (req, res) => {
             status:false
         },
         booking:{
-            status:Boolean
+            status:false
         },
         replace:[],
         refund:[],
       })
-      // then updateData
+      saveOrder.save();
       updateData();
     }
 
@@ -160,14 +171,56 @@ const singleOrderProcessing = async (req, res) => {
       }
     }
 
-    // const lookUpOrderDb = await singleOrder.findOne({ orderNumber: id });
-    const order = await woocommerce.get(`orders/${id}`);
-    // console.log(req.user)
+    // check if the ordre hasnt been handled by someone else
+    async function checkIfOrderHasNotBeenTaken(){
+      switch(userDuty){
+        case "meat-picker":
+          // chceck if meat picking hasnt been handled by sonmeon else
+          if(orderExist.meatPicker.active == true && user.username != orderExist.meatPicker.id){
+            authorize = false;
+          }else{
+            updateData(); //update data
+            authorize =true;
+          }
+          break;
+         
+         case "dry-picker":
+            // chceck if meat picking hasnt been handled by sonmeon else
+            if(orderExist.dryPicker.active == true && user.username != orderExist.dryPicker.id){
+              authorize = false;
+            }else{
+              updateData(); //update data
+              authorize =true;
+            }
+            break;
+          
+          case "dry-picker":
+            // chceck if meat picking hasnt been handled by sonmeon else
+            if(orderExist.packer.active == true && user.username != orderExist.packer.id){
+              authorize = false;
+            }else{
+              updateData(); //update data
+              authorize =true;
+            }
+            break;
+          
+          case "manager":
+              authorize = true
+              break; 
+    
+           default:
+            break
+      }
+    }
+
+    const order = await woocommerce.get(`orders/${id}`); // get order from woocommerce
     res.render("general-order/single-order-processing", {
       title: "Order Processing",
       order: order.data,
       orderFromDB: orderExist,
-      user: req.user,
+      authorize:authorize,
+      activity:activity,
+      user:user,
     });
 
   } else {
@@ -295,6 +348,14 @@ const orderDone = async (req, res) =>{
             },
           }
         })
+        break;
+      
+      case "manager":
+          await singleOrder.updateOne({orderNumber:orderId},{
+            $set:{
+              status:true,
+            }
+          });
         break;
 
       default:
