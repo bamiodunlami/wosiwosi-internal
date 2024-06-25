@@ -8,6 +8,8 @@
                             <th scope="col">Product</th>
                             <th scope="col">QTY</th>
                             <th scope="col">Paid</th>
+                            <th scope="col">Ref</th>
+                            <th scope="col">Rep</th>
                         </tr>
                         </thead>
                         <tbody class="">
@@ -21,6 +23,8 @@
                                     </td>
                                     <td style="background-color:#beffeac9;"><%=order.line_items[i].quantity%></td>
                                     <td><%=order.currency_symbol%><%=order.line_items[i].subtotal%></td>
+                                    <td style="background-color:#ffaa0bc9;"><input class="form-check-input refund" type="checkbox" id="refund"></td>
+                                    <td style="background-color:#d48a00;"><input class="form-check-input replace" type="checkbox" id="replace"></td>
                                 </tr>
                             <%}%>
                         </tbody>

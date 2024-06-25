@@ -26,6 +26,8 @@ const renderStaffPage = async (req, res) => {
 };
 
 const staffDashboardRequest = async (req, res) => {
+  if(req.isAuthenticated()){
+
     let request = req.params.request;
     switch (request){
 
@@ -35,10 +37,21 @@ const staffDashboardRequest = async (req, res) => {
                 title: "Online Center",
               });
             break
+        
+            case "my-profile":
+              const staff = await User.findOne({username:req.user.username});
+              res.render("staff/staff-profile",{
+                title:"Staff Profile",
+                staff:staff
+              })
+              break;
 
         default:
             break;
     }
+  }else{
+    res.redirect('/')
+  }
 };
 
 module.exports = {

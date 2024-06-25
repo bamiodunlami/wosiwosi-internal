@@ -6,6 +6,7 @@ appRoot.setPath(rootpath);
 
 const fs = require("fs");
 const { authorize } = require("passport");
+const { title } = require("process");
 
 const woocommerce = require(appRoot + "/util/woo.util.js");
 
@@ -300,6 +301,7 @@ const orderNote = async (req, res) => {
   }
 };
 
+// a particular order has been done
 const orderDone = async (req, res) =>{
   if(req.isAuthenticated()){
     let orderId = req.query.id
@@ -367,11 +369,33 @@ const orderDone = async (req, res) =>{
   }
 }
 
+// view  completed orders
+const completedOrder = async (req, res)=>{
+  if(req.isAuthenticated()){
+    const completedOrder = await singleOrder.find({status:true})
+      res.render('general-order/completed-order', {
+      title:"Completed Order",
+      order:completedOrder,
+      user:req.user
+      })
+    }else{
+      res.redirect('/')
+    }
+}
+
+// refunds
+const refund = async (req, res)=>{
+  console.log(req.body)
+}
+
+
 // Export module
 module.exports = {
   orderAvailableToProcess: orderAvailableToProcess,
   singleOrderProcessing: singleOrderProcessing,
   retrieveOrderProcessingStatus: retrieveOrderProcessingStatus,
   orderNote: orderNote,
-  orderDone:orderDone
+  orderDone:orderDone,
+  completedOrder,
+  refund:refund
 };

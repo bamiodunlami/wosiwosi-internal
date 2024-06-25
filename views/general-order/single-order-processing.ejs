@@ -3,10 +3,14 @@
     <section class="order-page">
         <div class="container">
             <h6 class="alert alert-success text-center">Order <%=order.id%></h6>
+
+         <!-- reveal who is who (who is handling the order) -->
+        <%- include('functions/who-is') -%>
             
             <div class="row">
                 <!-- shiiping address -->
-                <div class="col-md-6 alert alert-light">
+                <div class="col-md-6">
+                    <div class="alert alert-light">
                     <h6><%=order.shipping.first_name%> <%=order.billing.last_name%></h6>
                     <h6>
                         <%=order.shipping.address_1%> 
@@ -18,32 +22,32 @@
                     <%if(user.duty == "manager"){%>
                     <h6><a href="tel:+44<%=order.billing.phone%>">+44 <%=order.billing.phone%></a></h6>
                     <%}%>
+                    </div>
                 </div>
 
                 <!-- order status and payment -->
-                <div class="col-md-6 alert alert-light">
+                <div class="col-md-6">
+                    <div class="alert alert-light">
                     <h6>Order Status: <%=order.status%></h6>
                     <h6>Shipping: <%=order.shipping_lines[0].method_title%></h6>
                     <h6>Shipping Amount: <%=order.currency_symbol%><%=order.shipping_lines[0].total%></h6>
+                    </div>
                 </div>
             </div>
-
-
-
-        <!-- reveal who is who (who is handling the order) -->
-        <% - ('include/who-is')-%>
 
 
             <!-- customer note -->
-            <div class="col-md-12">
+            <div class="col-md-12">                    
+                <% if(order.customer_note){%>
                 <div class="alert alert-warning">
                     <h6 class="text-center">Customer Note</h6>
                     <div class="text-center"><%=order.customer_note%></div>
-                </div>
+                </div>                    
+                <%}%>
             </div>
 
             <!-- staff notes -->
-            <div class="col-md-12 alert alert-dark">
+            <div class="col-md-12 alert alert-primary">
                     <div class="alert alert-light">
                         <h6 class="text-center">Staff Note</h6>
                         <div class="note-msg" id="note-msg">
@@ -63,7 +67,7 @@
                     <input type="hidden" id="userId" value="<%=user.username%>">
                     <input type="hidden" id="fname" value="<%=user.fname%>">
                     <div>
-                        <button class="btn btn-sm btn-warning" id="sendNoteBtn">Drop note</button>
+                        <button class="btn btn-sm btn-primary" id="sendNoteBtn">Drop note</button>
                     </div>
                 </div>
 

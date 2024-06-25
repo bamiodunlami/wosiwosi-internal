@@ -14,7 +14,9 @@ router
 .get('/single-order-processing', generalOrder.singleOrderProcessing) // single order processing page
 .get("/orderInfo", generalOrder.retrieveOrderProcessingStatus) // (ajax call from orderToProcess.js) this function is used to check status and details of order already done in the orderAvailableToProcess page
 .post('/note', generalOrder.orderNote) //note for both admin and staff
-.get("/complete", generalOrder.orderDone) //order completed
+.get("/complete", generalOrder.orderDone) // a particular order has beem completed
+.get("/completed-order", generalOrder.completedOrder) //view completed order
+.get('/refund', generalOrder.refund) //request for a refund by staff
 
 
 module.exports=router

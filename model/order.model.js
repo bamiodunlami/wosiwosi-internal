@@ -40,6 +40,6 @@ const singleOrderSchema = mongoose.Schema({
     
 })
 
-const singleOrder = mongoose.model("singleOrder", singleOrderSchema);
+const singleOrder = new mongoose.model("singleOrder", singleOrderSchema);
 
 module.exports = singleOrder;

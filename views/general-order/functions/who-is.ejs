@@ -1,8 +1,37 @@
             <!-- actions -->
-            <div> 
-                <%if(user.role == "admin"){%>
-                    <a href="/remove-from-order?order=<%=order.id%>" class="btn btn-danger btn-sm">Remove from order to be process today</a>
-                <%}%>
-                <a href="/processingorder" class="btn btn-warning btn-sm">Back</a>
-                <a href="/complete?id=<%=order.id%>" class="btn btn-success btn-sm" id="done-btn">Completed</a>
+        <% if(orderFromDB){%>
+            <div class="row">
+                <!-- neat picker -->
+                <div class="col-md-4 col-4">
+                    <div class="alert alert-light">
+                        <h6> Meat:
+                        <% if(orderFromDB.meatPicker.fname){%>                        
+                            <%=orderFromDB.meatPicker.fname%>
+                        <%}%>
+                        </h6>
+                    </div>
+                </div> 
+
+                <!-- dry picker-->
+                <div class="col-md-4 col-4">
+                    <div class="alert alert-light">
+                        <h6>Picker:
+                        <% if(orderFromDB.dryPicker.fname){%>                        
+                            <%=orderFromDB.dryPicker.fname%>
+                        <%}%>
+                        </h6>
+                    </div>
+                </div> 
+
+                <!-- packer -->
+                <div class="col-md-4 col-4">
+                    <div class="alert alert-light">
+                        <h6> Packer:
+                        <% if(orderFromDB.packer.fname){%>                        
+                            <%=orderFromDB.packer.fname%>
+                        <%}%>
+                        </h6>
+                    </div>
+                </div> 
             </div>
+        <%}%>
