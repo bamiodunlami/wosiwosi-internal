@@ -19,7 +19,8 @@ router
 .post('/saveorder', admin.saveAllForProcessing)//save order to process
 
 // .get('/add-to-order', admin.addToOrder)
-.get('/remove-from-order', admin.removeFromOrder)
+.get('/clearboard', admin.clearBoard) //clear all already save order to process
+.get('/remove-from-order', admin.removeFromOrder) //remove order from processing list
 .post("/createinfluencer", admin.createInfluencer) //create influencer
 
 // Staffs

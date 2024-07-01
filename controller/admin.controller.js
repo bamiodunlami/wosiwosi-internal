@@ -283,6 +283,20 @@ const createInfluencer = async (req, res) => {
   }
 };
 
+// clear board
+const clearBoard = async (req, res)=>{
+  if(req.isAuthenticated()){
+    const path = appRoot + "/public/data/orderToProcess.json";
+    const data =""
+    fs.writeFile(path, JSON.stringify(data), (err)=>{
+      if(err) console.log(err)
+        res.redirect(req.headers.referer)
+    })
+  }else{
+    res.redirect('/')
+  }
+}
+
 // reset staff password
 
 module.exports = {
@@ -294,6 +308,7 @@ module.exports = {
   retrieveSavedForProcessing: retrieveSavedForProcessing,
   saveAllForProcessing: saveAllForProcessing,
   // addToOrder: addToOrder,
+  clearBoard:clearBoard,
   removeFromOrder: removeFromOrder,
   createInfluencer: createInfluencer,
 };

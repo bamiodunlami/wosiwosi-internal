@@ -13,6 +13,7 @@
                 <div class="col-sm-6 col-6">
                     <p class="alert alert-warning">Orders available: <strong><%=order.length%></strong></p>
                 </div>
+
                 <div class="col-sm-6 col-6">
                     <p class="alert alert-warning">Orders done: <strong>
                         <% let x =0%>
@@ -72,6 +73,7 @@
                 <div class="text-center">
                     <% if(user.role == "admin"){%>
                         <a class="btn btn-success btn-md" href="/admin/online">Back to dashboard</a>
+                        <a class="" href="/clearboard">Clear board</a>
                    <% }else{%>
                         <a class="btn btn-success btn-md" href="/staff/online">Back to dashboard</a>
                     <%}%>
