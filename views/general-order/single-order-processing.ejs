@@ -2,7 +2,9 @@
 <%- include('include/header') -%>
     <section class="order-page">
         <div class="container">
-            <h6 class="alert alert-success text-center">Order <%=order.id%></h6>
+            <h6 class="alert alert-success text-center">Order <span id="orderNumber"><%=order.id%></span></h6>
+            <input type="hidden" value="<%=user.username%>" id="staffId">
+            <input type="hidden" value="<%=user.fname%>" id="fname">
 
          <!-- reveal who is who (who is handling the order) -->
         <%- include('functions/who-is') -%>
@@ -10,7 +12,7 @@
             <div class="row">
                 <!-- shiiping address -->
                 <div class="col-md-6">
-                    <div class="alert alert-light">
+                    <div class="alert alert-dark">
                     <h6><%=order.shipping.first_name%> <%=order.billing.last_name%></h6>
                     <h6>
                         <%=order.shipping.address_1%> 
@@ -27,7 +29,7 @@
 
                 <!-- order status and payment -->
                 <div class="col-md-6">
-                    <div class="alert alert-light">
+                    <div class="alert alert-danger">
                     <h6>Order Status: <%=order.status%></h6>
                     <h6>Shipping: <%=order.shipping_lines[0].method_title%></h6>
                     <h6>Shipping Amount: <%=order.currency_symbol%><%=order.shipping_lines[0].total%></h6>

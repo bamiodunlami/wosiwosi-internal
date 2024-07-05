@@ -16,7 +16,8 @@ router
 .post('/note', generalOrder.orderNote) //note for both admin and staff
 .get("/complete", generalOrder.orderDone) // a particular order has beem completed
 .get("/completed-order", generalOrder.completedOrder) //view completed order
-.get('/refund', generalOrder.refund) //request for a refund by staff
+.post('/replace', generalOrder.replace) //request for a refund by staff
+.post('/refund', generalOrder.refund)
 
 
 module.exports=router

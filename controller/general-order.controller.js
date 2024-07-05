@@ -5,7 +5,6 @@ const rootpath = path.resolve(process.cwd());
 appRoot.setPath(rootpath);
 
 const fs = require("fs");
-const { authorize } = require("passport");
 const { title } = require("process");
 
 const woocommerce = require(appRoot + "/util/woo.util.js");
@@ -20,6 +19,38 @@ const mailer = require(appRoot + "/util/mailer.util.js");
 
 const singleOrder = require(appRoot + "/model/order.model.js");
 
+const replaceDb= require(appRoot + "/model/replace.model.js");
+
+const refundDb= require(appRoot + "/model/refund.model.js");
+
+
+// ALL AJAX
+// (ajax call from orderToProcess.js) this function is used to check status and details of order already done in the orderAvailableToProcess page
+const retrieveOrderProcessingStatus = async (req, res) => {
+  if (req.isAuthenticated) {
+    const orderInfo = await singleOrder.find();
+    if (!orderInfo) {
+      res.send("false");
+    } else {
+      res.json(orderInfo);
+    }
+  } else {
+    res.redirect("/");
+  }
+};
+
+// ajax call from singleOrderProcessing.js. this function check product selected for replacement and refund in the single order to process page
+// const checkReplacementAndRefund = await (req, res)=>{
+//   if(req.isAuthenticated()){
+
+//   }else{
+//     res.redirect("/")
+//   }
+// }
+
+
+
+// ORDER CONTROLLERS
 // render orders available for workers to process, other db lookup are done by ajax in the js 
 const orderAvailableToProcess = async (req, res) => {
   if (req.isAuthenticated()) {
@@ -38,20 +69,6 @@ const orderAvailableToProcess = async (req, res) => {
 
     // console.log(req.query)
     // ${date.toLocaleTimeString()}
-  } else {
-    res.redirect("/");
-  }
-};
-
-// (ajax call from orderToProcess.js) this function is used to check status and details of order already done in the orderAvailableToProcess page
-const retrieveOrderProcessingStatus = async (req, res) => {
-  if (req.isAuthenticated) {
-    const orderInfo = await singleOrder.find();
-    if (!orderInfo) {
-      res.send("false");
-    } else {
-      res.json(orderInfo);
-    }
   } else {
     res.redirect("/");
   }
@@ -164,6 +181,7 @@ const singleOrderProcessing = async (req, res) => {
             },
           }
         );
+        console.log("saved packer activity")
         break;
       
         // default
@@ -195,7 +213,7 @@ const singleOrderProcessing = async (req, res) => {
             }
             break;
           
-          case "dry-picker":
+          case "packer":
             // chceck if meat picking hasnt been handled by sonmeon else
             if(orderExist.packer.active == true && user.username != orderExist.packer.id){
               authorize = false;
@@ -383,9 +401,100 @@ const completedOrder = async (req, res)=>{
     }
 }
 
-// refunds
+// refund request by staff
+const replace = async (req, res)=>{
+  if(req.isAuthenticated()){
+    const findOrder = await replaceDb.findOne({orderNumber:req.body.orderNumber});
+    // if order number exist
+    if(findOrder){
+      // update replacement details
+      const updateReplacement = await replaceDb.updateOne({orderNumber:req.body.orderNumber}, {
+        $push:{
+          product:{
+            productName:req.body.productName,
+            replacementName:req.body.replacementName,
+            replacementQty:req.body.replacementQty,
+            replacementSize:req.body.replacementSize,
+          }
+        }
+      }) 
+      // if updated
+      if(updateReplacement.acknowledged == true){
+        res.send(true)
+      }else{ //if not updated
+        res.send(false)
+      }
+    } else{ //if order never existed
+      //create orderNumber
+      const createOrder = await new replaceDb({
+        orderNumber:req.body.orderNumber,
+        staffId:req.body.staffUsername,
+        fname:req.body.staffName,
+        date:date.toJSON(),
+        product:[{
+          productName:req.body.productName,
+          replacementName:req.body.replacementName,
+          replacementQty:req.body.replacementQty,
+          replacementSize:req.body.replacementSize,
+        }],
+      })
+      createOrder.save();
+      //if saved
+      if(createOrder){
+        res.send(true)
+      }else{ //if not saved
+        res.send(false)
+      }
+    }
+  }else{
+    res.redirect("/")
+  }
+}
+
+// replaacement request by staff
 const refund = async (req, res)=>{
-  console.log(req.body)
+  if(req.isAuthenticated()){
+    const findOrder = await refundDb.findOne({orderNumber:req.body.orderNumber});
+    // if order number exist
+    if(findOrder){
+      // update refund details
+      const updateRefund = await replaceDb.updateOne({orderNumber:req.body.orderNumber}, {
+        $push:{
+          product:{
+            productName:req.body.productName,
+            status:false
+          }
+        }
+      }) 
+      // if updated
+      if(updateRefund.acknowledged == true){
+        res.send(true)
+      }else{ //if not updated
+        res.send(false)
+      }
+    } else{ //if order never existed
+      //create orderNumber
+      const createOrder = await new refundDb({
+        orderNumber:req.body.orderNumber,
+        staffId:req.body.staffUsername,
+        fname:req.body.staffName,
+        date:date.toJSON(),
+        product:[{
+          productName:req.body.productName,
+          status:false
+        }],
+      })
+      createOrder.save();
+      //if saved
+      if(createOrder){
+        res.send(true)
+      }else{ //if not saved
+        res.send(false)
+      }
+    }
+  }else{
+    res.redirect("/")
+  }
 }
 
 
@@ -397,5 +506,6 @@ module.exports = {
   orderNote: orderNote,
   orderDone:orderDone,
   completedOrder,
+  replace:replace,
   refund:refund
 };

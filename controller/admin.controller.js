@@ -203,7 +203,6 @@ const saveAllForProcessing = (req, res) => {
   }
 };
 
-
 // remove single order from the orders to be done that day
 const removeFromOrder = async (req, res, next) => {
   if(req.isAuthenticated()){
