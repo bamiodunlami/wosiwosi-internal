@@ -20,6 +20,15 @@ const pullUser = async (req, res)=>{
     res.json(user)
 }
 
+// notifications 
+// note notification
+// const noteNotification = async (req, res)=>{
+//     console.log(message)
+//   }
+
+
+
+// OTHER CONTROLLERS
 // home
 const renderHome =  (req, res)=>{
     res.render('general/login',{
@@ -174,6 +183,7 @@ const changePassword = async (req, res)=>{
 }
 
 
+
 // Export module
 module.exports ={
     pullUser:pullUser,
@@ -185,4 +195,5 @@ module.exports ={
     forgotPassword:forgotPassword,
     renderChangePassword:renderChangePassword,
     changePassword:changePassword,
+    // noteNotification:noteNotification,
 }

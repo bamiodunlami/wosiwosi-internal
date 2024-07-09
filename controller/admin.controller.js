@@ -12,6 +12,7 @@ const woocommerce = require(appRoot + "/util/woo.util.js");
 const mailer = require(appRoot + "/util/mailer.util.js");
 const singlOrder = require(appRoot + "/model/order.model.js")
 
+// AJAX CALL
 // admin dashboard
 const adminDashboard = async (req, res) => {
   if (req.isAuthenticated()) {
@@ -64,30 +65,6 @@ const adminOperation = async (req, res) => {
   }
 };
 
-// search single order and display
-const searchSingleOrder = async (req, res, next) => {
-  if (req.isAuthenticated()) {
-    try {
-      const id = req.query.orderNumber;
-      if (!id) {
-        res.redirect(req.headers.referer);
-      } else {
-        const order = await woocommerce.get(`orders/${id}`);
-        // console.log(order.data.customer_note)
-        res.render("admin/singleOrder-page", {
-          title: `Order ${id}`,
-          order: order.data,
-          action: "search", //this order was serched from main admin page so the only action expected is to add to processing order or not
-        });
-      }
-    } catch (e) {
-      console.log(e);
-      next();
-    }
-  } else {
-    res.redirect("/");
-  }
-};
 
 // order page
 const renderOrderListPage = async (req, res) => {
@@ -130,34 +107,8 @@ const renderOrderListPage = async (req, res) => {
   }
 };
 
-// single order page
-const singleOrderPage = async (req, res) => {
-  if (req.isAuthenticated()) {
-    let id = req.query.id;
-    let fromDate = req.query.fromDate;
-    let toDate = req.query.toDate;
-    let page = req.query.page;
-    let fromTime = req.query.fromTime;
-    let toTime = req.query.toTime;
-    // console.log("serch for" + req.query)
-    const order = await woocommerce.get(`orders/${id}`);
-    // console.log(order.data.customer_note)
-    res.render("admin/singleOrder-page", {
-      title: `Order ${req.query.id}`,
-      order: order.data,
-      fromDate: fromDate,
-      toDate: toDate,
-      page: page,
-      fromTime: fromTime,
-      toTime: toTime,
-      action: "view", //this is because admin clicked from order page and not the main admin page, the only action expected here is jus view
-    });
-  } else {
-    res.redirect("/");
-  }
-};
 
-// (Ajax call from order.js) this is used to check and thick orders that are already saved for processing
+// (Ajax call from order.js) this is used to check and mark orders that are already saved for processing in the admin order page
 const retrieveSavedForProcessing = async (req, res) => {
   if (req.isAuthenticated()) {
     const path = appRoot + "/public/data/orderToProcess.json";
@@ -301,9 +252,7 @@ const clearBoard = async (req, res)=>{
 module.exports = {
   adminDashboard: adminDashboard,
   adminOperation: adminOperation,
-  searchSingleOrder: searchSingleOrder,
   renderOrderListPage: renderOrderListPage,
-  singleOrderPage: singleOrderPage,
   retrieveSavedForProcessing: retrieveSavedForProcessing,
   saveAllForProcessing: saveAllForProcessing,
   // addToOrder: addToOrder,

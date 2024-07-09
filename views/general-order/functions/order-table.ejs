@@ -17,7 +17,7 @@
                             <% for(i =0; i<order.line_items.length; i++ ){%>
                                 <tr class="product-table">
                                     <td><a href="<%=order.line_items[i].image.src%>"><img src="<%=order.line_items[i].image.src%>" width="40px" height="40px" alt="image"></a></td>
-                                    <td><%=order.line_items[i].name%> 
+                                    <td><span class="productName"><%=order.line_items[i].name%></span>
                                         <%if(order.line_items[i].meta_data.length>2){%>
                                             <h6 style="color: #ff0000;"><%=order.line_items[i].meta_data[1].display_value%></h6>
                                         <%}%>
@@ -37,7 +37,7 @@
                                             <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Replace <span id="ModalProductName"></span></h1>
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Replace <span class="ModalProductName"></span></h1>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
@@ -76,7 +76,7 @@
                                             <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Refund <span id="ModalProductName"></span></h1>
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Refund <span class="ModalProductName"></span></h1>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
@@ -91,7 +91,7 @@
                                         </div>
                                     </td>
                                         
-                                    <td><button class="btn btn-success btn-sm complete" id="complete"><i class="fa-solid fa-check"></i></td>
+                                    <td><input class="form-check-input" type="checkbox"></td>
                                 </tr>
                             <%}%>
                         </tbody>

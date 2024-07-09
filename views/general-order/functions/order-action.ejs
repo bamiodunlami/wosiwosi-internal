@@ -1,8 +1,21 @@
             <!-- actions -->
-            <div> 
+
+            <!-- if order is alreaddy added to Orders to be processed -->
+            <div class="hidden" id="available-bar"> 
                 <%if(user.role == "admin"){%>
                     <a href="/remove-from-order?order=<%=order.id%>" class="btn btn-danger btn-sm">Remove from order to be process today</a>
                 <%}%>
                 <a href="/processingorder" class="btn btn-warning btn-sm">Back</a>
                 <a href="/complete?id=<%=order.id%>" class="btn btn-success btn-sm" id="done-btn">Completed</a>
+            </div>
+
+            <!-- if order is not added to Orders to be processed -->
+            <div class="hidden" id="unavailable-bar">
+                <%if(user.role == "admin"){%>
+                    <button class="btn btn-danger btn-sm" id="saveBtn">Add to order to be process today</button>
+                <%}else{%>
+                    <p class="alert alert-danger">This order cannot be worked on, contact manager to unlock</p>
+                <%}%>                
+                <a href="/processingorder" class="btn btn-warning btn-sm">Back</a>
+
             </div>

@@ -7,7 +7,8 @@ const refundSchema = mongoose.Schema({
     fname:String,
     date:String,
     product:[],
-    status:Boolean
+    status:Boolean,
+    customer_details:{}
 })
 
 module.exports = new mongoose.model("refund", refundSchema)

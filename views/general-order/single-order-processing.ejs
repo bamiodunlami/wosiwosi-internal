@@ -83,7 +83,11 @@
         <%}else{%>
             <h4 class="alert alert-danger text-center">This order is already being processed</h4>
             <%- include("functions/order-table") -%>
-            <a href="/processingorder" class="btn btn-warning btn-sm">Back</a>
+            <a href="/processingorder" class="btn btn-warning btn-sm">Back to processing orders</a>
+            <a href="/completed-order" class="btn btn-dark btn-sm">View completed orders</a>
+            <%if(user.duty == "manager"){%>
+                <a href="/undo-order" class="btn btn-danger btn-sm">Undo Order</a>
+            <%}%>
         <%}%>
 
         </div>

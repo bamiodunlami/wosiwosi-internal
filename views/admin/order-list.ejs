@@ -46,7 +46,7 @@
                                     <td class="order-selection">
                                         <input class=" form-check-input" type="checkbox" value="">
                                     </td>
-                                    <td><a class="link" href="/singleorder?id=<%=order[i].id%>&fromDate=<%=fromDate%>&toDate=<%=toDate%>&page=<%=page%>&fromTime=<%=fromTime%>&toTime=<%=toTime%>"><%=order[i].id%></a></td>
+                                    <td><a class="link" href="/single-order-processing?id=<%=order[i].id%>"><%=order[i].id%></a></td>
                                     <td><%=order[i].billing.first_name%> <%=order[i].billing.last_name%></td>
                                     <td class="order-amount">£<%=order[i].total%></td>
                                     <td>

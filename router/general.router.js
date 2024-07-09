@@ -11,7 +11,8 @@ const general = require (appRoot + "/controller/general.controller.js")
 const User = require(appRoot + "/model/user.model.js")
 
 router
-.post ('/user', general.pullUser) //send all staff details
+.post ('/user', general.pullUser) //AJAX send all staff details
+// .post('/note-notification', general.noteNotification)
 
 .get('/', general.renderHome) //render login home
 

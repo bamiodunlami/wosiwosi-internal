@@ -10,9 +10,16 @@ appRoot.setPath(rootpath);
 const generalOrder = require (appRoot + "/controller/general-order.controller.js")
 
 router
+
+// AJAX
+.get("/orderInfo", generalOrder.checkStatusOfOrderToProcess) // (ajax call from orderToProcess.js) this function is used to check status and details of order already done in the orderAvailableToProcess page
+.post('/get-order-details', generalOrder.getOrderDetails) // ajax to get all status of single order (refund in particular)
+.get('/order-to-process', generalOrder.orderToProcessJsonFile) //send order to process file
+
+// OTHERS
+.get('/searchsingleorder', generalOrder.searchSingleOrder) //search for order number
 .get('/processingorder', generalOrder.orderAvailableToProcess) //view page with list of orders available for processing
 .get('/single-order-processing', generalOrder.singleOrderProcessing) // single order processing page
-.get("/orderInfo", generalOrder.retrieveOrderProcessingStatus) // (ajax call from orderToProcess.js) this function is used to check status and details of order already done in the orderAvailableToProcess page
 .post('/note', generalOrder.orderNote) //note for both admin and staff
 .get("/complete", generalOrder.orderDone) // a particular order has beem completed
 .get("/completed-order", generalOrder.completedOrder) //view completed order

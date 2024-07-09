@@ -5,7 +5,6 @@ const rootpath = path.resolve(process.cwd());
 appRoot.setPath(rootpath);
 
 const fs = require("fs");
-const { title } = require("process");
 
 const woocommerce = require(appRoot + "/util/woo.util.js");
 
@@ -26,7 +25,7 @@ const refundDb= require(appRoot + "/model/refund.model.js");
 
 // ALL AJAX
 // (ajax call from orderToProcess.js) this function is used to check status and details of order already done in the orderAvailableToProcess page
-const retrieveOrderProcessingStatus = async (req, res) => {
+const checkStatusOfOrderToProcess = async (req, res) => {
   if (req.isAuthenticated) {
     const orderInfo = await singleOrder.find();
     if (!orderInfo) {
@@ -39,18 +38,50 @@ const retrieveOrderProcessingStatus = async (req, res) => {
   }
 };
 
-// ajax call from singleOrderProcessing.js. this function check product selected for replacement and refund in the single order to process page
-// const checkReplacementAndRefund = await (req, res)=>{
-//   if(req.isAuthenticated()){
+// ajax to get all status of each product row of single order page(refund in particular)
+const getOrderDetails = async (req, res)=>{
 
-//   }else{
-//     res.redirect("/")
-//   }
-// }
+  const sendRefundDetails = await refundDb.findOne({orderNumber:req.body.orderNumber});  
+  console.log(sendRefundDetails)
+  if(sendRefundDetails){
+    res.send(sendRefundDetails)
+  }else{
+    res.send("")
+  }
+}
 
+// ajax call for order to process json file
+const orderToProcessJsonFile = async (req, res)=>{
+  // console.log(orderFromDB);
+  let path = appRoot + "/public/data/orderToProcess.json";
+  fs.readFile(path, async (err, data) => {
+    let orderToProcess = JSON.parse(data);
+    res.send(orderToProcess)
+})
+}
 
 
 // ORDER CONTROLLERS
+
+// search single order and display
+const searchSingleOrder = async (req, res, next) => {
+  if (req.isAuthenticated()) {
+    try {
+      const id = req.query.orderNumber;
+      if (!id) {
+        res.redirect(req.headers.referer);
+      } else {
+        res.redirect(`/single-order-processing?id=${id}`)
+      }
+    } catch (e) {
+      console.log(e);
+      next();
+    }
+  } else {
+    res.redirect("/");
+  }
+};
+
 // render orders available for workers to process, other db lookup are done by ajax in the js 
 const orderAvailableToProcess = async (req, res) => {
   if (req.isAuthenticated()) {
@@ -74,15 +105,14 @@ const orderAvailableToProcess = async (req, res) => {
   }
 };
 
-// single order processing page
 const singleOrderProcessing = async (req, res) => {
   if (req.isAuthenticated()) {
     // check if user is staff or admin (if admin, do nothing, but if user, create the order number in db and lock it so that no other staff in that duty can work on it)
     let userDuty = req.user.duty;
     const id = req.query.id;
     const user=req.user;
-    let authorize = true;
-    let activity = true
+    let authorize = true; //determines who does something to the order
+    let activity = true //determines if anything can be done on the order
 
     // check if order nunber ever exited in the db
     const orderExist = await singleOrder.findOne({ orderNumber: id });
@@ -90,7 +120,7 @@ const singleOrderProcessing = async (req, res) => {
     // if order number exist, check and update user accordingly
     if (orderExist) {
         // check if order is already been globally done 
-        if(orderExist.status==true && userDuty != "manager"){
+        if(orderExist.status==true){
           activity = false //no more activity
         }else{
           checkIfOrderHasNotBeenTaken();
@@ -181,7 +211,6 @@ const singleOrderProcessing = async (req, res) => {
             },
           }
         );
-        console.log("saved packer activity")
         break;
       
         // default
@@ -454,6 +483,8 @@ const replace = async (req, res)=>{
 // replaacement request by staff
 const refund = async (req, res)=>{
   if(req.isAuthenticated()){
+    const orderDetails = await woocommerce.get(`orders/${req.body.orderNumber}`);
+    // console.log(customerDetails)
     const findOrder = await refundDb.findOne({orderNumber:req.body.orderNumber});
     // if order number exist
     if(findOrder){
@@ -483,6 +514,12 @@ const refund = async (req, res)=>{
           productName:req.body.productName,
           status:false
         }],
+        customer_details:{
+          fname:orderDetails.data.billing.first_name,
+          lname:orderDetails.data.billing.last_name,
+          phone:orderDetails.data.billing.phone,
+          email:orderDetails.data.billing.email
+        }
       })
       createOrder.save();
       //if saved
@@ -500,12 +537,15 @@ const refund = async (req, res)=>{
 
 // Export module
 module.exports = {
+  searchSingleOrder:searchSingleOrder,
   orderAvailableToProcess: orderAvailableToProcess,
   singleOrderProcessing: singleOrderProcessing,
-  retrieveOrderProcessingStatus: retrieveOrderProcessingStatus,
+  checkStatusOfOrderToProcess: checkStatusOfOrderToProcess, //AJAX
   orderNote: orderNote,
   orderDone:orderDone,
   completedOrder,
   replace:replace,
-  refund:refund
+  refund:refund,
+  getOrderDetails:getOrderDetails, //AJax
+  orderToProcessJsonFile:orderToProcessJsonFile //Ajax
 };
