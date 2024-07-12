@@ -16,6 +16,7 @@ let transporter = nodemailer.createTransport({
   },
 })
 
+//password reset
 const passwordReset = (to, bcc, fname, password) => {
     const mailOptions = {
         from: '"Wosiwosi" <info@wosiwosi.co.uk>',
@@ -68,6 +69,7 @@ const passwordReset = (to, bcc, fname, password) => {
     transporter.sendMail(mailOptions);
 };
 
+//influencer unboard
 const mailInfluencerDetails= (to, bcc, influencer, email, pass) => {
     const mailOptions = {
         from: '"Wosiwosi" <info@wosiwosi.co.uk>',
@@ -131,6 +133,8 @@ const mailInfluencerDetails= (to, bcc, influencer, email, pass) => {
     transporter.sendMail(mailOptions);
 };
 
+
+//password change
 const passwordChange = (to, bcc, fname) => {
     const mailOptions = {
         from: '"Wosiwosi" <info@wosiwosi.co.uk>',
@@ -185,6 +189,7 @@ const passwordChange = (to, bcc, fname) => {
     transporter.sendMail(mailOptions);
 };
 
+//influencer redeem request 
 const redeemRequest = (to, bcc, fname, amount) => {
     const mailOptions = {
         from: '"Wosiwosi" <info@wosiwosi.co.uk>',
@@ -240,10 +245,62 @@ const redeemRequest = (to, bcc, fname, amount) => {
     transporter.sendMail(mailOptions);
 };
 
+//refund mail
+const refundMail = (to, bcc, fname, product, quantity, amount) =>{
+    mailOptions ={
+        from: '"Wosiwosi" <info@wosiwosi.co.uk>',
+        to: to,
+        bcc:bcc,
+        subject: "REFUND PROCCESSED",
+        html: 
+        `<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>REFUND PROCCESSED</title>
+            <style>
+                body {
+                    font-family: Poppins, sans-serif;
+                    line-height: 1.6;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    text-align: left;
+                }
+                .disclaimer{
+                    font-size:11px;
+                }
+                h1 {
+                    color: #007519;
+                }
+                p {
+                    margin: 15px 0;
+                    font-size:18px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">  
+                <p> REFUND AUTOMATION TEST MAIL</p>
+                <p> Dear ${fname},</p>
+                <p>Thank you for shopping at Wosiwosi.</p>
+                <p>We have proccessed your refund for ${product} x ${quantity} at ${amount} </p>
+                <p>It should appear on your bank card through which the order was placed within 7 working days</p>
+                <p>Regards, Wosiwosi Foods UK Limited</p>
+            </div>
+        </body>
+        </html>`
+    }
+    transporter.sendMail(mailOptions)
+}
+
 
 module.exports ={
     passwordReset:passwordReset,
     mailInfluencerDetails:mailInfluencerDetails,
     passwordChange:passwordChange,
-    redeemRequest:redeemRequest
+    redeemRequest:redeemRequest,
+    refundMail:refundMail
 }

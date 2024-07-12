@@ -4,13 +4,14 @@ const rootpath = path.resolve(process.cwd());
 appRoot.setPath(rootpath);
 
 const fs = require("fs");
-const { title } = require("process");
 const date = new Date();
 const passport = require(appRoot + "/util/passport.util.js");
 const User = require(appRoot + "/model/user.model.js");
 const woocommerce = require(appRoot + "/util/woo.util.js");
 const mailer = require(appRoot + "/util/mailer.util.js");
 const singlOrder = require(appRoot + "/model/order.model.js")
+const replaceDb= require(appRoot + "/model/replace.model.js");
+const refundDb= require(appRoot + "/model/refund.model.js");
 
 // AJAX CALL
 // admin dashboard
@@ -247,7 +248,85 @@ const clearBoard = async (req, res)=>{
   }
 }
 
-// reset staff password
+//undo order
+const undoOrder = async (req, res)=>{
+  if(req.isAuthenticated()){
+    const orderNumber = req.query.id
+     await singlOrder.deleteOne({orderNumber:orderNumber})
+      await refundDb.deleteOne({orderNumber:orderNumber})
+      await replaceDb.deleteOne({orderNumber:orderNumber})
+      res.redirect(req.headers.referer)
+  }else{
+    res.redirect("/")
+  }
+}
+
+//refund requests
+const RenderRefundRequest = async (req, res)=>{
+  if(req.isAuthenticated()){
+  const refund = await  refundDb.find();
+  res.render('admin/refund',{
+    title:"Refund Requests",
+    refund:refund
+  })
+}else{
+  res.redirect('/')
+}
+}
+
+// approve request
+const requestOption = async (req, res)=>{
+if(req.isAuthenticated()){
+  let orderNumber = req.query.id;
+  let productName = req.query.product
+  let productQty = req.query.qty
+  let productPrice = req.query.price
+
+  const requestOption = req.params.option;     
+  switch(requestOption){
+    // case refund approve
+    case "approve-refund":
+      await refundDb.updateOne({orderNumber:orderNumber, "product.productName":productName},{
+        $set:{
+          "product.$.status":true,
+          "product.$.approval":true
+        }
+      })
+      const customer = await refundDb.findOne({orderNumber:orderNumber})
+      mailer.refundMail("bamidele@wosiwosi.co.",  "seyiawo@wosiwosi.co.uk, laura@wosiwosi.co.uk", customer.customer_details.fname, productName, productQty, productPrice)
+      res.redirect(req.headers.referer)
+      break;
+
+      // refund rejected
+      case "reject-refund":
+        await refundDb.updateOne({orderNumber:orderNumber, "product.productName":productName},{
+          $set:{
+            "product.$.status":true,
+          }
+        })
+        res.redirect(req.headers.referer)
+        break;
+        
+        default:
+          break;
+    }
+}else{
+  res.redirect("/")
+}
+}
+
+//replacement 
+const renderReplacementPage= async (req, res)=>{
+  if(req.isAuthenticated()){
+    const replacement = await replaceDb.find()
+    res.render('admin/replacement', {
+      title:"Replacement",
+      replace:replacement
+    })
+  }else{
+    res.redirect('/')
+  }
+}
 
 module.exports = {
   adminDashboard: adminDashboard,
@@ -255,8 +334,11 @@ module.exports = {
   renderOrderListPage: renderOrderListPage,
   retrieveSavedForProcessing: retrieveSavedForProcessing,
   saveAllForProcessing: saveAllForProcessing,
-  // addToOrder: addToOrder,
   clearBoard:clearBoard,
   removeFromOrder: removeFromOrder,
   createInfluencer: createInfluencer,
+  undoOrder:undoOrder,
+  RenderRefundRequest:RenderRefundRequest,
+  requestOption:requestOption,
+  renderReplacementPage:renderReplacementPage
 };

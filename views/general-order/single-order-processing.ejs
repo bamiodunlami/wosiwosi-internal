@@ -86,7 +86,7 @@
             <a href="/processingorder" class="btn btn-warning btn-sm">Back to processing orders</a>
             <a href="/completed-order" class="btn btn-dark btn-sm">View completed orders</a>
             <%if(user.duty == "manager"){%>
-                <a href="/undo-order" class="btn btn-danger btn-sm">Undo Order</a>
+                <a href="/undo-order?id=<%=order.id%>" class="btn btn-danger btn-sm">Undo Order</a>
             <%}%>
         <%}%>
 
@@ -94,5 +94,5 @@
     </section>
 
     <%- include('include/footerTemp') -%>
-    <script src="/js/singleOrderProcessing.js"></script>
+    <script src="/min/singleOrderProcessing.js"></script>
     <%- include('include/footer') -%>

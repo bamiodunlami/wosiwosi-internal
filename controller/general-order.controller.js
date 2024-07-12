@@ -40,9 +40,8 @@ const checkStatusOfOrderToProcess = async (req, res) => {
 
 // ajax to get all status of each product row of single order page(refund in particular)
 const getOrderDetails = async (req, res)=>{
-
   const sendRefundDetails = await refundDb.findOne({orderNumber:req.body.orderNumber});  
-  console.log(sendRefundDetails)
+  // console.log(sendRefundDetails)
   if(sendRefundDetails){
     res.send(sendRefundDetails)
   }else{
@@ -430,7 +429,7 @@ const completedOrder = async (req, res)=>{
     }
 }
 
-// refund request by staff
+// replace request by staff
 const replace = async (req, res)=>{
   if(req.isAuthenticated()){
     const findOrder = await replaceDb.findOne({orderNumber:req.body.orderNumber});
@@ -480,20 +479,23 @@ const replace = async (req, res)=>{
   }
 }
 
-// replaacement request by staff
+// refund request by staff
 const refund = async (req, res)=>{
+  // console.log(req.body)
   if(req.isAuthenticated()){
     const orderDetails = await woocommerce.get(`orders/${req.body.orderNumber}`);
-    // console.log(customerDetails)
     const findOrder = await refundDb.findOne({orderNumber:req.body.orderNumber});
     // if order number exist
     if(findOrder){
       // update refund details
-      const updateRefund = await replaceDb.updateOne({orderNumber:req.body.orderNumber}, {
+      const updateRefund = await refundDb.updateOne({orderNumber:req.body.orderNumber}, {
         $push:{
           product:{
             productName:req.body.productName,
-            status:false
+            productQuantity:req.body.productQuantity,
+            productPrice:req.body.productPrice,
+            status:false,
+            approval:false
           }
         }
       }) 
@@ -512,7 +514,10 @@ const refund = async (req, res)=>{
         date:date.toJSON(),
         product:[{
           productName:req.body.productName,
-          status:false
+          productQuantity:req.body.productQuantity,
+          productPrice:req.body.productPrice,
+          status:false,
+          approval:false
         }],
         customer_details:{
           fname:orderDetails.data.billing.first_name,

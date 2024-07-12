@@ -1,0 +1,64 @@
+<%- include('include/header') -%>
+
+<div class="order-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h6 class="alert alert-success text-center">Product Replacements</h6>
+            </div>
+        </div>
+
+        <!-- table -->
+    <% for(let i = replace.length -1; i>=0; i--){%>
+    <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <!-- accordinon button -->
+                <button class="accordion-button"  data-bs-toggle="collapse" data-bs-target="#collapse<%=[i]%>" aria-controls="collapse<%=[i]%>"> <%=replace[i].orderNumber%> (<%=replace[i].date.slice(0,10)%>)</button>
+              </h2>
+
+            <div id="collapse<%=[i]%>" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <!-- accordion body -->
+            <div class="accordion-body">
+                <p class=" alert alert-light"><%=replace[i].fname%> | <i class="fa-solid fa-clock"></i> <%=replace[i].date.slice(11,16)%></p>
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Original Product</th>
+                            <th scope="col">Replacement Product</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Size</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <% for(let x=0; x<replace[i].product.length; x++){%>
+                                <tr>
+                                    <td><%=replace[i].product[x].productName%></td>
+                                    <td><%=replace[i].product[x].replacementName%></td>
+                                    <td><%=replace[i].product[x].replacementQty%></td>
+                                    <td><%=replace[i].product[x].replacementSize%></td>
+                                </tr>      
+                            <%}%>
+
+                        </tbody>
+                      </table>
+                </div>
+                <!-- ---- -->
+              </div>
+            </div>
+     </div>
+    <%}%>
+
+            <!-- back to dashboard -->
+            <div class="">
+                <div class="col-sm-12" style="padding-top: 10px;">
+                        <a class="btn btn-dark btn-sm" href="/admin/online">Back to dashboard</a>
+                </div>
+            </div>
+
+    </div>
+</div>
+
+<%- include('include/footerTemp') -%>
+<script src="/min/general.js"></script>
+<%- include('include/footer') -%>

@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "node server.js",
-    "minify": "terser public/js/singleOrderProcessing.js -c -m --output public/min/singleOrderProcessing.js"
+    "minify": "terser public/js/walkie.js -c -m --output public/min/walkie.js"
   },
   "author": "Bamidele",
   "license": "ISC",

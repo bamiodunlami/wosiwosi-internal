@@ -1,0 +1,75 @@
+<%- include('include/header') -%>
+
+<div class="order-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h6 class="alert alert-success text-center">Refund Requests</h6>
+            </div>
+        </div>
+
+        <!-- table -->
+    <% for(let i = refund.length -1; i>=0; i--){%>
+    <div class="accordion" id="accordionExample">
+            <div class="accordion-item">
+              <h2 class="accordion-header">
+                <!-- accordinon button -->
+                <button class="accordion-button"  data-bs-toggle="collapse" data-bs-target="#collapse<%=[i]%>" aria-controls="collapse<%=[i]%>"> <%=refund[i].orderNumber%> (<%=refund[i].date.slice(0,10)%>)</button>
+              </h2>
+
+            <div id="collapse<%=[i]%>" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <!-- accordion body -->
+            <div class="accordion-body">
+                <p class=" alert alert-light">Requested by <%=refund[i].fname%> | <i class="fa-solid fa-clock"></i> <%=refund[i].date.slice(11,16)%></p>
+                    <table class="table">
+                        <thead>
+                          <tr>
+                            <th scope="col">Product Name</th>
+                            <th scope="col">Quantity</th>
+                            <th scope="col">Price</th>
+                            <th scope="col">Action</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                            <% for(let x=0; x<refund[i].product.length; x++){%>
+                                <tr>
+                                    <td><%=refund[i].product[x].productName%></td>
+                                    <td><%=refund[i].product[x].productQuantity%></td>
+                                    <td><%=refund[i].product[x].productPrice%></td>
+                                    <td>
+                                        <% if(refund[i].product[x].status == true && refund[i].product[x].approval == true ){ %>
+                                            <div class="page-title">Refund Approved</div>
+                                        <%}else if(refund[i].product[x].status == true && refund[i].product[x].approval == false ){ %>
+                                            <div class="error">Refund Rejected</div>
+                                        <%}else{%>
+                                            <div>
+                                                <a href="/request/approve-refund?id=<%=refund[i].orderNumber%>&product=<%=refund[i].product[x].productName%>&price=<%=refund[i].product[x].productPrice%>&qty=<%=refund[i].product[x].productQuantity%>" class="btn btn-success btn-sm">Approve</a>
+                                                <a href="/request/reject-refund?id=<%=refund[i].orderNumber%>&product=<%=refund[i].product[x].productName%>&price=<%=refund[i].product[x].productPrice%>&qty=<%=refund[i].product[x].productQuantity%>" class="btn btn-danger btn-sm">Reject</a>
+                                            </div>
+                                        <%}%>
+                                    </td>
+                                  </tr>      
+                            <%}%>
+
+                        </tbody>
+                      </table>
+                </div>
+                <!-- ---- -->
+              </div>
+            </div>
+     </div>
+    <%}%>
+
+            <!-- back to dashboard -->
+            <div class="">
+                <div class="col-sm-12" style="padding-top: 10px;">
+                        <a class="btn btn-dark btn-sm" href="/admin/online">Back to dashboard</a>
+                </div>
+            </div>
+
+    </div>
+</div>
+
+<%- include('include/footerTemp') -%>
+<script src="/min/general.js"></script>
+<%- include('include/footer') -%>

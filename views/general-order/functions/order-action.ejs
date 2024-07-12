@@ -6,7 +6,7 @@
                     <a href="/remove-from-order?order=<%=order.id%>" class="btn btn-danger btn-sm">Remove from order to be process today</a>
                 <%}%>
                 <a href="/processingorder" class="btn btn-warning btn-sm">Back</a>
-                <a href="/complete?id=<%=order.id%>" class="btn btn-success btn-sm" id="done-btn">Completed</a>
+                <button class="btn btn-success btn-sm" id="completeBtn">Completed</button>
             </div>
 
             <!-- if order is not added to Orders to be processed -->

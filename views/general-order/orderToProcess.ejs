@@ -10,31 +10,11 @@
             <h6 class="alert alert-success text-center">Order to process</h6>
 
             <div class="row" >
-                <div class="col-sm-6 col-6">
+                <div class="col-sm-12 col-12 text-center">
                     <p class="alert alert-warning">Orders available: <strong><%=order.length%></strong></p>
                 </div>
-
-                <div class="col-sm-6 col-6">
-                    <p class="alert alert-warning">Orders done: <strong>
-                        <% let x =0%>
-                        <% for(i=0; i<orderFromDB.length; i++){%>
-                            <%if(orderFromDB[i].status == true){%>
-                                <%x+=1%>
-                            <%}%>
-                        <%}%>
-                        <%=x%>
-                    </strong></p>
-                </div>
             </div>
-            <!-- <div class="row d-flex justify-content-center alert alert-light">
-                <div class="col-md-6 dateFilter">
-                        <form action="/order" method="get" class="row">
-                            <div class="dateFilter-item col-sm-12">
-                                <input type="text" placeholder="Search Order..." class="form-control" name="fromDate" value="">
-                            </div>
-                        </form>
-                </div>
-            </div> -->
+
             <!-- table -->
             <div class="row order-table">
                 <div class="col-12">
@@ -86,5 +66,5 @@
 
 
 <%- include('include/footerTemp') -%>
-<script src="/js/orderToProcess.js"></script>
+<script src="/min/orderToProcess.js"></script>
 <%- include('include/footer') -%>

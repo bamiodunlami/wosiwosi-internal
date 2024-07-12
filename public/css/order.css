@@ -16,6 +16,13 @@ input[type=checkbox]:checked{
     width: 100%;
 }
 
+
+
+/* Refund Page */
+.accordion{
+    margin-bottom: 5px;
+}
+
 /* tab view */
 @media (max-width:800px){
     /* other page */
