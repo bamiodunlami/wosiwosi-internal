@@ -293,7 +293,7 @@ if(req.isAuthenticated()){
         }
       })
       const customer = await refundDb.findOne({orderNumber:orderNumber})
-      mailer.refundMail("odunlamibamidelejohn@gmail.com",  "bamidele@wosiwosi.co.uk", customer.customer_details.fname, productName, productQty, productPrice)
+      // mailer.refundMail("odunlamibamidelejohn@gmail.com","bamidele@wosiwosi.co.uk", customer.customer_details.fname, productName, productQty, productPrice)
       res.redirect(req.headers.referer)
       break;
 
