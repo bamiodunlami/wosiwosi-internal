@@ -59,7 +59,6 @@ const orderToProcessJsonFile = async (req, res)=>{
 })
 }
 
-
 // ORDER CONTROLLERS
 
 // search single order and display
@@ -112,6 +111,14 @@ const singleOrderProcessing = async (req, res) => {
     const user=req.user;
     let authorize = true; //determines who does something to the order
     let activity = true //determines if anything can be done on the order
+    let orderToProcess= []
+
+    // get all order save for processing
+    let path = appRoot + "/public/data/orderToProcess.json";
+    fs.readFile(path, async (err, data) => {
+       orderToProcess = JSON.parse(data);
+       console.log(orderToProcess)
+    })
 
     // check if order nunber ever exited in the db
     const orderExist = await singleOrder.findOne({ orderNumber: id });
@@ -264,6 +271,7 @@ const singleOrderProcessing = async (req, res) => {
     res.render("general-order/single-order-processing", {
       title: "Order Processing",
       order: order.data,
+      orderToProcess:orderToProcess,
       orderFromDB: orderExist,
       authorize:authorize,
       activity:activity,
