@@ -80,7 +80,13 @@ a.main-link{
 .button{
     margin: 3px;
 }
+input[type=checkbox]{
+    border: solid 1px #00884d;
+}
 
+input[type=checkbox]:checked{
+    background-color: #00884d;   
+}
 
 /*Loading effect*/
 .loading-hide{

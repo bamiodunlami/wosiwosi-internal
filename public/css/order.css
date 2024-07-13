@@ -3,10 +3,7 @@
     padding: 5% 15%;
 }
 
-input[type=checkbox]:checked{
-    background-color: #00884d;
-    border:1px solid #00884d;    
-}
+
 
 .page-button{
     padding: 15px;
