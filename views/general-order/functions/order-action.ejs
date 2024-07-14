@@ -14,7 +14,7 @@
                 <%if(user.role == "admin"){%>
                     <button class="btn btn-danger btn-sm" id="saveBtn">Add to order to be process today</button>
                 <%}else{%>
-                    <p class="alert alert-danger">This order cannot be worked on, contact manager to unlock</p>
+                    <h5 class="alert alert-danger"><i class="fa-solid fa-circle-exclamation"></i> This order cannot be worked on, contact manager to unlock</h5>
                 <%}%>                
                 <a href="/processingorder" class="btn btn-warning btn-sm">Back</a>
 
