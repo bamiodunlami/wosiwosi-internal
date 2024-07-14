@@ -51,7 +51,6 @@ const getOrderDetails = async (req, res)=>{
 
 // ajax call for order to process json file
 const orderToProcessJsonFile = async (req, res)=>{
-  // console.log(orderFromDB);
   let path = appRoot + "/public/data/orderToProcess.json";
   fs.readFile(path, async (err, data) => {
     let orderToProcess = JSON.parse(data);
@@ -114,11 +113,11 @@ const singleOrderProcessing = async (req, res) => {
     let orderToProcess= []
 
     // get all order save for processing
-    let path = appRoot + "/public/data/orderToProcess.json";
-    fs.readFile(path, async (err, data) => {
-       orderToProcess = JSON.parse(data);
-       console.log(orderToProcess)
-    })
+    // let path = appRoot + "/public/data/orderToProcess.json";
+    // fs.readFile(path, async (err, data) => {
+    //    orderToProcess = JSON.parse(data);
+    //    console.log(orderToProcess)
+    // })
 
     // check if order nunber ever exited in the db
     const orderExist = await singleOrder.findOne({ orderNumber: id });
@@ -271,7 +270,7 @@ const singleOrderProcessing = async (req, res) => {
     res.render("general-order/single-order-processing", {
       title: "Order Processing",
       order: order.data,
-      orderToProcess:orderToProcess,
+      // orderToProcess:orderToProcess,
       orderFromDB: orderExist,
       authorize:authorize,
       activity:activity,
