@@ -14,7 +14,7 @@
                 <%if(notification[i].readStatus === false){%>
                     <% if(notification[i].directedTo == "all" || notification[i].directedTo == "manager" || notification[i].directedTo == user.username){%>
                     <div class="col-sm-12 alert alert-light each-notification">
-                        <div><%=notification[i].date.slice(0,10)%> at <%=notification[i].date.slice(11, 16)%> - <%=notification[i].senderFname%>: <strong>"<%=notification[i].message%>"</strong> &nbsp; <a href="/single-order-processing?id=<%=notification[i].orderNumber%>" class="btn btn-secondary btn-sm">view order</a> <a class="btn btn-dark btn-sm">mark as read</a></div>
+                        <div><%=notification[i].date.slice(0,10)%> at <%=notification[i].date.slice(11, 16)%> - <%=notification[i].senderFname%>: <strong>"<%=notification[i].message%>"</strong> &nbsp; <a href="/single-order-processing?id=<%=notification[i].orderNumber%>" class="btn btn-secondary btn-sm">view order</a> <a href="/mark-as-read?id=<%=notification[i].notificationId%>" class="btn btn-dark btn-sm">mark as read</a></div>
                     </div>  
                     <%}%>
               <%}%>

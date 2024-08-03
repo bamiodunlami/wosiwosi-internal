@@ -350,6 +350,26 @@ const ajaxGetNotification = async (req, res)=>{
     res.send(data)
 }
 
+//notification mark as read
+const markAsRead = async (req, res)=>{
+  if(req.isAuthenticated()){
+    const markNotification = await notificationDb.updateOne({notificationId:req.query.id},{
+      $set:{
+        readStatus:true
+      }
+  })
+  res.redirect(req.headers.referer)
+  }else{
+    res.redirect('/')
+  }
+} 
+
+//ajax get notifications
+const ajaxGetRefundNotification = async (req, res)=>{
+  const data = await refundDb.find()
+  res.send(data)
+}
+
 module.exports = {
   adminDashboard: adminDashboard,
   adminOperation: adminOperation,
@@ -364,5 +384,7 @@ module.exports = {
   requestOption:requestOption,
   renderReplacementPage:renderReplacementPage,
   renderNotificationPage:renderNotificationPage,
-  ajaxGetNotification:ajaxGetNotification
+  ajaxGetNotification:ajaxGetNotification,
+  markAsRead:markAsRead,
+  ajaxGetRefundNotification:ajaxGetRefundNotification,
 };
