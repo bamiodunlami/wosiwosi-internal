@@ -23,6 +23,8 @@ router
 .get('/get-refund-request', admin.RenderRefundRequest) //render refund page
 .get('/request/:option', admin.requestOption) //refund option
 .get('/replacement', admin.renderReplacementPage) //render replacement
+.get('/admin-notification', admin.renderNotificationPage)
+.get('/fetch-notification', admin.ajaxGetNotification)
 
 
 module.exports = router;

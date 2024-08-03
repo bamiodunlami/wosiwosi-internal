@@ -4,6 +4,7 @@
       <h6 class="page-title text-center" >Online Center</h6>
       <div class="row d-flex align-items-center text-center admin-section-option">
 
+        <input type="hidden" value="<%=user.username%>" id="userId">
   
         <!-- search for order -->
         <div class="search-bar alert alert-light">
@@ -63,9 +64,9 @@
 
           <!-- Notification -->
           <div class="col-md-6 col-sm-12 admin-section-option-main">
-            <a href="#">
+            <a href="/admin-notification">
               <div class="admin-section-option-item">
-                <h5 class="alert alert-secondary completed-orders">Notification</h5>
+                <h5 class="alert alert-secondary completed-orders"><span id="notification-counter" class="notification-icon" style="color: red;"><strong>0</strong></span> Notification</h5>
               </div>
             </a>
           </div>
@@ -90,4 +91,5 @@
     </section>
 
     <%- include('include/footerTemp') -%>
+    <script src="/js/notification.js"></script>
     <%- include('include/footer') -%>

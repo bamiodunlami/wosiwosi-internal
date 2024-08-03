@@ -1,12 +1,12 @@
 const appRoot = require("app-root-path");
 const path = require("path");
-const { title } = require("process");
 const rootpath = path.resolve(process.cwd());
 appRoot.setPath(rootpath);
 
 const User = require(appRoot + "/model/user.model.js");
 const passport = require(appRoot + "/util/passport.util.js");
 const mailer = require(appRoot + "/util/mailer.util.js");
+const notificationDb= require(appRoot + "/model/notification.model.js");
 
 // rendert staff dashboard
 const renderStaffPage = async (req, res) => {
@@ -54,7 +54,22 @@ const staffDashboardRequest = async (req, res) => {
   }
 };
 
+//notification
+const renderNotificationPage = async (req, res)=>{
+  if(req.isAuthenticated()){
+    const notification = await notificationDb.find()
+    res.render('staff/notification', {
+      title:"Notification",
+      notification:notification,
+      user:req.user
+    })
+  }else{
+    res.redirect('/')
+  }
+}
+
 module.exports = {
   renderStaffPage: renderStaffPage,
   staffDashboardRequest: staffDashboardRequest,
+  renderNotificationPage:renderNotificationPage
 };

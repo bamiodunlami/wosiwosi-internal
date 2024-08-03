@@ -1,0 +1,36 @@
+<%- include('include/header') -%>
+
+<div class="order-page">
+    <div class="container">
+        <div class="row">
+            <div class="col-sm-12">
+                <h6 class="alert alert-success text-center">Admin Notifications</h6>
+            </div>
+        </div>
+
+        <!-- Notification -->
+        <div class="row">
+            <% for(let i = notification.length -1; i>=0; i--){%>
+                <%if(notification[i].readStatus === false){%>
+                    <% if(notification[i].directedTo == "all" || notification[i].directedTo == "manager" || notification[i].directedTo == user.username){%>
+                    <div class="col-sm-12 alert alert-light each-notification">
+                        <div><%=notification[i].date.slice(0,10)%> at <%=notification[i].date.slice(11, 16)%> - <%=notification[i].senderFname%>: <strong>"<%=notification[i].message%>"</strong> &nbsp; <a href="/single-order-processing?id=<%=notification[i].orderNumber%>" class="btn btn-secondary btn-sm">view order</a> <a class="btn btn-dark btn-sm">mark as read</a></div>
+                    </div>  
+                    <%}%>
+              <%}%>
+            <%}%>                   
+         </div>
+
+    <!-- back to dashboard -->
+    <div class="">
+        <div class="col-sm-12" style="padding-top: 10px;">
+                <a class="btn btn-dark btn-sm" href="/admin/online">Back to dashboard</a>
+        </div>
+    </div>
+
+    </div>
+</div>
+
+<%- include('include/footerTemp') -%>
+<script src="/min/general.js"></script>
+<%- include('include/footer') -%>

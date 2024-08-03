@@ -22,6 +22,8 @@ const replaceDb= require(appRoot + "/model/replace.model.js");
 
 const refundDb= require(appRoot + "/model/refund.model.js");
 
+const notificationDb= require(appRoot + "/model/notification.model.js");
+
 
 // ALL AJAX
 // (ajax call from orderToProcess.js) this function is used to check status and details of order already done in the orderAvailableToProcess page
@@ -285,7 +287,8 @@ const singleOrderProcessing = async (req, res) => {
 // Admin and staffs use note
 const orderNote = async (req, res) => {
   if (req.isAuthenticated()) {
-    // console.log(req.body);
+    
+    //find order
     const order = await singleOrder.findOne({  orderNumber: req.body.orderNumber});
     // if order number is already cereated
     if (order) {
@@ -349,6 +352,23 @@ const orderNote = async (req, res) => {
         res.send("false");
       }
     }
+
+    //update notification
+    if(req.user.role == "staff"){
+      const saveNotification = new notificationDb({
+        notificationId:Math.floor(Math.random()*899429323),
+        senderId:req.user.username,
+        senderFname:req.user.fname,
+        senderDuty:req.user.duty,
+        orderNumber:req.body.orderNumber,
+        date:date.toJSON(),
+        readStatus:false,
+        directedTo: "manager",
+        message:req.body.note
+      })
+      await saveNotification.save()
+    }
+
   } else {
     res.redirect("/");
   }
@@ -545,7 +565,6 @@ const refund = async (req, res)=>{
     res.redirect("/")
   }
 }
-
 
 // Export module
 module.exports = {

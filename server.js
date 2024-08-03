@@ -14,7 +14,7 @@ let options = {
 }
 
 const adminRoute =  require(`${__dirname}/router/admin.router.js`);
-const pickerRoute =  require(`${__dirname}/router/picker.router.js`);
+// const pickerRoute =  require(`${__dirname}/router/picker.router.js`);
 const generalRoute =  require(`${__dirname}/router/general.router.js`);
 const influencerRoute = require(`${__dirname}/router/influencer.router.js`);
 const generalOrder = require(`${__dirname}/router/general-order.router.js`);
@@ -46,7 +46,7 @@ app.use(flash());
 
 app.use(adminRoute);
 app.use(generalRoute);
-app.use(pickerRoute);
+// app.use(pickerRoute);
 app.use(influencerRoute);
 app.use(generalOrder);
 app.use(staff)

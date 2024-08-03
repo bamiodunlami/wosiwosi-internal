@@ -20,6 +20,11 @@
     margin-bottom: 5px;
 }
 
+/* Notification */
+.each-notification{
+    border: solid 1px #000;
+}
+
 /* tab view */
 @media (max-width:800px){
     /* other page */

@@ -12,6 +12,7 @@ const mailer = require(appRoot + "/util/mailer.util.js");
 const singlOrder = require(appRoot + "/model/order.model.js")
 const replaceDb= require(appRoot + "/model/replace.model.js");
 const refundDb= require(appRoot + "/model/refund.model.js");
+const notificationDb= require(appRoot + "/model/notification.model.js");
 
 // AJAX CALL
 // admin dashboard
@@ -47,6 +48,7 @@ const adminOperation = async (req, res) => {
         res.render("admin/online-centre", {
           title: "Admin",
           date: date.toJSON().slice(0, 10),
+          user:req.user
         });
 
       // staff
@@ -328,6 +330,26 @@ const renderReplacementPage= async (req, res)=>{
   }
 }
 
+//notification
+const renderNotificationPage = async (req, res)=>{
+  if(req.isAuthenticated()){
+    const notification = await notificationDb.find()
+    res.render('admin/notification', {
+      title:"Notification",
+      notification:notification,
+      user:req.user
+    })
+  }else{
+    res.redirect('/')
+  }
+}
+
+//ajax get notifications
+const ajaxGetNotification = async (req, res)=>{
+    const data = await notificationDb.find()
+    res.send(data)
+}
+
 module.exports = {
   adminDashboard: adminDashboard,
   adminOperation: adminOperation,
@@ -340,5 +362,7 @@ module.exports = {
   undoOrder:undoOrder,
   RenderRefundRequest:RenderRefundRequest,
   requestOption:requestOption,
-  renderReplacementPage:renderReplacementPage
+  renderReplacementPage:renderReplacementPage,
+  renderNotificationPage:renderNotificationPage,
+  ajaxGetNotification:ajaxGetNotification
 };

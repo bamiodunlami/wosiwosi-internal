@@ -14,6 +14,8 @@ router
 
 .get('/staff/:request', staff.staffDashboardRequest) //incoming request from staff dashboard
 
+.get('/staff-notification', staff.renderNotificationPage)
+
 
 
 module.exports = router
