@@ -3,8 +3,6 @@
     padding: 5% 15%;
 }
 
-
-
 .page-button{
     padding: 15px;
 }
@@ -23,6 +21,12 @@
 /* Notification */
 .each-notification{
     border: solid 1px #000;
+}
+
+/* order to process */
+.order-to-process-staff-notification{
+    padding: 5px;
+    border: solid 0.5px #000;
 }
 
 /* tab view */

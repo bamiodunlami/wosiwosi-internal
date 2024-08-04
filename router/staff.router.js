@@ -14,7 +14,7 @@ router
 
 .get('/staff/:request', staff.staffDashboardRequest) //incoming request from staff dashboard
 
-.get('/staff-notification', staff.renderNotificationPage)
+.get('/mark-notification-read', staff.markNotificationAsRead)
 
 
 

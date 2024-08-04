@@ -84,6 +84,7 @@ const searchSingleOrder = async (req, res, next) => {
 // render orders available for workers to process, other db lookup are done by ajax in the js 
 const orderAvailableToProcess = async (req, res) => {
   if (req.isAuthenticated()) {
+    const refund = await refundDb.find({staffId:req.user.username, status:true})
     let orderFromDB = await singleOrder.find()
     // console.log(orderFromDB);
     let path = appRoot + "/public/data/orderToProcess.json";
@@ -94,6 +95,7 @@ const orderAvailableToProcess = async (req, res) => {
         order: orderToProcess,
         orderFromDB:orderFromDB,
         user: req.user,
+        refund:refund
       });
     });
 
@@ -524,6 +526,10 @@ const refund = async (req, res)=>{
             status:false,
             approval:false
           }
+        },
+        $set:{
+          status:false,
+          readStatus:false,
         }
       }) 
       // if updated
@@ -539,6 +545,8 @@ const refund = async (req, res)=>{
         staffId:req.body.staffUsername,
         fname:req.body.staffName,
         date:date.toJSON(),
+        status:false,
+        readStatus:false,
         product:[{
           productName:req.body.productName,
           productQuantity:req.body.productQuantity,

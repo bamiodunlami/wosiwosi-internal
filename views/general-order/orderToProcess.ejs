@@ -7,11 +7,17 @@
     <section class="order-page">
         <div class="container">
 
-            <h6 class="alert alert-success text-center">Order to process</h6>
+            <h6 class="alert alert-success text-center">Order to process <%=order.length%></h6>
 
             <div class="row" >
-                <div class="col-sm-12 col-12 text-center">
-                    <p class="alert alert-warning">Orders available: <strong><%=order.length%></strong></p>
+                <div class="col-sm-12 col-12">
+                    <% if(refund.length > 0){%>
+                        <div class="row d-flex justify-content-center">
+                            <%for(const eachRefund of refund){%>
+                                <div class="col-sm-3 alert alert-danger">Refund order <%=eachRefund.orderNumber%> <a href="/mark-notification-read?id=<%=eachRefund.orderNumber%>">mark as read</a></div>
+                            <%}%>
+                        </div>
+                    <%}%>
                 </div>
             </div>
 

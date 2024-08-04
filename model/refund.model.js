@@ -8,6 +8,7 @@ const refundSchema = mongoose.Schema({
     date:String,
     product:[],
     status:Boolean,
+    readStatus:Boolean,
     customer_details:{}
 })
 

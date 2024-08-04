@@ -7,6 +7,7 @@ const User = require(appRoot + "/model/user.model.js");
 const passport = require(appRoot + "/util/passport.util.js");
 const mailer = require(appRoot + "/util/mailer.util.js");
 const notificationDb= require(appRoot + "/model/notification.model.js");
+const refundDb= require(appRoot + "/model/refund.model.js");
 
 // rendert staff dashboard
 const renderStaffPage = async (req, res) => {
@@ -54,15 +55,15 @@ const staffDashboardRequest = async (req, res) => {
   }
 };
 
-//notification
-const renderNotificationPage = async (req, res)=>{
+//mark notification a read
+const markNotificationAsRead = async (req, res)=>{
   if(req.isAuthenticated()){
-    const notification = await notificationDb.find()
-    res.render('staff/notification', {
-      title:"Notification",
-      notification:notification,
-      user:req.user
+    const markRefundRead = await refundDb.updateOne({orderNumber:req.query.id},{
+      $set:{
+        readStatus:true
+      }
     })
+    res.redirect(`/single-order-processing?id=${req.query.id}`)
   }else{
     res.redirect('/')
   }
@@ -71,5 +72,5 @@ const renderNotificationPage = async (req, res)=>{
 module.exports = {
   renderStaffPage: renderStaffPage,
   staffDashboardRequest: staffDashboardRequest,
-  renderNotificationPage:renderNotificationPage
+  markNotificationAsRead:markNotificationAsRead
 };

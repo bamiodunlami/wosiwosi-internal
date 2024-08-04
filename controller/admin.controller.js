@@ -284,7 +284,12 @@ if(req.isAuthenticated()){
   let productQty = req.query.qty
   let productPrice = req.query.price
 
-  const requestOption = req.params.option;     
+  const requestOption = req.params.option;
+  await refundDb.updateOne({orderNumber:orderNumber},{
+    $set:{
+      status:true
+    }
+  }) // set status of rufund request as true to signifies that a respnse has be given and staff can be notify     
   switch(requestOption){
     // case refund approve
     case "approve-refund":
