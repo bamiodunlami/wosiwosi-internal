@@ -15,7 +15,6 @@ router
 .get("/order", admin.renderOrderListPage) //main order page
 .post('/saveorder', admin.saveAllForProcessing)//save order to process
 
-.get('/clearboard', admin.clearBoard) //clear all already save order to process
 .get('/remove-from-order', admin.removeFromOrder) //remove order from processing list
 .post("/createinfluencer", admin.createInfluencer) //create influencer
 .get('/undo-order', admin.undoOrder) //undo order completion

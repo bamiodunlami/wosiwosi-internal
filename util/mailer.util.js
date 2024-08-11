@@ -283,12 +283,12 @@ const refundMail = (to, bcc, fname, product, quantity, amount) =>{
         </head>
         <body>
             <div class="container">  
-                <p> REFUND AUTOMATION TEST MAIL</p>
                 <p> Dear ${fname},</p>
                 <p>Thank you for shopping at Wosiwosi.</p>
                 <p>We have proccessed your refund for ${product} x ${quantity} at ${amount} </p>
-                <p>It should appear on your bank card through which the order was placed within 7 working days</p>
-                <p>Regards, Wosiwosi Foods UK Limited</p>
+                <p>It should appear on the bank card through which the order was placed within 7 working days</p>
+                <p>Regards,</p>
+                <p>Wosiwosi Foods UK Limited</p>
             </div>
         </body>
         </html>`

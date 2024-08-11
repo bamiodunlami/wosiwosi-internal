@@ -20,6 +20,7 @@
     "express-flash": "^0.0.2",
     "express-session": "^1.18.0",
     "mongoose": "^8.1.1",
+    "node-cron": "^3.0.3",
     "node-express-reload": "^0.1.22",
     "nodemailer": "^6.9.13",
     "passport": "^0.7.0",

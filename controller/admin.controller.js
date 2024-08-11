@@ -219,19 +219,6 @@ const createInfluencer = async (req, res) => {
   }
 };
 
-// clear board
-const clearBoard = async (req, res)=>{
-  if(req.isAuthenticated()){
-    const path = appRoot + "/public/data/orderToProcess.json";
-    const data =""
-    fs.writeFile(path, JSON.stringify(data), (err)=>{
-      if(err) console.log(err)
-        res.redirect(req.headers.referer)
-    })
-  }else{
-    res.redirect('/')
-  }
-}
 
 //undo order
 const undoOrder = async (req, res)=>{
@@ -270,7 +257,7 @@ const RenderRefundRequest = async (req, res)=>{
 }
 }
 
-// approve request
+// approve or rejest refund request
 const requestOption = async (req, res)=>{
 if(req.isAuthenticated()){
   let orderNumber = req.query.id;
@@ -294,7 +281,7 @@ if(req.isAuthenticated()){
         }
       })
       const customer = await refundDb.findOne({orderNumber:orderNumber})
-      // mailer.refundMail("odunlamibamidelejohn@gmail.com","bamidele@wosiwosi.co.uk", customer.customer_details.fname, productName, productQty, productPrice)
+      mailer.refundMail(customer.customer_details.email,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", customer.customer_details.fname, productName, productQty, productPrice)
       res.redirect(req.headers.referer)
       break;
 
@@ -374,7 +361,6 @@ module.exports = {
   adminOperation: adminOperation,
   renderOrderListPage: renderOrderListPage,
   saveAllForProcessing: saveAllForProcessing,
-  clearBoard:clearBoard,
   removeFromOrder: removeFromOrder,
   createInfluencer: createInfluencer,
   undoOrder:undoOrder,
