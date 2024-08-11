@@ -89,7 +89,7 @@ const searchSingleOrder = async (req, res, next) => {
 const orderAvailableToProcess = async (req, res) => {
   if (req.isAuthenticated()) {
     const order = await singleOrder.find({status:false})
-    const refund = await refundDb.find({staffId:req.user.username, status:true})
+    const refund = await refundDb.find({staffId:req.user.username, status:true, readStatus:false})
       res.render("general-order/orderToProcess", {
         title: "Processing Order",
         order: order,

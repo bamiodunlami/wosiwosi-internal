@@ -55,8 +55,8 @@ const staffDashboardRequest = async (req, res) => {
   }
 };
 
-//mark notification a read
-const markNotificationAsRead = async (req, res)=>{
+//mark refund notification a read
+const markRefundNotificationAsRead = async (req, res)=>{
   if(req.isAuthenticated()){
     const markRefundRead = await refundDb.updateOne({orderNumber:req.query.id},{
       $set:{
@@ -72,5 +72,5 @@ const markNotificationAsRead = async (req, res)=>{
 module.exports = {
   renderStaffPage: renderStaffPage,
   staffDashboardRequest: staffDashboardRequest,
-  markNotificationAsRead:markNotificationAsRead
+  markRefundNotificationAsRead:markRefundNotificationAsRead
 };

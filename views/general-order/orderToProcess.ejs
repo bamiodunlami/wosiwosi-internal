@@ -14,7 +14,7 @@
                     <% if(refund.length > 0){%>
                         <div class="row d-flex justify-content-center">
                             <%for(const eachRefund of refund){%>
-                                <div class="col-sm-12 alert alert-danger">Refund order <%=eachRefund.orderNumber%> <a href="/mark-notification-read?id=<%=eachRefund.orderNumber%>">mark as read</a></div>
+                                <div class="col-sm-6 alert alert-danger">! alert order <%=eachRefund.orderNumber%> <a href="/mark-notification-read?id=<%=eachRefund.orderNumber%>">mark as read</a></div>
                             <%}%>
                         </div>
                     <%}%>
