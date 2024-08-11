@@ -118,13 +118,6 @@ const singleOrderProcessing = async (req, res) => {
     let activity = true //determines if anything can be done on the order
     let orderToProcess= []
 
-    // get all order save for processing
-    // let path = appRoot + "/public/data/orderToProcess.json";
-    // fs.readFile(path, async (err, data) => {
-    //    orderToProcess = JSON.parse(data);
-    //    console.log(orderToProcess)
-    // })
-
     // check if order nunber ever exited in the db
     const orderExist = await singleOrder.findOne({ orderNumber: id });
 
@@ -138,39 +131,39 @@ const singleOrderProcessing = async (req, res) => {
         }
     } else{
       // first save the order
-      const saveOrder = new singleOrder({
-        orderNumber:id,
-        status:false,
-        note:[],
-        meatPicker:{
-            id:"",
-            fname:"",
-            active:false,
-            time:"",
-            status:false
-        },
-        dryPicker:{
-            id:"",
-            fname:"",
-            active:false,
-            time:"",
-            status:false
-        },
-        packer:{
-            id:"",
-            fname:"",
-            active:false,
-            time:"",
-            status:false
-        },
-        booking:{
-            status:false
-        },
-        replace:[],
-        refund:[],
-      })
-      saveOrder.save();
-      updateData();
+      // const saveOrder = new singleOrder({
+      //   orderNumber:id,
+      //   status:false,
+      //   note:[],
+      //   meatPicker:{
+      //       id:"",
+      //       fname:"",
+      //       active:false,
+      //       time:"",
+      //       status:false
+      //   },
+      //   dryPicker:{
+      //       id:"",
+      //       fname:"",
+      //       active:false,
+      //       time:"",
+      //       status:false
+      //   },
+      //   packer:{
+      //       id:"",
+      //       fname:"",
+      //       active:false,
+      //       time:"",
+      //       status:false
+      //   },
+      //   booking:{
+      //       status:false
+      //   },
+      //   replace:[],
+      //   refund:[],
+      // })
+      // saveOrder.save();
+      // updateData();
     }
 
     // function to update order data
@@ -308,53 +301,7 @@ const orderNote = async (req, res) => {
       );
       res.send("true");
     } else {
-      // create the order number and save note
-      const saveNote = new singleOrder({
-        orderNumber: req.body.orderNumber,
-        status: false,
-        note: [
-          {
-            fname: req.body.userFname,
-            userId: req.body.userId,
-            note: req.body.note,
-          },
-        ],
-        meatPicker: {
-          id: "",
-          fname:"",
-          active: false,
-          time: "",
-          status: false,
-        },
-        dryPicker: {
-          id: "",
-          fname:"",
-          active: false,
-          time: "",
-          status: false,
-        },
-        packer: {
-          id: "",
-          fname:"",
-          active: false,
-          time: "",
-          status: false,
-        },
-        booking: {
-          status: false,
-        },
-        replace: [],
-        refund: [],
-      });
-
-      saveNote.save();
-
-      if (saveNote) {
-        //if note is saved
-        res.send("true");
-      } else {
-        res.send("false");
-      }
+      res.send("false");
     }
 
     //update notification
