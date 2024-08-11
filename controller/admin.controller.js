@@ -237,7 +237,18 @@ const clearBoard = async (req, res)=>{
 const undoOrder = async (req, res)=>{
   if(req.isAuthenticated()){
     const orderNumber = req.query.id
-     await singlOrder.deleteOne({orderNumber:orderNumber})
+     const update = await singlOrder.updateOne({orderNumber:orderNumber},{
+      $set:{
+        status:false,
+        packer:{
+          id:"",
+          fname:"",
+          active:false,
+          time:"",
+          status:false
+        }
+      }
+     })
       await refundDb.deleteOne({orderNumber:orderNumber})
       await replaceDb.deleteOne({orderNumber:orderNumber})
       res.redirect(req.headers.referer)

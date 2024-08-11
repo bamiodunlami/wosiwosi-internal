@@ -90,12 +90,6 @@ const orderAvailableToProcess = async (req, res) => {
   if (req.isAuthenticated()) {
     const order = await singleOrder.find({status:false})
     const refund = await refundDb.find({staffId:req.user.username, status:true})
-    // let orderFromDB = await singleOrder.find()
-    // console.log(orderFromDB);
-    // let path = appRoot + "/public/data/orderToProcess.json";
-    // fs.readFile(path, async (err, data) => {
-    // });
-      // let orderToProcess = JSON.parse(data);
       res.render("general-order/orderToProcess", {
         title: "Processing Order",
         order: order,
