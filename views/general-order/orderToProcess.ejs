@@ -14,7 +14,7 @@
                     <% if(refund.length > 0){%>
                         <div class="row d-flex justify-content-center">
                             <%for(const eachRefund of refund){%>
-                                <div class="col-sm-3 alert alert-danger">Refund order <%=eachRefund.orderNumber%> <a href="/mark-notification-read?id=<%=eachRefund.orderNumber%>">mark as read</a></div>
+                                <div class="col-sm-12 alert alert-danger">Refund order <%=eachRefund.orderNumber%> <a href="/mark-notification-read?id=<%=eachRefund.orderNumber%>">mark as read</a></div>
                             <%}%>
                         </div>
                     <%}%>
@@ -28,8 +28,8 @@
                         <thead>
                         <tr>
                             <th scope="col">Order</th>
-                            <th scope="col">Meat Picker</th>
-                            <th scope="col">Dry Picker</th>
+                            <th scope="col">Meat</th>
+                            <th scope="col">Picker</th>
                             <th scope="col">Packer</th>
                             <th scope="col">Note</th>
                             <th scope="col">Status</th>
@@ -38,7 +38,7 @@
                         <tbody class="">
                             <% for(i =0; i<order.length; i++ ){%>
                                 <tr class="eachOrder">
-                                    <td><a href="/single-order-processing?id=<%=order[i]%>"><%=order[i]%></a></td>
+                                    <td><a href="/single-order-processing?id=<%=order[i].orderNumber%>"><%=order[i].orderNumber%></a></td>
                                     <!-- ?id=<=order[i].id>&fromDate=<=fromDate>&toDate=<=toDate>&page=<=page>&fromTime=<=fromTime>&toTime=<=toTime> -->
                                         <td>-</td>
                                         <td>-</td>
@@ -72,5 +72,5 @@
 
 
 <%- include('include/footerTemp') -%>
-<script src="/min/orderToProcess.js"></script>
+<script src="/js/orderToProcess.js"></script>
 <%- include('include/footer') -%>

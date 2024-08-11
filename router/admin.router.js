@@ -13,7 +13,6 @@ router
 .get("/admin/:operation", admin.adminOperation) //take care of admin operation
 
 .get("/order", admin.renderOrderListPage) //main order page
-.get('/ordersaved', admin.retrieveSavedForProcessing) // (Ajax call from order.js) this is used to check and thick orders that are already saved for processing
 .post('/saveorder', admin.saveAllForProcessing)//save order to process
 
 .get('/clearboard', admin.clearBoard) //clear all already save order to process

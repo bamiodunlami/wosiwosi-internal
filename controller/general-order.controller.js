@@ -51,17 +51,21 @@ const getOrderDetails = async (req, res)=>{
   }
 }
 
-// ajax call for order to process json file
-const orderToProcessJsonFile = async (req, res)=>{
-  let path = appRoot + "/public/data/orderToProcess.json";
-  fs.readFile(path, async (err, data) => {
-    let orderToProcess = JSON.parse(data);
-    res.send(orderToProcess)
-})
-}
+// (Ajax call from order.js) this is used to check and mark orders that are already saved for processing in the admin order page
+const retrieveSavedForProcessing = async (req, res) => {
+  if (req.isAuthenticated()) {
+    const order = await singleOrder.find()
+    let dataToSend = []
+    for(const eachData of order){
+      dataToSend.push(eachData.orderNumber)
+    }
+    res.send(dataToSend)
+  } else {
+    res.redirect("/");
+  }
+};
 
 // ORDER CONTROLLERS
-
 // search single order and display
 const searchSingleOrder = async (req, res, next) => {
   if (req.isAuthenticated()) {
@@ -84,27 +88,25 @@ const searchSingleOrder = async (req, res, next) => {
 // render orders available for workers to process, other db lookup are done by ajax in the js 
 const orderAvailableToProcess = async (req, res) => {
   if (req.isAuthenticated()) {
+    const order = await singleOrder.find({status:false})
     const refund = await refundDb.find({staffId:req.user.username, status:true})
-    let orderFromDB = await singleOrder.find()
+    // let orderFromDB = await singleOrder.find()
     // console.log(orderFromDB);
-    let path = appRoot + "/public/data/orderToProcess.json";
-    fs.readFile(path, async (err, data) => {
-      let orderToProcess = JSON.parse(data);
+    // let path = appRoot + "/public/data/orderToProcess.json";
+    // fs.readFile(path, async (err, data) => {
+    // });
+      // let orderToProcess = JSON.parse(data);
       res.render("general-order/orderToProcess", {
         title: "Processing Order",
-        order: orderToProcess,
-        orderFromDB:orderFromDB,
+        order: order,
         user: req.user,
         refund:refund
       });
-    });
-
-    // console.log(req.query)
-    // ${date.toLocaleTimeString()}
   } else {
     res.redirect("/");
   }
 };
+
 
 const singleOrderProcessing = async (req, res) => {
   if (req.isAuthenticated()) {
@@ -586,5 +588,5 @@ module.exports = {
   replace:replace,
   refund:refund,
   getOrderDetails:getOrderDetails, //AJax
-  orderToProcessJsonFile:orderToProcessJsonFile //Ajax
+  retrieveSavedForProcessing:retrieveSavedForProcessing //Ajax
 };

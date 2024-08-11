@@ -34,10 +34,7 @@ const singleOrderSchema = mongoose.Schema({
     },
     booking:{
         status:Boolean
-    },
-    replace:[],
-    refund:[],
-    
+    }
 })
 
 const singleOrder = new mongoose.model("singleOrder", singleOrderSchema);

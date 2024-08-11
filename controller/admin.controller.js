@@ -4,6 +4,7 @@ const rootpath = path.resolve(process.cwd());
 appRoot.setPath(rootpath);
 
 const fs = require("fs");
+const singleOrder = require("../model/order.model");
 const date = new Date();
 const passport = require(appRoot + "/util/passport.util.js");
 const User = require(appRoot + "/model/user.model.js");
@@ -68,7 +69,6 @@ const adminOperation = async (req, res) => {
   }
 };
 
-
 // order page
 const renderOrderListPage = async (req, res) => {
   if (req.isAuthenticated()) {
@@ -110,48 +110,48 @@ const renderOrderListPage = async (req, res) => {
   }
 };
 
-
-// (Ajax call from order.js) this is used to check and mark orders that are already saved for processing in the admin order page
-const retrieveSavedForProcessing = async (req, res) => {
+// Ajax save order for processing 
+const saveAllForProcessing = async (req, res) => {
   if (req.isAuthenticated()) {
-    const path = appRoot + "/public/data/orderToProcess.json";
-    fs.readFile(path, (err, data) => {
-      if (err) {
-        console.log(err);
-      } else {
-        res.send(data); //send data to frontend
-      }
-    });
-  } else {
-    res.redirect("/");
-  }
-};
-
-// save order for processing
-const saveAllForProcessing = (req, res) => {
-  if (req.isAuthenticated()) {
-    // console.log(req.body)
-    let path = appRoot + "/public/data/orderToProcess.json";
-    // first read the json of path
-    fs.readFile(path, (err, data) => {
-      if (err) {
-        console.log("error reading data" + err);
-        res.send("Error! kindly refresh");
-      } else {
-        let formerData = JSON.parse(data);
-        let newData = [...new Set([...formerData, ...req.body.data])]; //merge without duplicate
-
-        // // Override what is currently in orderToProcess.json file
-        fs.writeFile(path, JSON.stringify(newData), (err) => {
-          if (err) {
-            console.log("error writing data" + err);
-            res.send("Error! kindly refresh");
-          } else {
-            res.send("Orders Saved");
+    let data = req.body.data
+    // console.log(data)
+    //safe data to databose
+    for (const eachData of data){
+      const order = await singlOrder.findOne({orderNumber:eachData})
+      if(!order){
+        let saveOrder = new singleOrder({
+          orderNumber:eachData,
+          status:false,
+          note:[],
+          meatPicker:{
+              id:'',
+              fname:'',
+              active:false,
+              time:'',
+              status:false
+          },
+          dryPicker:{
+            id:'',
+            fname:'',
+            active:false,
+            time:'',
+            status:false
+          },
+          packer:{
+            id:'',
+            fname:'',
+            active:false,
+            time:'',
+            status:false
+          },
+          booking:{
+              status:false
           }
-        });
+        })
+        await saveOrder.save()
       }
-    });
+    }
+    res.send('Orders Saved')
   } else {
     res.send("Error! kindly refresh");
   }
@@ -160,27 +160,10 @@ const saveAllForProcessing = (req, res) => {
 // remove single order from the orders to be done that day
 const removeFromOrder = async (req, res, next) => {
   if(req.isAuthenticated()){
-    const removeOrderFromDb = await singlOrder.deleteOne({orderNumber:req.query.order})
-    const path = appRoot + "/public/data/orderToProcess.json";
-    fs.readFile(path, (err, data)=>{ //read file availalble
-      if(err){
-        console.log(err);
-        res.redirect(req.headers.referer)
-      }else{
-        const orderToProcess = JSON.parse(data)
-        const orderNumberToRemove = req.query.order;
-        // remove the order numver from the arrau
-        const newOrderToProcess = orderToProcess.filter((order) =>{ 
-          return order !== orderNumberToRemove
-        })
-        // rewrite the file to order to process
-        fs.writeFile(path, JSON.stringify(newOrderToProcess), (err)=>{
-          if(err) console.log(err)
-            res.redirect('/processingorder')
-        })
-
-      }
-    });
+    await singlOrder.deleteOne({orderNumber:req.query.order})
+    await replaceDb.deleteOne({orderNumber:req.query.order})
+    await refundDb.deleteOne({orderNumber:req.query.order})
+    res.redirect('/processingorder')
   }else{
     res.redirect("/")
   }
@@ -379,7 +362,6 @@ module.exports = {
   adminDashboard: adminDashboard,
   adminOperation: adminOperation,
   renderOrderListPage: renderOrderListPage,
-  retrieveSavedForProcessing: retrieveSavedForProcessing,
   saveAllForProcessing: saveAllForProcessing,
   clearBoard:clearBoard,
   removeFromOrder: removeFromOrder,

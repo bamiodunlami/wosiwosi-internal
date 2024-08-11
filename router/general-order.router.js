@@ -14,7 +14,7 @@ router
 // AJAX
 .get("/orderInfo", generalOrder.checkStatusOfOrderToProcess) // (ajax call from orderToProcess.js) this function is used to check status and details of order already done in the orderAvailableToProcess page
 .post('/get-order-details', generalOrder.getOrderDetails) // ajax to get all status of single order (refund in particular)
-.get('/order-to-process', generalOrder.orderToProcessJsonFile) //send order to process file
+.get('/order-to-process', generalOrder.retrieveSavedForProcessing) //send order to process file
 
 // OTHERS
 .get('/searchsingleorder', generalOrder.searchSingleOrder) //search for order number
