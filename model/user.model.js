@@ -43,10 +43,7 @@ async function migrateUsers() {
     try {
       const mig = await User.find();
       for (const i in mig) {
-        // mig[i].setPassword = `${mig[i].fname}1234@@`
-        let password =`${mig[i].fname}${Math.floor(Math.random()*982332)}` 
-        console.log(mig[i].fname + " " + password)
-        await mig[i].setPassword(password)
+        mig[i].passChange = false
         await mig[i].save()
       }
       // mig.setPassword("Abosede1234@@")
