@@ -35,21 +35,24 @@ const userSchema = mongoose.Schema({
 
 userSchema.plugin(passportLocalMongoose)
 
-// const User = new mongoose.model('User', userSchema);
-module.exports = new mongoose.model('User', userSchema);
+const User = new mongoose.model('User', userSchema);
+// module.exports = new mongoose.model('User', userSchema);
 
 // // Add to database
 async function migrateUsers() {
     try {
       const mig = await User.find();
       for (const i in mig) {
-        mig[i].passChange = "false"
+        // mig[i].setPassword = `${mig[i].fname}1234@@`
+        let password =`${mig[i].fname}${Math.floor(Math.random()*982332)}` 
+        console.log(mig[i].fname + " " + password)
+        await mig[i].setPassword(password)
         await mig[i].save()
       }
       // mig.setPassword("Abosede1234@@")
       // mig.save()
-      console.log('Data migration completed successfully.');
-      console.log(mig);
+      // console.log('Data migration completed successfully.');
+      // console.log(mig);
   
       // Disconnect from MongoDB
       await mongoose.disconnect();
@@ -57,5 +60,5 @@ async function migrateUsers() {
       console.error('Data migration failed:', error);
     }
   }
-//   migrateUsers();
-//  module.exports = User
+  migrateUsers();
+ module.exports = User

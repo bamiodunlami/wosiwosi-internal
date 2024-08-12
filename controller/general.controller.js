@@ -169,7 +169,7 @@ const changePassword = async (req, res)=>{
                 }
             }) //find user and update bool
             // console.log(updatePasswordBool) //log respoonse
-            mailer.passwordChange( req.user.username,"bamidele@wosiwosi.co.uk", req.user.fname); //send mail
+            // mailer.passwordChange( req.user.username,"bamidele@wosiwosi.co.uk", req.user.fname); //send mail
             res.render("general/success", {
                 title:"success"
             }) //redirect to success page
