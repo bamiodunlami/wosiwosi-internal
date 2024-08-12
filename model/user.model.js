@@ -35,8 +35,8 @@ const userSchema = mongoose.Schema({
 
 userSchema.plugin(passportLocalMongoose)
 
-const User = new mongoose.model('User', userSchema);
-// module.exports = new mongoose.model('User', userSchema);
+// const User = new mongoose.model('User', userSchema);
+module.exports = new mongoose.model('User', userSchema);
 
 // // Add to database
 async function migrateUsers() {
@@ -60,5 +60,5 @@ async function migrateUsers() {
       console.error('Data migration failed:', error);
     }
   }
-  migrateUsers();
- module.exports = User
+  // migrateUsers();
+//  module.exports = User
