@@ -300,7 +300,7 @@ if(req.isAuthenticated()){
         }
       })
       const customer = await refundDb.findOne({orderNumber:orderNumber})
-      mailer.refundMail(customer.customer_details.email,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", customer.customer_details.fname, productName, productQty, productPrice)
+      // mailer.refundMail(customer.customer_details.email,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", customer.customer_details.fname, productName, productQty, productPrice)
       res.redirect(req.headers.referer)
       break;
 
