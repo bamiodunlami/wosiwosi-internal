@@ -69,6 +69,25 @@ const adminOperation = async (req, res) => {
   }
 };
 
+//change staff duty
+const changeDuty = async (req, res)=>{  
+  let incominData = req.body.duty
+  let dutyAndId = incominData.split(' ')
+  let duty = dutyAndId[0]
+  let id = dutyAndId[1]
+  const changeDuty = await User.updateOne({username:id},{
+    $set:{
+      duty:duty
+    }
+  })
+  if(changeDuty.modifiedCount == 1){
+    res.send("true")
+  }else{
+    res.send('false')
+  }
+
+}
+
 // order page
 const renderOrderListPage = async (req, res) => {
   if (req.isAuthenticated()) {
@@ -359,6 +378,7 @@ const ajaxGetRefundNotification = async (req, res)=>{
 module.exports = {
   adminDashboard: adminDashboard,
   adminOperation: adminOperation,
+  changeDuty:changeDuty,
   renderOrderListPage: renderOrderListPage,
   saveAllForProcessing: saveAllForProcessing,
   removeFromOrder: removeFromOrder,

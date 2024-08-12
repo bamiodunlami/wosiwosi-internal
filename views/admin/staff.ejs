@@ -23,9 +23,32 @@
                             <% for(i=staff.length-1; i>=0; i-- ){%>
                                 <tr>
                                     <td><a href="/staff-profile?id=<%=staff[i].username%>" class="link"><%=staff[i].fname%></a></td>
-                                    <td class="lname"></td>
+                                    <td class="lname"><%=staff[i].lname%></td>
                                     <td></td>
-                                    <td><%=staff[i].duty.toUpperCase()%></td>
+                                    <td>
+                                        <%if(staff[i].duty == "manager"){%>
+                                            <%=staff[i].duty.toUpperCase()%>
+                                        <%}else{%>
+                                            <select class="form-select staff-duty" aria-label="Default select example">
+                                                <!-- packers -->
+                                                <%if(staff[i].duty == "packer"){%>
+                                                    <option selected value="packer <%=staff[i].username%>"><%=staff[i].duty.toUpperCase()%></option>
+                                                    <option value="meat-picker <%=staff[i].username%>">MEAT-PICKER</option>
+                                                    <option value="dry-picker <%=staff[i].username%>">DRY-PICKER</option>
+                                                <!-- meat pickers -->
+                                                <%}else if(staff[i].duty == "meat-picker"){%>
+                                                    <option selected value="meat-picker <%=staff[i].username%>"><%=staff[i].duty.toUpperCase()%></option>
+                                                    <option value="dry-picker <%=staff[i].username%>">DRY-PICKER</option>
+                                                    <option value="packer <%=staff[i].username%>">PACKER</option>
+                                                 <!-- -->
+                                                <%}else if(staff[i].duty == "dry-picker"){%>
+                                                    <option selected value="dry-picker <%=staff[i].username%>"><%=staff[i].duty.toUpperCase()%></option>
+                                                    <option value="packer <%=staff[i].username%>">PACKER</option>
+                                                    <option value="meat-picker <%=staff[i].username%>">meat-picker</option>
+                                                <%}%>
+                                            </select>
+                                        <%}%>
+                                    </td>
                                     <% if(user.role == "admin" && user.level == 6){%>
                                         <td><a href="/resetpassword?id=<%=staff[i].username%>" class="btn btn-warning btn-sm">Reset</a></td>
                                     <%}%>
@@ -48,6 +71,6 @@
     </section>
 
     <%- include('include/footerTemp') -%>
-    <!-- <script src="/min/general.js"></script>
-    <script src="/min/order.js"></script> -->
+    <script src="/min/staff-duty.js"></script>
+    <!-- <script src="/min/order.js"></script> -->
     <%- include('include/footer') -%>

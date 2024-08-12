@@ -129,7 +129,7 @@ const forgotPassword = async (req, res)=>{
            const passwordSaved = await staff.save();
            if(passwordSaved){
             console.log("password changed")
-            mailer.passwordReset(req.query.id, "bamidele@wosiwosi.co.uk", staff.fname, newPass)
+            mailer.passwordReset("media@wosiwosi.co.uk", "bamidele@wosiwosi.co.uk", staff.fname, newPass)
                 if(staff.passChange == true){
                     await User.updateOne({username:req.query.id}, {passChange:false})
                 }

@@ -12,6 +12,8 @@ router
 .get("/admin", admin.adminDashboard) //render admin dashboard
 .get("/admin/:operation", admin.adminOperation) //take care of admin operation
 
+.post('/change-duty', admin.changeDuty) // change staff duty
+
 .get("/order", admin.renderOrderListPage) //main order page
 .post('/saveorder', admin.saveAllForProcessing)//save order to process
 

@@ -1,0 +1,1 @@
+try{let t=$(".staff-duty");for(const n of t)$(n).on("change",(()=>{let t={duty:$(n).val()};fetch("/change-duty",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(t)}).then((t=>t.json())).then((t=>{1==t?(alert("Duty changed"),window.location.reload()):alert("Error! contact admin")}))}))}catch(t){}
