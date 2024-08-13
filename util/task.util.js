@@ -25,7 +25,7 @@ async function getAllRefund(){
                 product = refundProduct.productName
                 quantity = refundProduct.productQuantity
                 amount = refundProduct.productPrice
-                console.log(customerMail,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", orderNumber, fname, product, quantity, amount)
+                // console.log(customerMail,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", orderNumber, fname, product, quantity, amount)
                 mailer.refundMail(customerMail,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", orderNumber, fname, product, quantity, amount)
             }
         }
@@ -40,7 +40,7 @@ async function resetTodayRefund(){
         }
     })
     console.log(eachRefundDOne)
-    mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "refund")
+    // mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "refund")
 }
 
 //reset today's completed order
@@ -51,7 +51,7 @@ async function resetTodayCompletedOrder(){
             await completedDb.deleteOne({status:true})
         }
     }
-    mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "competed")
+    // mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "competed")
     console.log("reset done")
 }
 
@@ -68,7 +68,9 @@ cron.schedule('0 20 * * 1-4', () => {
 
 // Tester
 //   cron.schedule('* * * * *', () => {
-//     getAllRefund()
+//     // getAllRefund()
+//     // resetTodayCompletedOrder(); 
+//     // resetTodayRefund();
 //     console.log("sent")
 //   }, {
 //     scheduled: true,

@@ -295,6 +295,7 @@ const refundMail = (to, bcc, orderNumber, fname, product, quantity, amount) =>{
         </html>`
     }
     transporter.sendMail(mailOptions)
+    console.log("mail sent")
 }
 
 //refund mail
