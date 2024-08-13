@@ -12,12 +12,12 @@ const replaceDb= require(appRoot + "/model/replace.model.js");
 const refundDb= require(appRoot + "/model/refund.model.js");
 const completedDb= require(appRoot + "/model/completed.model.js");
 
-// getAllRefund() 
+// getAllRefund();
 async function getAllRefund(){
     const refundData = await refundDb.find()
     for(let i = 0; i<refundData.length; i++){
         for(const refundProduct of refundData[i].product){
-            if(refundProduct.approval == true){
+            if(refundData[i].close == false && refundProduct.approval == true ){
                 let customerMail, fname, product, quantity, amount
                 orderNumber = refundData[i].orderNumber
                 customerMail = refundData[i].customer_details.email
@@ -26,7 +26,7 @@ async function getAllRefund(){
                 quantity = refundProduct.productQuantity
                 amount = refundProduct.productPrice
                 console.log(customerMail,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", orderNumber, fname, product, quantity, amount)
-                // mailer.refundMail(customerMail,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", orderNumber, fname, product, quantity, amount)
+                mailer.refundMail(customerMail,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", orderNumber, fname, product, quantity, amount)
             }
         }
     }
@@ -56,8 +56,9 @@ async function resetTodayCompletedOrder(){
 }
 
 // 7pm every day
-cron.schedule('0 21 * * 1-4', () => {
-    resetTodayCompletedOrder() // reset completed order
+cron.schedule('0 20 * * 1-4', () => {
+    getAllRefund();
+    resetTodayCompletedOrder(); // reset completed order
     resetTodayRefund();
   }, {
     scheduled: true,
@@ -67,7 +68,7 @@ cron.schedule('0 21 * * 1-4', () => {
 
 // Tester
 //   cron.schedule('* * * * *', () => {
-//     // getAllRefund()
+//     getAllRefund()
 //     console.log("sent")
 //   }, {
 //     scheduled: true,
