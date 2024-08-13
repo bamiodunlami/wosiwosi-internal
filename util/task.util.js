@@ -10,12 +10,67 @@ const mailer = require(appRoot + "/util/mailer.util.js");
 const singlOrder = require(appRoot + "/model/order.model.js")
 const replaceDb= require(appRoot + "/model/replace.model.js");
 const refundDb= require(appRoot + "/model/refund.model.js");
+const completedDb= require(appRoot + "/model/completed.model.js");
+
+// // getAllRefund() 
+async function getAllRefund(){
+    const refundData = await refundDb.find()
+    for(let i = 0; i<refundData.length; i++){
+        for(const refundProduct of refundData[i].product){
+            if(refundProduct.approval == true){
+                let customerMail, fname, product, quantity, amount
+                orderNumber = refundData[i].orderNumber
+                customerMail = refundData[i].customer_details.email
+                fname = refundData[i].customer_details.fname
+                product = refundProduct.productName
+                quantity = refundProduct.productQuantity
+                amount = refundProduct.productPrice
+                // mailer.refundMail(customerMail,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", orderNumber, fname, product, quantity, amount)
+            }
+        }
+    }
+}
+
+//reset Refund
+async function resetTodayRefund(){
+    let eachRefundDOne =await refundDb.updateMany({
+        $set:{
+            close:true
+        }
+    })
+    console.log(eachRefundDOne)
+    mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "refund")
+}
+
+//reset today's completed order
+async function resetTodayCompletedOrder(){
+    const completedOrder = await completedDb.find()
+    for(const eachCompletedOrder of completedOrder){
+        if(eachCompletedOrder.status == true){
+            await completedDb.deleteOne({status:true})
+        }
+    }
+    mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "competed")
+    console.log("reset done")
+}
+
+// 7pm every day
+cron.schedule('0 21 * * 1-4', () => {
+    resetTodayCompletedOrder() // reset completed order
+    resetTodayRefund();
+  }, {
+    scheduled: true,
+    timezone: "Europe/London"
+});
 
 
-
-// cron.schedule('0 19 * * 1-4', () => {
-//     console.log('Running a job at 01:00 at America/Sao_Paulo timezone');
+// Tester
+//   cron.schedule('* * * * *', () => {
+//     // getAllRefund()
+//     console.log("sent")
 //   }, {
 //     scheduled: true,
 //     timezone: "Europe/London"
 //   });
+
+module.exports= cron

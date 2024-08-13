@@ -246,7 +246,7 @@ const redeemRequest = (to, bcc, fname, amount) => {
 };
 
 //refund mail
-const refundMail = (to, bcc, fname, product, quantity, amount) =>{
+const refundMail = (to, bcc, orderNumber, fname, product, quantity, amount) =>{
     mailOptions ={
         from: '"Wosiwosi" <info@wosiwosi.co.uk>',
         to: to,
@@ -283,11 +283,58 @@ const refundMail = (to, bcc, fname, product, quantity, amount) =>{
         </head>
         <body>
             <div class="container">  
+                <p> ORDER NUMBER ${orderNumber},</p>
                 <p> Dear ${fname},</p>
                 <p>Thank you for shopping at Wosiwosi.</p>
                 <p>We have proccessed your refund for ${product} x ${quantity} at ${amount} </p>
                 <p>It should appear on the bank card through which the order was placed within 7 working days</p>
                 <p>Regards,</p>
+                <p>Wosiwosi Foods UK Limited</p>
+            </div>
+        </body>
+        </html>`
+    }
+    transporter.sendMail(mailOptions)
+}
+
+//refund mail
+const alertDailyCompleteReset = (to, purpose) =>{
+    mailOptions ={
+        from: '"Wosiwosi" <info@wosiwosi.co.uk>',
+        to: to,
+        subject: `Today's ${purpose} Reset`,
+        html: 
+        `<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>REFUND PROCCESSED</title>
+            <style>
+                body {
+                    font-family: Poppins, sans-serif;
+                    line-height: 1.6;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    text-align: left;
+                }
+                .disclaimer{
+                    font-size:11px;
+                }
+                h1 {
+                    color: #007519;
+                }
+                p {
+                    margin: 15px 0;
+                    font-size:18px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">  
+                <p> This is to let you know that today's ${purpose} order has been reset</p>
                 <p>Wosiwosi Foods UK Limited</p>
             </div>
         </body>
@@ -302,5 +349,6 @@ module.exports ={
     mailInfluencerDetails:mailInfluencerDetails,
     passwordChange:passwordChange,
     redeemRequest:redeemRequest,
-    refundMail:refundMail
+    refundMail:refundMail,
+    alertDailyCompleteReset:alertDailyCompleteReset
 }

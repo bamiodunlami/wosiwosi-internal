@@ -6,7 +6,7 @@
                     <div class="alert alert-light">
                         <h6> Meat:
                         <% if(orderFromDB.meatPicker.fname){%>                        
-                            <%=orderFromDB.meatPicker.fname%>
+                            <span id="meat-picker-duty"><%=orderFromDB.meatPicker.fname%></span>
                         <%}%>
                         </h6>
                     </div>
@@ -17,7 +17,7 @@
                     <div class="alert alert-light">
                         <h6>Picker:
                         <% if(orderFromDB.dryPicker.fname){%>                        
-                            <%=orderFromDB.dryPicker.fname%>
+                            <span id="dry-picker-duty"><%=orderFromDB.dryPicker.fname%></span>
                         <%}%>
                         </h6>
                     </div>
@@ -28,7 +28,7 @@
                     <div class="alert alert-light">
                         <h6> Packer:
                         <% if(orderFromDB.packer.fname){%>                        
-                            <%=orderFromDB.packer.fname%>
+                           <span id="packer-duty"><%=orderFromDB.packer.fname%></span> 
                         <%}%>
                         </h6>
                     </div>

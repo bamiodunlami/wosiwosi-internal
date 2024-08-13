@@ -20,6 +20,8 @@ const influencerRoute = require(`${__dirname}/router/influencer.router.js`);
 const generalOrder = require(`${__dirname}/router/general-order.router.js`);
 const staff = require (`${__dirname}/router/staff.router.js`)
 
+const cron = require (`${__dirname}/util/task.util.js`)
+
 const port=process.env.PORT || 3000;
 
 // require body parser

@@ -7,7 +7,7 @@ appRoot.setPath(rootpath)
 
 mongoose.connect(`mongodb+srv://odunlamibamidelejohn:${process.env.DBPASS}@wosiwosiorder.svc0u4z.mongodb.net/?retryWrites=true&w=majority`)
 
-const singleOrderSchema = mongoose.Schema({
+const completeSchema = mongoose.Schema({
     orderNumber:String,
     status:Boolean,
     note:[],
@@ -32,32 +32,8 @@ const singleOrderSchema = mongoose.Schema({
         time:String,
         status:Boolean
     },
-    booking:{
-        status:Boolean
-    }
 })
 
-const singleOrder = new mongoose.model("singleOrder", singleOrderSchema);
+const completed = new mongoose.model("completed", completeSchema);
 
-//DB Update and migration
-async function migrateUsers() {
-    try {
-      const mig = await singleOrder.find();
-      // Update each user record with the new field
-      for (let i=0; i<mig.length; i++) {
-            mig[i].close = false
-            await mig[i].save()
-      }
-  
-      console.log('Data migration completed successfully.');
-      console.log(mig);
-  
-      // Disconnect from MongoDB
-      await mongoose.disconnect();
-    } catch (error) {
-      console.error('Data migration failed:', error);
-    }
-  }
-//   migrateUsers();
-
-module.exports = singleOrder;
+module.exports = completed;

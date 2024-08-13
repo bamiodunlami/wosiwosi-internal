@@ -14,6 +14,7 @@ const singlOrder = require(appRoot + "/model/order.model.js")
 const replaceDb= require(appRoot + "/model/replace.model.js");
 const refundDb= require(appRoot + "/model/refund.model.js");
 const notificationDb= require(appRoot + "/model/notification.model.js");
+const completedDb= require(appRoot + "/model/completed.model.js");
 
 // AJAX CALL
 // admin dashboard
@@ -257,6 +258,7 @@ const undoOrder = async (req, res)=>{
      })
       await refundDb.deleteOne({orderNumber:orderNumber})
       await replaceDb.deleteOne({orderNumber:orderNumber})
+      await completedDb.deleteOne({orderNumber:orderNumber})
       res.redirect(req.headers.referer)
   }else{
     res.redirect("/")
@@ -266,7 +268,7 @@ const undoOrder = async (req, res)=>{
 //refund requests
 const RenderRefundRequest = async (req, res)=>{
   if(req.isAuthenticated()){
-  const refund = await  refundDb.find();
+  const refund = await  refundDb.find({close:false});
   res.render('admin/refund',{
     title:"Refund Requests",
     refund:refund
@@ -300,7 +302,12 @@ if(req.isAuthenticated()){
         }
       })
       const customer = await refundDb.findOne({orderNumber:orderNumber})
-      // mailer.refundMail(customer.customer_details.email,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", customer.customer_details.fname, productName, productQty, productPrice)
+      //send refund mail
+      try{
+        mailer.refundMail(customer.customer_details.email,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", orderNumber, customer.customer_details.fname, productName, productQty, productPrice)
+      }catch(e){
+        console.log(e)
+      }
       res.redirect(req.headers.referer)
       break;
 

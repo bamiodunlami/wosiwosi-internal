@@ -24,16 +24,19 @@ const refundDb= require(appRoot + "/model/refund.model.js");
 
 const notificationDb= require(appRoot + "/model/notification.model.js");
 
+const completedDb= require(appRoot + "/model/completed.model.js");
+
 
 // ALL AJAX
 // (ajax call from orderToProcess.js) this function is used to check status and details of order already done in the orderAvailableToProcess page
 const checkStatusOfOrderToProcess = async (req, res) => {
   if (req.isAuthenticated) {
-    const orderInfo = await singleOrder.find();
-    if (!orderInfo) {
+    const orderData = await singleOrder.find();
+        
+    if (!orderData) {
       res.send("false");
     } else {
-      res.json(orderInfo);
+      res.json(orderData);
     }
   } else {
     res.redirect("/");
@@ -64,6 +67,16 @@ const retrieveSavedForProcessing = async (req, res) => {
     res.redirect("/");
   }
 };
+
+const getSingleOrderProcessingStatus = async (req, res)=>{
+  console.log(req.query)
+  const data = await singleOrder.findOne({orderNumber:req.query.id})
+  if(!data){
+    res.send("false")
+  }else{
+    res.send(data)
+  }
+}
 
 // ORDER CONTROLLERS
 // search single order and display
@@ -172,7 +185,7 @@ const singleOrderProcessing = async (req, res) => {
                   fname:req.user.fname,
                   active: true,
                   time: date.toJSON(),
-                  status: false,
+                  // status: false,
                 },
               },
             }
@@ -187,8 +200,8 @@ const singleOrderProcessing = async (req, res) => {
                 id: req.user.username,
                 fname:req.user.fname,
                 active: true,
-                time: date.toJSON(),
-                status: false,
+                time: date.toJSON()
+                // status: false,
               },
             },
           }
@@ -204,7 +217,7 @@ const singleOrderProcessing = async (req, res) => {
                 fname:req.user.fname,
                 active: true,
                 time: date.toJSON(),
-                status: false,
+                // status: false,
               },
             },
           }
@@ -381,6 +394,39 @@ const orderDone = async (req, res) =>{
       default:
         break
     }
+
+    //check if order is completed, then save to temporaty complete order db
+    let completed  = await singleOrder.findOne({orderNumber:orderId})
+    if(completed.status == true){
+      const saveToCompletedDc = new completedDb({
+        orderNumber:completed.orderNumber,
+        status:completed.status,
+        note:completed.note,
+        meatPicker:{
+            id:completed.meatPicker.id,
+            fname:completed.meatPicker.fname,
+            active:completed.meatPicker.active,
+            time:completed.meatPicker.time,
+            status:completed.meatPicker.status
+        },
+        dryPicker:{
+          id:completed.dryPicker.id,
+          fname:completed.dryPicker.fname,
+          active:completed.dryPicker.active,
+          time:completed.dryPicker.time,
+          status:completed.dryPicker.status
+        },
+        packer:{
+          id:completed.packer.id,
+          fname:completed.packer.fname,
+          active:completed.packer.active,
+          time:completed.packer.time,
+          status:completed.packer.status
+        },
+      })
+      await saveToCompletedDc.save()
+    }
+
     res.redirect("/processingorder");
   }else{
     res.redirect("/")
@@ -390,7 +436,7 @@ const orderDone = async (req, res) =>{
 // view  completed orders
 const completedOrder = async (req, res)=>{
   if(req.isAuthenticated()){
-    const completedOrder = await singleOrder.find({status:true})
+    const completedOrder = await completedDb.find({status:true})
       res.render('general-order/completed-order', {
       title:"Completed Order",
       order:completedOrder,
@@ -473,6 +519,7 @@ const refund = async (req, res)=>{
         $set:{
           status:false,
           readStatus:false,
+          close:false
         }
       }) 
       // if updated
@@ -489,6 +536,7 @@ const refund = async (req, res)=>{
         fname:req.body.staffName,
         date:date.toJSON(),
         status:false,
+        close:false,
         readStatus:false,
         product:[{
           productName:req.body.productName,
@@ -529,5 +577,6 @@ module.exports = {
   replace:replace,
   refund:refund,
   getOrderDetails:getOrderDetails, //AJax
-  retrieveSavedForProcessing:retrieveSavedForProcessing //Ajax
+  retrieveSavedForProcessing:retrieveSavedForProcessing, //Ajax
+  getSingleOrderProcessingStatus:getSingleOrderProcessingStatus
 };
