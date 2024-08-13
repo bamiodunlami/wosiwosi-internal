@@ -12,7 +12,7 @@ const replaceDb= require(appRoot + "/model/replace.model.js");
 const refundDb= require(appRoot + "/model/refund.model.js");
 const completedDb= require(appRoot + "/model/completed.model.js");
 
-// // getAllRefund() 
+// getAllRefund() 
 async function getAllRefund(){
     const refundData = await refundDb.find()
     for(let i = 0; i<refundData.length; i++){
@@ -25,6 +25,7 @@ async function getAllRefund(){
                 product = refundProduct.productName
                 quantity = refundProduct.productQuantity
                 amount = refundProduct.productPrice
+                console.log(customerMail,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", orderNumber, fname, product, quantity, amount)
                 // mailer.refundMail(customerMail,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", orderNumber, fname, product, quantity, amount)
             }
         }

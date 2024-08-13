@@ -301,13 +301,13 @@ if(req.isAuthenticated()){
           "product.$.approval":true
         }
       })
-      const customer = await refundDb.findOne({orderNumber:orderNumber})
+      // const customer = await refundDb.findOne({orderNumber:orderNumber})
       //send refund mail
-      try{
-        mailer.refundMail(customer.customer_details.email,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", orderNumber, customer.customer_details.fname, productName, productQty, productPrice)
-      }catch(e){
-        console.log(e)
-      }
+      // try{
+      //   mailer.refundMail(customer.customer_details.email,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", orderNumber, customer.customer_details.fname, productName, productQty, productPrice)
+      // }catch(e){
+      //   console.log(e)
+      // }
       res.redirect(req.headers.referer)
       break;
 
