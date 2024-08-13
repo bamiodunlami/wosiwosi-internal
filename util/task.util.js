@@ -40,7 +40,7 @@ async function resetTodayRefund(){
         }
     })
     console.log(eachRefundDOne)
-    // mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "refund")
+    mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "refund")
 }
 
 //reset today's completed order
@@ -51,7 +51,7 @@ async function resetTodayCompletedOrder(){
             await completedDb.deleteOne({status:true})
         }
     }
-    // mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "competed")
+    mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "competed")
     console.log("reset done")
 }
 
