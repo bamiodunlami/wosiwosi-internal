@@ -2,12 +2,28 @@
 
             <!-- if order is alreaddy added to Orders to be processed -->
             <div class="hidden" id="available-bar"> 
-                <a href="/processingorder" class="btn btn-warning btn-sm">Back</a>
+                <a href="/processingorder" class="btn btn-warning btn-sm" style="margin-bottom: 2px;">Back</a>
                 <%if(user.role == "admin"){%>
-                    <a href="/remove-from-order?order=<%=order.id%>" class="btn btn-danger btn-sm">Remove from order to be process today</a>
-                    <a href="/reset-worker?order=<%=order.id%>" class="btn btn-dark btn-sm">Reset worker</a>
+                    <div class="col-sm-12 mb-1">
+                        <a href="/remove-from-order?order=<%=order.id%>" class="btn btn-danger btn-sm">Remove from order to be process today</a>
+                        <a href="/reset-worker?order=<%=order.id%>" class="btn btn-dark btn-sm">Reset worker</a>
+                    </div>
+
+                    <div class="col-sm-6 mb-1">
+                        <select class="form-select staff-duty" id="assign-staff" aria-label="Default select example">
+                            <option value="">Assign to staff</option>
+                            <option value="patrick@mywosiwosi.co.uk">Patrick</option>
+                            <option value="liton@mywosiwosi.co.uk">Liton</option>
+                            <option value="sajal@mywosiwosi.co.uk">Sajal</option>
+                            <option value="moshood@mywosiwosi.co.uk">Moshood</option>
+                            <option value="lekan@mywosiwosi.co.uk">Lekan</option>
+                            <option value="osas@mywosiwosi.co.uk">Osas</option>
+                            <option value="gbenga@mywosiwosi.co.uk">Gbenga</option>
+                            <option value="gafar@mywosiwosi.co.uk">Gafar</option>
+                        </select>
+                    </div>
                 <%}%>
-                <button class="btn btn-success btn-sm" id="completeBtn">Completed</button>
+                <button class="btn btn-success btn-sm" id="completeBtn">Completed order</button>
             </div>
 
             <!-- if order is not added to Orders to be processed -->

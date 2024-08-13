@@ -192,32 +192,98 @@ const removeFromOrder = async (req, res, next) => {
 
 //This function is used to remove workers details from previous order that wasnt sent, so that workers today can work on them
 const resetWorker = async (req, res) =>{
-  await singlOrder.updateOne({orderNumber:req.query.order},{
-    $set:{
-        meatPicker:{
-          id:"",
-          fname:"",
-          active:false,
-          time:"",
-          status:false
-      },
-      dryPicker:{
-          id:"",
-          fname:"",
-          active:false,
-          time:"",
-          status:false
-      },
-      packer:{
-          id:"",
-          fname:"",
-          active:false,
-          time:"",
-          status:false
-      },
+  if(req.isAuthenticated()){
+    await singlOrder.updateOne({orderNumber:req.query.order},{
+      $set:{
+          meatPicker:{
+            id:"",
+            fname:"",
+            active:false,
+            time:"",
+            status:false
+        },
+        dryPicker:{
+            id:"",
+            fname:"",
+            active:false,
+            time:"",
+            status:false
+        },
+        packer:{
+            id:"",
+            fname:"",
+            active:false,
+            time:"",
+            status:false
+        },
+      }
+   })
+   res.redirect('/processingorder')
+  }else{
+    res.redirect("/")
+  }
+}
+
+//Assign order to staff
+const assignStaffToOrder = async (req, res)=>{
+  if(req.isAuthenticated()){
+    let orderNumber = req.body.orderNumber
+    const staff = await User.findOne({username:req.body.staffId})
+    console.log(staff.duty)
+    if(staff){
+      switch (staff.duty){
+        case "meat-picker":
+          await singleOrder.updateOne({orderNumber:orderNumber},{
+            $set:{
+              meatPicker:{
+                id: staff.username,
+                fname:staff.fname,
+                active: true,
+                time: date.toJSON(),
+                status: false,
+              }
+            }
+          })
+          break;
+        
+        case "dry-picker":
+          await singleOrder.updateOne({orderNumber:orderNumber},{
+            $set:{
+              dryPicker: {
+                id: staff.username,
+                fname:staff.fname,
+                active: true,
+                time: date.toJSON(),
+                status: false,
+              },
+            }
+          })
+          break;
+  
+        case "packer":
+          await singleOrder.updateOne({orderNumber:orderNumber},{
+            $set:{
+              packer: {
+                id: staff.username,
+                fname:staff.fname,
+                active: true,
+                time: date.toJSON(),
+                status: false,
+              },
+            }
+          })
+          break;
+        
+        default:
+          break
+      }
+      res.send(true)
+    }else{
+      res.send(false)
     }
- })
- res.redirect('/processingorder')
+  }else{
+    res.redirect('/')
+  }
 }
 
 // create influencer
@@ -420,6 +486,7 @@ module.exports = {
   saveAllForProcessing: saveAllForProcessing,
   removeFromOrder: removeFromOrder,
   resetWorker:resetWorker,
+  assignStaffToOrder:assignStaffToOrder,
   createInfluencer: createInfluencer,
   undoOrder:undoOrder,
   RenderRefundRequest:RenderRefundRequest,
