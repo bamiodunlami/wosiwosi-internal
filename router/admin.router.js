@@ -18,6 +18,7 @@ router
 .post('/saveorder', admin.saveAllForProcessing)//save order to process
 
 .get('/remove-from-order', admin.removeFromOrder) //remove order from processing list
+.get('/reset-worker', admin.resetWorker)
 .post("/createinfluencer", admin.createInfluencer) //create influencer
 .get('/undo-order', admin.undoOrder) //undo order completion
 .get('/get-refund-request', admin.RenderRefundRequest) //render refund page

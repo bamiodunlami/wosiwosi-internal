@@ -2,10 +2,11 @@
 
             <!-- if order is alreaddy added to Orders to be processed -->
             <div class="hidden" id="available-bar"> 
+                <a href="/processingorder" class="btn btn-warning btn-sm">Back</a>
                 <%if(user.role == "admin"){%>
                     <a href="/remove-from-order?order=<%=order.id%>" class="btn btn-danger btn-sm">Remove from order to be process today</a>
+                    <a href="/reset-worker?order=<%=order.id%>" class="btn btn-dark btn-sm">Reset worker</a>
                 <%}%>
-                <a href="/processingorder" class="btn btn-warning btn-sm">Back</a>
                 <button class="btn btn-success btn-sm" id="completeBtn">Completed</button>
             </div>
 

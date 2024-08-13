@@ -190,6 +190,36 @@ const removeFromOrder = async (req, res, next) => {
 
 };
 
+//This function is used to remove workers details from previous order that wasnt sent, so that workers today can work on them
+const resetWorker = async (req, res) =>{
+  await singlOrder.updateOne({orderNumber:req.query.order},{
+    $set:{
+        meatPicker:{
+          id:"",
+          fname:"",
+          active:false,
+          time:"",
+          status:false
+      },
+      dryPicker:{
+          id:"",
+          fname:"",
+          active:false,
+          time:"",
+          status:false
+      },
+      packer:{
+          id:"",
+          fname:"",
+          active:false,
+          time:"",
+          status:false
+      },
+    }
+ })
+ res.redirect('/processingorder')
+}
+
 // create influencer
 const createInfluencer = async (req, res) => {
   if (req.isAuthenticated()) {
@@ -389,6 +419,7 @@ module.exports = {
   renderOrderListPage: renderOrderListPage,
   saveAllForProcessing: saveAllForProcessing,
   removeFromOrder: removeFromOrder,
+  resetWorker:resetWorker,
   createInfluencer: createInfluencer,
   undoOrder:undoOrder,
   RenderRefundRequest:RenderRefundRequest,
