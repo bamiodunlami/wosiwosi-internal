@@ -499,75 +499,66 @@ const replace = async (req, res)=>{
 
 // refund request by staff
 const refund = async (req, res)=>{
-  // console.log(req.body)
   if(req.isAuthenticated()){
     const orderDetails = await woocommerce.get(`orders/${req.body.orderNumber}`);
     const findOrder = await refundDb.findOne({orderNumber:req.body.orderNumber});
     // if order number exist
     if(findOrder){
-      //check if this product has already been refunded
-      for (const availableOrder of findOrder.product){
-        if(availableOrder.productName == req.body.productName){
-          res.send(false)
-        }else{
-          // update refund details
-          const updateRefund = await refundDb.updateOne({orderNumber:req.body.orderNumber}, {
-            $push:{
-              product:{
-                productName:req.body.productName,
-                productQuantity:req.body.productQuantity,
-                productPrice:req.body.productPrice,
-                status:false,
-                approval:false
-              }
-            },
-            $set:{
+        // update refund details
+        const updateRefund = await refundDb.updateOne({orderNumber:req.body.orderNumber}, {
+          $push:{
+            product:{
+              productName:req.body.productName,
+              productQuantity:req.body.productQuantity,
+              productPrice:req.body.productPrice,
               status:false,
-              readStatus:false,
-              close:false
+              approval:false
             }
-          }) 
-          // if updated
-          if(updateRefund.acknowledged == true){
-            res.send(true)
-          }else{ //if not updated
-            res.send(false)
+          },
+          $set:{
+            status:false,
+            readStatus:false,
+            close:false
           }
+        }) 
+        // if updated
+        if(updateRefund.acknowledged == true){
+          res.send(true)
+        }else{ //if not updated
+          res.send(false)
         }
+    }else{ //if order never existed
+      //create orderNumber
+      const createOrder = await new refundDb({
+        orderNumber:req.body.orderNumber,
+        staffId:req.body.staffUsername,
+        fname:req.body.staffName,
+        date:date.toJSON(),
+        status:false,
+        close:false,
+        readStatus:false,
+        product:[{
+          productName:req.body.productName,
+          productQuantity:req.body.productQuantity,
+          productPrice:req.body.productPrice,
+          status:false,
+          approval:false
+        }],
+        customer_details:{
+          fname:orderDetails.data.billing.first_name,
+          lname:orderDetails.data.billing.last_name,
+          phone:orderDetails.data.billing.phone,
+          email:orderDetails.data.billing.email
+        }
+      })
+      createOrder.save();
+      //if saved
+      if(createOrder){
+        res.send(true)
+      }else{ //if not saved
+        res.send(false)
       }
-    } 
-    // else{ //if order never existed
-    //   //create orderNumber
-    //   const createOrder = await new refundDb({
-    //     orderNumber:req.body.orderNumber,
-    //     staffId:req.body.staffUsername,
-    //     fname:req.body.staffName,
-    //     date:date.toJSON(),
-    //     status:false,
-    //     close:false,
-    //     readStatus:false,
-    //     product:[{
-    //       productName:req.body.productName,
-    //       productQuantity:req.body.productQuantity,
-    //       productPrice:req.body.productPrice,
-    //       status:false,
-    //       approval:false
-    //     }],
-    //     customer_details:{
-    //       fname:orderDetails.data.billing.first_name,
-    //       lname:orderDetails.data.billing.last_name,
-    //       phone:orderDetails.data.billing.phone,
-    //       email:orderDetails.data.billing.email
-    //     }
-    //   })
-    //   createOrder.save();
-    //   //if saved
-    //   if(createOrder){
-    //     res.send(true)
-    //   }else{ //if not saved
-    //     res.send(false)
-    //   }
-    // }
+    }
   }else{
     res.redirect("/")
   }
