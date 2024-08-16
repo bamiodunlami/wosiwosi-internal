@@ -77,15 +77,26 @@
                                             <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Refund <span class="RefundModalProductName"></span></h1>
+                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Refund</h1>
                                                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
-                                                    Confirm you want to refund the above product ?
+                                                    <div class="row">
+                                                        <div class="mb-2">
+                                                            <input type="text" class="form-control" placeholder="Refund Product" id="refundProduct" value="" disabled>
+                                                        </div>
+                                                        <div class="mb-2 col-6">
+                                                            <input type="number" class="form-control" placeholder="Quantity" id="refundQuantity" value="">
+                                                            <div style="color: red;" id="quantityError"></div>
+                                                        </div>
+                                                        <div class="mb-2 col-6">
+                                                            <input type="text" class="form-control" placeholder="Amount" id="refundPrice" value="">
+                                                        </div>
+                                                    </div>
                                                 </div>
                                                 <div class="modal-footer">
                                                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                    <button type="button" class="btn btn-danger" id="refundBtn">Confirm</button>
+                                                    <button type="button" class="btn btn-danger" id="refundBtn" disabled>Confirm</button>
                                                 </div>
                                             </div>
                                             </div>
