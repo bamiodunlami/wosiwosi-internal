@@ -20,6 +20,8 @@ router
 .get('/remove-from-order', admin.removeFromOrder) //remove order from processing list
 .get('/reset-worker', admin.resetWorker)
 .post('/assign-staff-to-order', admin.assignStaffToOrder)
+.get('/lock-order', admin.lockOrder)
+.get('/unlock-order', admin.unlockOrder)
 .post("/createinfluencer", admin.createInfluencer) //create influencer
 .get('/undo-order', admin.undoOrder) //undo order completion
 .get('/get-refund-request', admin.RenderRefundRequest) //render refund page

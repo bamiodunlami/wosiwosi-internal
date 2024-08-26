@@ -77,22 +77,23 @@
 
 
         <!-- table and action -->
-        <%if(authorize == true && activity == true){%>
-            <%- include("functions/order-table") -%>
-            <%- include("functions/order-action") -%>
-        <%}else{%>
-            <h4 class="alert alert-danger text-center">This order is already being processed</h4>\
-                <%- include("functions/order-table") -%>
-            <a href="/processingorder" class="btn btn-warning btn-sm">Back to processing orders</a>
-            <a href="/completed-order" class="btn btn-dark btn-sm">View completed orders</a>
-            <%if(user.duty == "manager"){%>
-                <a href="/undo-order?id=<%=order.id%>" class="btn btn-danger btn-sm">Undo Order</a>
-            <%}%>
-        <%}%>
+                    <!-- if order is not locked but active and available -->
+                    <%if(authorize == true && activity == true){%>
+                        <%- include("functions/order-table") -%>
+                        <%- include("functions/order-action") -%>
+                    <%}else{%>
+                        <h4 class="alert alert-danger text-center">This order is already being processed</h4>
+                        <%- include("functions/order-table") -%>
+                        <a href="/processingorder" class="btn btn-warning btn-sm">Back to processing orders</a>
+                        <a href="/completed-order" class="btn btn-dark btn-sm">View completed orders</a>
+                        <%if(user.duty == "manager"){%>
+                            <a href="/undo-order?id=<%=order.id%>" class="btn btn-danger btn-sm">Undo Order</a>
+                        <%}%>
+                    <%}%>
 
         </div>
     </section>
 
     <%- include('include/footerTemp') -%>
-    <script src="/min/singleOrderProcessing.js"></script>
+    <script src="/js/singleOrderProcessing.js"></script>
     <%- include('include/footer') -%>

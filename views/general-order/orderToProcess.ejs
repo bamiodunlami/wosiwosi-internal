@@ -38,7 +38,16 @@
                         <tbody class="">
                             <% for(i =0; i<order.length; i++ ){%>
                                 <tr class="eachOrder">
-                                    <td><a href="/single-order-processing?id=<%=order[i].orderNumber%>"><%=order[i].orderNumber%></a></td>
+                                    <td>
+                                        <%if(order[i].lock == true ){%>
+                                            <%if(user.duty == "manager"){%>
+                                                <a href="/single-order-processing?id=<%=order[i].orderNumber%>"><%=order[i].orderNumber%></a> <i class="fa-solid fa-lock"></i></td>
+                                            <%}else{%>
+                                                <a><%=order[i].orderNumber%></a> <i class="fa-solid fa-lock"></i></td>
+                                            <%}%>
+                                        <%}else{%>
+                                         <a href="/single-order-processing?id=<%=order[i].orderNumber%>"><%=order[i].orderNumber%></a></td>
+                                         <%}%>
                                     <!-- ?id=<=order[i].id>&fromDate=<=fromDate>&toDate=<=toDate>&page=<=page>&fromTime=<=fromTime>&toTime=<=toTime> -->
                                         <td>-</td>
                                         <td>-</td>

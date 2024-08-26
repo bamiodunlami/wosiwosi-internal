@@ -224,7 +224,7 @@ const resetWorker = async (req, res) =>{
   }
 }
 
-//Assign order to staff
+//Assign order to staff ajax
 const assignStaffToOrder = async (req, res)=>{
   if(req.isAuthenticated()){
     let orderNumber = req.body.orderNumber
@@ -281,6 +281,59 @@ const assignStaffToOrder = async (req, res)=>{
     }else{
       res.send(false)
     }
+  }else{
+    res.redirect('/')
+  }
+}
+
+//lock order
+const lockOrder = async (req, res)=>{
+  if(req.isAuthenticated()){
+    orderNumber = req.query.order
+    //reset worker and lock order
+    await singlOrder.updateOne({orderNumber:orderNumber},{
+      $set:{
+        lock:true,
+          meatPicker:{
+            id:"",
+            fname:"",
+            active:false,
+            time:"",
+            status:false
+        },
+        dryPicker:{
+            id:"",
+            fname:"",
+            active:false,
+            time:"",
+            status:false
+        },
+        packer:{
+            id:"",
+            fname:"",
+            active:false,
+            time:"",
+            status:false
+        },
+      }
+   })
+   res.redirect(req.headers.referer)
+  }else{
+    res.redirect('/')
+  }
+}
+
+// unlock order
+const unlockOrder = async (req, res)=>{
+  if(req.isAuthenticated()){
+    orderNumber = req.query.order
+    //reset worker and lock order
+    await singlOrder.updateOne({orderNumber:orderNumber},{
+      $set:{
+        lock:false,
+      }
+   })
+   res.redirect(req.headers.referer)
   }else{
     res.redirect('/')
   }
@@ -486,6 +539,8 @@ module.exports = {
   saveAllForProcessing: saveAllForProcessing,
   removeFromOrder: removeFromOrder,
   resetWorker:resetWorker,
+  lockOrder:lockOrder,
+  unlockOrder:unlockOrder,
   assignStaffToOrder:assignStaffToOrder,
   createInfluencer: createInfluencer,
   undoOrder:undoOrder,
