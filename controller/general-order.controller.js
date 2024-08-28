@@ -273,7 +273,7 @@ const singleOrderProcessing = async (req, res) => {
     }
 
     const order = await woocommerce.get(`orders/${id}`); // get order from woocommerce
-    console.log(orderExist)
+    // console.log(orderExist)
     res.render("general-order/single-order-processing", {
       title: "Order Processing",
       order: order.data,

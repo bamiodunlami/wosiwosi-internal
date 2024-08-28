@@ -5,6 +5,7 @@
             <h6 class="alert alert-success text-center">Order <span id="orderNumber"><%=order.id%></span></h6>
             <input type="hidden" value="<%=user.username%>" id="staffId">
             <input type="hidden" value="<%=user.fname%>" id="fname">
+            <input type="hidden" value="<%=user.duty%>" id="duty">
 
          <!-- reveal who is who (who is handling the order) -->
         <%- include('functions/who-is') -%>
@@ -20,9 +21,10 @@
                         <%=order.shipping.city%> 
                         <%=order.shipping.state%>
                     </h6>
-                    <h6>Post Code: <%=order.billing.postcode%></h6>
+                    <h6>Post Code: <%=order.shipping.postcode%></h6>
                     <%if(user.duty == "manager"){%>
                     <h6><a href="tel:+44<%=order.billing.phone%>">+44 <%=order.billing.phone%></a></h6>
+                    <h6><%=order.billing.email%></h6>
                     <%}%>
                     </div>
                 </div>
@@ -95,5 +97,5 @@
     </section>
 
     <%- include('include/footerTemp') -%>
-    <script src="/min/singleOrderProcessing.js"></script>
+    <script src="/js/singleOrderProcessing.js"></script>
     <%- include('include/footer') -%>
