@@ -13,6 +13,7 @@ const completeSchema = mongoose.Schema({
     note:[],
     meatPicker:{
         id:String,
+        product:[],
         fname:String,
         active:Boolean,
         time:String,
@@ -20,6 +21,7 @@ const completeSchema = mongoose.Schema({
     },
     dryPicker:{
         id:String,
+        product:[],
         fname:String,
         active:Boolean,
         time:String,
@@ -27,6 +29,7 @@ const completeSchema = mongoose.Schema({
     },
     packer:{
         id:String,
+        product:[],
         fname:String,
         active:Boolean,
         time:String,

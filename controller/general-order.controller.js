@@ -44,7 +44,7 @@ const checkStatusOfOrderToProcess = async (req, res) => {
 };
 
 // ajax to get all status of each product row of single order page(refund in particular)
-const getOrderDetails = async (req, res)=>{
+const getRefundOrderDetails = async (req, res)=>{
   const sendRefundDetails = await refundDb.findOne({orderNumber:req.body.orderNumber});  
   // console.log(sendRefundDetails)
   if(sendRefundDetails){
@@ -68,8 +68,9 @@ const retrieveSavedForProcessing = async (req, res) => {
   }
 };
 
+// Ajax this function sends details of order clicked for processing
 const getSingleOrderProcessingStatus = async (req, res)=>{
-  console.log(req.query)
+  // console.log(req.query)
   const data = await singleOrder.findOne({orderNumber:req.query.id})
   if(!data){
     res.send("false")
@@ -127,6 +128,7 @@ const singleOrderProcessing = async (req, res) => {
 
     // check if order nunber ever exited in the db
     const orderExist = await singleOrder.findOne({ orderNumber: id });
+    // console.log(orderExist)
 
     // if order number exist, check and update user accordingly
     if (orderExist) {
@@ -137,51 +139,20 @@ const singleOrderProcessing = async (req, res) => {
           checkIfOrderHasNotBeenTaken();
         }
     } else{
-      // first save the order
-      // const saveOrder = new singleOrder({
-      //   orderNumber:id,
-      //   status:false,
-      //   note:[],
-      //   meatPicker:{
-      //       id:"",
-      //       fname:"",
-      //       active:false,
-      //       time:"",
-      //       status:false
-      //   },
-      //   dryPicker:{
-      //       id:"",
-      //       fname:"",
-      //       active:false,
-      //       time:"",
-      //       status:false
-      //   },
-      //   packer:{
-      //       id:"",
-      //       fname:"",
-      //       active:false,
-      //       time:"",
-      //       status:false
-      //   },
-      //   booking:{
-      //       status:false
-      //   },
-      //   replace:[],
-      //   refund:[],
-      // })
-      // saveOrder.save();
-      // updateData();
+      //
     }
 
     // function to update order data
     async function updateData (){
+      const orderData =  await singleOrder.findOne({orderNumber: id})
       switch (userDuty) {
         // if meat picker
         case "meat-picker":
-           await singleOrder.updateOne({ orderNumber: id },{
+           await singleOrder.updateOne({orderNumber: id},{
               $set: {
                 meatPicker: {
                   id: req.user.username,
+                  product:orderData.meatPicker.product, //update product
                   fname:req.user.fname,
                   active: true,
                   time: date.toJSON(),
@@ -198,6 +169,7 @@ const singleOrderProcessing = async (req, res) => {
             $set: {
               dryPicker: {
                 id: req.user.username,
+                product:orderData.dryPicker.product,
                 fname:req.user.fname,
                 active: true,
                 time: date.toJSON()
@@ -214,6 +186,7 @@ const singleOrderProcessing = async (req, res) => {
             $set: {
               packer: {
                 id: req.user.username,
+                product:orderData.packer.product,
                 fname:req.user.fname,
                 active: true,
                 time: date.toJSON(),
@@ -336,8 +309,10 @@ const orderNote = async (req, res) => {
 // a particular order has been done
 const orderDone = async (req, res) =>{
   if(req.isAuthenticated()){
-    let orderId = req.query.id
+    let orderId = req.body.id
     let userDuty = req.user.duty
+    let product = req.body.product
+    // console.log(product)
     // console.log(orderId, userDuty)
     switch (userDuty){
 
@@ -346,6 +321,7 @@ const orderDone = async (req, res) =>{
           $set:{
             meatPicker:{
               id: req.user.username,
+              product:product,
               fname:req.user.fname,
               active: true,
               time: date.toJSON(),
@@ -360,6 +336,7 @@ const orderDone = async (req, res) =>{
           $set:{
             dryPicker: {
               id: req.user.username,
+              product:product,
               fname:req.user.fname,
               active: true,
               time: date.toJSON(),
@@ -375,6 +352,7 @@ const orderDone = async (req, res) =>{
             status:true,
             packer: {
               id: req.user.username,
+              product:product,
               fname:req.user.fname,
               active: true,
               time: date.toJSON(),
@@ -396,7 +374,7 @@ const orderDone = async (req, res) =>{
         break
     }
 
-    //check if order is completed, then save to temporaty complete order db
+    // check if order is completed, then save to temporaty complete order db
     let completed  = await singleOrder.findOne({orderNumber:orderId})
     if(completed.status == true){
       const saveToCompletedDc = new completedDb({
@@ -405,6 +383,7 @@ const orderDone = async (req, res) =>{
         note:completed.note,
         meatPicker:{
             id:completed.meatPicker.id,
+            product:completed.meatPicker.product,
             fname:completed.meatPicker.fname,
             active:completed.meatPicker.active,
             time:completed.meatPicker.time,
@@ -412,6 +391,7 @@ const orderDone = async (req, res) =>{
         },
         dryPicker:{
           id:completed.dryPicker.id,
+          product:completed.dryPicker.product,
           fname:completed.dryPicker.fname,
           active:completed.dryPicker.active,
           time:completed.dryPicker.time,
@@ -419,6 +399,7 @@ const orderDone = async (req, res) =>{
         },
         packer:{
           id:completed.packer.id,
+          product:completed.packer.product,
           fname:completed.packer.fname,
           active:completed.packer.active,
           time:completed.packer.time,
@@ -428,7 +409,7 @@ const orderDone = async (req, res) =>{
       await saveToCompletedDc.save()
     }
 
-    res.redirect("/processingorder");
+    res.send(true);
   }else{
     res.redirect("/")
   }
@@ -576,7 +557,7 @@ module.exports = {
   completedOrder,
   replace:replace,
   refund:refund,
-  getOrderDetails:getOrderDetails, //AJax
+  getRefundOrderDetails:getRefundOrderDetails, //AJax
   retrieveSavedForProcessing:retrieveSavedForProcessing, //Ajax
   getSingleOrderProcessingStatus:getSingleOrderProcessingStatus
 };

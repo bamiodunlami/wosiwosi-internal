@@ -13,6 +13,7 @@ const singleOrderSchema = mongoose.Schema({
     note:[],
     meatPicker:{
         id:String,
+        product:[],
         fname:String,
         active:Boolean,
         time:String,
@@ -20,6 +21,7 @@ const singleOrderSchema = mongoose.Schema({
     },
     dryPicker:{
         id:String,
+        product:[],
         fname:String,
         active:Boolean,
         time:String,
@@ -27,6 +29,7 @@ const singleOrderSchema = mongoose.Schema({
     },
     packer:{
         id:String,
+        product:[],
         fname:String,
         active:Boolean,
         time:String,
@@ -46,8 +49,8 @@ async function migrateUsers() {
       const mig = await singleOrder.find();
       // Update each user record with the new field
       for (let i=0; i<mig.length; i++) {
-            mig[i].lock = false
-            await mig[i].save()
+            // mig[i].lock = false
+            // await mig[i].save()
       }
   
       console.log('Data migration completed successfully.');
