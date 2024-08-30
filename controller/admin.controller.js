@@ -339,6 +339,22 @@ const unlockOrder = async (req, res)=>{
   }
 }
 
+//clear note
+const clearNote = async (req, res)=>{
+  if(req.isAuthenticated()){
+    orderNumber = req.query.order
+    //reset worker and lock order
+    await singlOrder.updateOne({orderNumber:orderNumber},{
+      $set:{
+        note:[],
+      }
+   })
+   res.redirect(req.headers.referer)
+  }else{
+    res.redirect('/')
+  }
+}
+
 // create influencer
 const createInfluencer = async (req, res) => {
   if (req.isAuthenticated()) {
@@ -544,6 +560,7 @@ module.exports = {
   assignStaffToOrder:assignStaffToOrder,
   createInfluencer: createInfluencer,
   undoOrder:undoOrder,
+  clearNote:clearNote,
   RenderRefundRequest:RenderRefundRequest,
   requestOption:requestOption,
   renderReplacementPage:renderReplacementPage,
