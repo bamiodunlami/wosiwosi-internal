@@ -5,6 +5,7 @@ appRoot.setPath(rootpath);
 
 const fs = require("fs");
 const singleOrder = require("../model/order.model");
+const { orderNote } = require("./general-order.controller");
 const date = new Date();
 const passport = require(appRoot + "/util/passport.util.js");
 const User = require(appRoot + "/model/user.model.js");
@@ -355,6 +356,19 @@ const clearNote = async (req, res)=>{
   }
 }
 
+const hideProduct = async (req, res)=>{
+  if(req.isAuthenticated()){
+    const updateOrder = await singleOrder.updateOne({orderNumber:req.body.id}, {
+      $set:{
+        hideProduct:req.body.product
+      }
+    })
+    res.send(true)
+  }else{
+    res.redirect("/")
+  }
+}
+
 // create influencer
 const createInfluencer = async (req, res) => {
   if (req.isAuthenticated()) {
@@ -561,6 +575,7 @@ module.exports = {
   createInfluencer: createInfluencer,
   undoOrder:undoOrder,
   clearNote:clearNote,
+  hideProduct:hideProduct,
   RenderRefundRequest:RenderRefundRequest,
   requestOption:requestOption,
   renderReplacementPage:renderReplacementPage,

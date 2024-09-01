@@ -23,6 +23,7 @@ router
 .get('/lock-order', admin.lockOrder)
 .get('/unlock-order', admin.unlockOrder)
 .get('/clear-note', admin.clearNote)
+.post('/hide-product', admin.hideProduct)
 .post("/createinfluencer", admin.createInfluencer) //create influencer
 .get('/undo-order', admin.undoOrder) //undo order completion
 .get('/get-refund-request', admin.RenderRefundRequest) //render refund page

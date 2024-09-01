@@ -35,10 +35,8 @@ const singleOrderSchema = mongoose.Schema({
         time:String,
         status:Boolean
     },
-    booking:{
-        status:Boolean
-    },
-    lock:Boolean
+    lock:Boolean,
+    hideProduct:[]
 })
 
 const singleOrder = new mongoose.model("singleOrder", singleOrderSchema);
@@ -49,8 +47,8 @@ async function migrateUsers() {
       const mig = await singleOrder.find();
       // Update each user record with the new field
       for (let i=0; i<mig.length; i++) {
-            // mig[i].lock = false
-            // await mig[i].save()
+            mig[i].hideProduct = []
+            await mig[i].save()
       }
   
       console.log('Data migration completed successfully.');
