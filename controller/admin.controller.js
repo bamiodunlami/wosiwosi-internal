@@ -338,7 +338,7 @@ const unlockOrder = async (req, res)=>{
   }else{
     res.redirect('/')
   }
-}
+};
 
 //clear note
 const clearNote = async (req, res)=>{
