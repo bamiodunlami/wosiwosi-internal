@@ -37,6 +37,6 @@ const completeSchema = mongoose.Schema({
     },
 })
 
-const completed = new mongoose.model("completed", completeSchema);
+const complete = new mongoose.model("complete", completeSchema);
 
-module.exports = completed;
+module.exports = complete;

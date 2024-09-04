@@ -22,7 +22,7 @@
                         <%=order.shipping.state%>
                     </h6>
                     <h6>Post Code: <%=order.shipping.postcode%></h6>
-                    <%if(user.duty == "manager"){%>
+                    <%if(user.level > 1){%>
                     <h6><a href="tel:+44<%=order.billing.phone%>">+44 <%=order.billing.phone%></a></h6>
                     <h6><%=order.billing.email%></h6>
                     <%}%>

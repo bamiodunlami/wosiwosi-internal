@@ -10,6 +10,7 @@ mongoose.connect(`mongodb+srv://odunlamibamidelejohn:${process.env.DBPASS}@wosiw
 const singleOrderSchema = mongoose.Schema({
     orderNumber:String,
     status:Boolean,
+    date:String,
     note:[],
     meatPicker:{
         id:String,
@@ -47,7 +48,7 @@ async function migrateUsers() {
       const mig = await singleOrder.find();
       // Update each user record with the new field
       for (let i=0; i<mig.length; i++) {
-            mig[i].hideProduct = []
+            mig[i].date = ""
             await mig[i].save()
       }
   
