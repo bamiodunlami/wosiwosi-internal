@@ -56,14 +56,14 @@ async function resetTodayCompletedOrder(){
 }
 
 // 7pm every day
-cron.schedule('0 20 * * 1-4', () => {
-    getAllRefund();
-    resetTodayCompletedOrder(); // reset completed order
-    resetTodayRefund();
-  }, {
-    scheduled: true,
-    timezone: "Europe/London"
-});
+// cron.schedule('0 20 * * 1-4', () => {
+//     getAllRefund();
+//     resetTodayCompletedOrder(); // reset completed order
+//     resetTodayRefund();
+//   }, {
+//     scheduled: true,
+//     timezone: "Europe/London"
+// });
 
 
 // Tester
