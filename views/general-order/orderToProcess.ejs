@@ -7,6 +7,11 @@
     <section class="order-page">
         <div class="container">
 
+
+                <%if(user.role="staff"){%>
+                    <h6 class="alert alert-dark text-center">TEAM <%=user.team.value.toUpperCase()%></h6>
+                <%}%>
+
             <h6 class="alert alert-success text-center">Order to process <%=order.length%></h6>
 
             <div class="row" >

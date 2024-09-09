@@ -34,9 +34,14 @@
                                 <option value="gafar@mywosiwosi.co.uk">Gafar</option>
                             </select>
                         </div>
-                        
                     <%}%>
+                    <!-- if it's team mode -->
+                     <%if(setting == true && user.duty == "packer" && orderFromDB.meatPicker.active == false){%>
+                        <button class="btn btn-dark btn-sm" id="meatPacked">Meat Packed</button>
+                        <button class="btn btn-success btn-sm" id="completeBtn">Order Packed</button>
+                     <%}else{%>
                     <button class="btn btn-success btn-sm" id="completeBtn">Completed order</button>
+                    <%}%>
                 </div>
             <%}else{%>
             <!-- if order is not added to Orders to be processed (function in singleOrderProcessing.js) -->

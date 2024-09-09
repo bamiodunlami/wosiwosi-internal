@@ -140,6 +140,8 @@ const singleOrderProcessing = async (req, res) => {
     let activity = true //determines if anything can be done on the order
     // let orderToProcess= []
 
+    const settings = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
+
       // check if order nunber ever exited in the db
       const orderExist = await singleOrder.findOne({ orderNumber: id });
 
@@ -164,6 +166,7 @@ const singleOrderProcessing = async (req, res) => {
           authorize:authorize,
           activity:activity,
           user:user,
+          setting:settings.team
         });
       }catch(e){
           console.log(e)
@@ -633,6 +636,123 @@ const refund = async (req, res)=>{
   }
 }
 
+//when it is in team mode
+const meatPacked = async(req, res)=>{
+  if(req.isAuthenticated()){
+    let orderId = req.body.id
+    let userDuty = req.user.duty
+    let product = req.body.product
+    // console.log(product)
+    // console.log(orderId, userDuty)
+    switch (userDuty){
+
+      // case "meat-picker":
+      //   await singleOrder.updateOne({orderNumber:orderId},{
+      //     $set:{
+      //       meatPicker:{
+      //         id: req.user.username,
+      //         product:product,
+      //         fname:req.user.fname,
+      //         active: true,
+      //         time: date.toJSON(),
+      //         status: true,
+      //       }
+      //     }
+      //   })
+      //   break;
+      
+      // case "dry-picker":
+      //   await singleOrder.updateOne({orderNumber:orderId},{
+      //     $set:{
+      //       dryPicker: {
+      //         id: req.user.username,
+      //         product:product,
+      //         fname:req.user.fname,
+      //         active: true,
+      //         time: date.toJSON(),
+      //         status: true,
+      //       },
+      //     }
+      //   })
+      //   break;
+
+      case "packer":
+        await singleOrder.updateOne({orderNumber:orderId},{
+          $set:{
+            meatPicker: {
+              id: req.user.username,
+              product:product,
+              fname:req.user.fname,
+              active: true,
+              time: date.toJSON(),
+              status: true,
+            },
+            date:date.toJSON().slice(0,10)
+          }
+        })
+        break;
+      
+      // case "manager":
+      //     await singleOrder.updateOne({orderNumber:orderId},{
+      //       $set:{
+      //         status:true,
+      //         packer: {
+      //           id: req.user.username,
+      //           fname:req.user.fname,
+      //           active: true,
+      //           time: date.toJSON(),
+      //           status: true,
+      //         },
+      //         date:date.toJSON().slice(0,10)
+      //       }
+      //     });
+      //   break;
+
+      default:
+        break
+    }
+
+    // check if order is completed, then save to temporaty complete order db
+    // let completed  = await singleOrder.findOne({orderNumber:orderId})
+    // if(completed.status == true){
+    //   const saveToCompletedDc = new completedDb({
+    //     orderNumber:completed.orderNumber,
+    //     status:completed.status,
+    //     note:completed.note,
+    //     meatPicker:{
+    //         id:completed.meatPicker.id,
+    //         product:completed.meatPicker.product,
+    //         fname:completed.meatPicker.fname,
+    //         active:completed.meatPicker.active,
+    //         time:completed.meatPicker.time,
+    //         status:completed.meatPicker.status
+    //     },
+    //     dryPicker:{
+    //       id:completed.dryPicker.id,
+    //       product:completed.dryPicker.product,
+    //       fname:completed.dryPicker.fname,
+    //       active:completed.dryPicker.active,
+    //       time:completed.dryPicker.time,
+    //       status:completed.dryPicker.status
+    //     },
+    //     packer:{
+    //       id:completed.packer.id,
+    //       product:completed.packer.product,
+    //       fname:completed.packer.fname,
+    //       active:completed.packer.active,
+    //       time:completed.packer.time,
+    //       status:completed.packer.status
+    //     },
+    //   })
+    //   await saveToCompletedDc.save()
+    // }
+
+    res.send(true);
+  }else{
+    res.redirect("/")
+  }
+}
+
 // Export module
 module.exports = {
   searchSingleOrder:searchSingleOrder,
@@ -646,5 +766,7 @@ module.exports = {
   refund:refund,
   getRefundOrderDetails:getRefundOrderDetails, //AJax
   retrieveSavedForProcessing:retrieveSavedForProcessing, //Ajax
-  getSingleOrderProcessingStatus:getSingleOrderProcessingStatus
+  getSingleOrderProcessingStatus:getSingleOrderProcessingStatus,
+
+  meatPacked:meatPacked
 };
