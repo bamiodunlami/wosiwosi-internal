@@ -1,0 +1,1 @@
+try{let t=$(".my-duty");$("#submit-btn").on("click",(()=>{let e={duty:t.val()};fetch("/change-my-duty",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify(e)}).then((t=>t.json())).then((t=>{1==t?(alert("Duty changed"),window.location.href="/processingorder"):alert("Sorry, duty taken")}))}))}catch(t){console.log(t)}

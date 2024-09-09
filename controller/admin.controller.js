@@ -5,7 +5,6 @@ appRoot.setPath(rootpath);
 
 const fs = require("fs");
 const singleOrder = require("../model/order.model");
-const { orderNote } = require("./general-order.controller");
 const date = new Date();
 const passport = require(appRoot + "/util/passport.util.js");
 const User = require(appRoot + "/model/user.model.js");
@@ -16,6 +15,7 @@ const replaceDb= require(appRoot + "/model/replace.model.js");
 const refundDb= require(appRoot + "/model/refund.model.js");
 const notificationDb= require(appRoot + "/model/notification.model.js");
 const completedDb= require(appRoot + "/model/completed.model.js");
+const settingsDb= require(appRoot + "/model/settings.model.js");
 
 // AJAX CALL
 // admin dashboard
@@ -57,11 +57,13 @@ const adminOperation = async (req, res) => {
       // staff
       case "staff":
         const staff = await User.find()
-        res.render("admin/staff", {
-          user:req.user,
-          title:"Staff",
-          staff:staff
-        })
+        const teamSettings = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
+          res.render("admin/staff", { //change to staff page
+            user:req.user,
+            title:"Stafd",
+            staff:staff,
+            team:teamSettings.team
+          })
       // default
       default:
         break;
@@ -71,17 +73,69 @@ const adminOperation = async (req, res) => {
   }
 };
 
+//staff team settings (this determins if team work in group or individual)
+const dutySettings = async (req, res)=>{
+  let query = req.query.request
+  // console.log(query)
+  const setTeam = await settingsDb.updateOne({id:"info@wosiwosi.co.uk"},{
+    $set:{
+      team:query
+    }
+  })
+
+  //set everyone to false when settings change from team to individual, this will help staff select their own duty again when it is switched back to team
+  if(query == "false"){
+    const changeTeam = await User.updateMany({role:"staff"},{
+      $set:{
+        "team.status":false,
+        duty:"packer"
+      }
+    })
+  }else{ //settings changed from individual to team
+    const changeTeam = await User.updateMany({role:"staff"},{
+      $set:{
+        duty:""
+      }
+    })
+  }
+
+  res.redirect(req.headers.referer)
+}
+
+//change staff team
+const changeTeam = async (req, res)=>{  
+  let incominData = req.body.team
+  let teamAndId = incominData.split(' ')
+  let team = teamAndId[0]
+  let id = teamAndId[1]
+
+  const changeTeam = await User.updateOne({username:id},{
+    $set:{
+      "team.value": team
+    }
+  })
+
+  if(changeTeam.modifiedCount == 1){
+    res.send("true")
+  }else{
+    res.send('false')
+  }
+
+}
+
 //change staff duty
 const changeDuty = async (req, res)=>{  
   let incominData = req.body.duty
   let dutyAndId = incominData.split(' ')
   let duty = dutyAndId[0]
   let id = dutyAndId[1]
+
   const changeDuty = await User.updateOne({username:id},{
     $set:{
       duty:duty
     }
   })
+
   if(changeDuty.modifiedCount == 1){
     res.send("true")
   }else{
@@ -418,7 +472,6 @@ const createInfluencer = async (req, res) => {
   }
 };
 
-
 //undo order
 const undoOrder = async (req, res)=>{
   if(req.isAuthenticated()){
@@ -564,6 +617,8 @@ const ajaxGetRefundNotification = async (req, res)=>{
 module.exports = {
   adminDashboard: adminDashboard,
   adminOperation: adminOperation,
+  dutySettings:dutySettings,
+  changeTeam:changeTeam,
   changeDuty:changeDuty,
   renderOrderListPage: renderOrderListPage,
   saveAllForProcessing: saveAllForProcessing,

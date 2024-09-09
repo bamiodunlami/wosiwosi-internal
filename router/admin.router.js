@@ -12,6 +12,8 @@ router
 .get("/admin", admin.adminDashboard) //render admin dashboard
 .get("/admin/:operation", admin.adminOperation) //take care of admin operation
 
+.get('/duty-settings', admin.dutySettings) //duty settings
+.post('/change-team', admin.changeTeam)
 .post('/change-duty', admin.changeDuty) // change staff duty
 
 .get("/order", admin.renderOrderListPage) //main order page

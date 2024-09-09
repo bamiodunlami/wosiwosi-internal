@@ -29,8 +29,10 @@ const userSchema = mongoose.Schema({
     passChange:Boolean,
     bonus:Number,
     bonusType:Number,
-
-
+    team:{
+      status:Boolean,
+      value:String
+    }
 })
 
 userSchema.plugin(passportLocalMongoose)
@@ -43,7 +45,8 @@ async function migrateUsers() {
     try {
       const mig = await User.find();
       for (const i in mig) {
-        mig[i].passChange = false
+        mig[i].team.status = false
+        mig[i].team.value = "wa"
         await mig[i].save()
       }
       // mig.setPassword("Abosede1234@@")

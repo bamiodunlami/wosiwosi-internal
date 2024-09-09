@@ -16,6 +16,10 @@ router
 
 .get('/mark-notification-read', staff.markRefundNotificationAsRead)
 
+.get('/select-duty', staff.renderStaffDutyPage)
+
+.post('/change-my-duty', staff.dutyChangeRequest)
+
 
 
 module.exports = router

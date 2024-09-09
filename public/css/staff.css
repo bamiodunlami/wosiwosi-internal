@@ -45,6 +45,22 @@ a{
 }
 
 
+/* staff change duty */
+.team-main{
+    height: 80vh;
+}
+
+.team-bar{
+    width: 500px;
+}
+
+.team-form{
+    padding: 20px;
+    border-radius: 10px;
+    border: solid 1px #e1e1e1;
+}
+
+
 
 /* tab view */
 @media (max-width:800px){
@@ -58,6 +74,11 @@ a{
     .search-bar{
         padding: 10px 5%;
     }
+
+    /* team duty */
+    .team-bar{
+        padding: 0 5%;
+    }
 }
 
 /* mobile view */
@@ -67,5 +88,10 @@ a{
         height: 100vh;
         padding: 10%;
     
+    }
+
+    /* team duty */
+    .team-bar{
+        padding: 0 5%;
     }
 }

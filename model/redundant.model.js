@@ -7,40 +7,16 @@ appRoot.setPath(rootpath)
 
 mongoose.connect(`mongodb+srv://odunlamibamidelejohn:${process.env.DBPASS}@wosiwosiorder.svc0u4z.mongodb.net/?retryWrites=true&w=majority`)
 
-const singleOrderSchema = mongoose.Schema({
-    orderNumber:String,
-    status:Boolean,
+const redundantSchema = mongoose.Schema({
     date:String,
-    note:[],
-    meatPicker:{
-        id:String,
-        product:[],
-        fname:String,
-        active:Boolean,
-        time:String,
-        status:Boolean
-    },
-    dryPicker:{
-        id:String,
-        product:[],
-        fname:String,
-        active:Boolean,
-        time:String,
-        status:Boolean
-    },
-    packer:{
-        id:String,
-        product:[],
-        fname:String,
-        active:Boolean,
-        time:String,
-        status:Boolean
-    },
-    lock:Boolean,
-    hideProduct:[]
+    orderNumber:String,
+    main:{},
+    refund:{},
+    replacement:{},
+    redo:{}
 })
 
-const singleOrder = new mongoose.model("singleOrder", singleOrderSchema);
+const redundant = new mongoose.model("redundant", redundantSchema);
 
 //DB Update and migration
 async function migrateUsers() {
@@ -63,4 +39,4 @@ async function migrateUsers() {
   }
   // migrateUsers();
 
-module.exports = singleOrder;
+module.exports = redundant;

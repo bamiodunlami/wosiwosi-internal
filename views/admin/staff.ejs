@@ -4,6 +4,20 @@
         <div class="container">
             <h6 class="alert alert-success text-center">Wosiwosi Staffs</h6>
 
+            <!-- duty settings determination -->
+            
+            <% if(team == false){%>
+                <div class="">
+                    <a href="/duty-settings?request=true" class="btn btn-secondary btn-md">Ativate team mode</a>
+                </div>
+            <%}else{%>
+                <div class="">
+                    <a href="/duty-settings?request=false" class="btn btn-danger btn-md">Deactivate team mode</a>
+                </div>
+            <%}%>
+
+            <hr>
+
             <!-- table -->
             <div class="row staff-table">
                 <div class="col-12">
@@ -14,6 +28,7 @@
                             <th scope="col" class="lname">Last Name</th>
                             <th scope="col">Phone</th>
                             <th scope="col">Duty</th>
+                            <th>Team</th>
                             <% if(user.role == "admin" && user.level == 6){%>
                                 <th scope="col">Password</th>
                             <%}%>
@@ -25,6 +40,7 @@
                                     <td><a href="/staff-profile?id=<%=staff[i].username%>" class="link"><%=staff[i].fname%></a></td>
                                     <td class="lname"><%=staff[i].lname%></td>
                                     <td></td>
+                                    <!-- Duty -->
                                     <td>
                                         <%if(staff[i].duty == "manager"){%>
                                             <%=staff[i].duty.toUpperCase()%>
@@ -45,6 +61,44 @@
                                                     <option selected value="dry-picker <%=staff[i].username%>"><%=staff[i].duty.toUpperCase()%></option>
                                                     <option value="packer <%=staff[i].username%>">PACKER</option>
                                                     <option value="meat-picker <%=staff[i].username%>">MEAT-PICKER</option>
+                                                <%}else{%>
+                                                    <option>SELECT OPTION</option>
+                                                    <option value="meat-picker <%=staff[i].username%>">MEAT-PICKER</option>
+                                                    <option value="dry-picker <%=staff[i].username%>">DRY-PICKER</option>
+                                                    <option value="packer <%=staff[i].username%>">PACKER</option>
+                                                <%}%>
+                                            </select>
+                                        <%}%>
+                                    </td>
+                                    <!-- team settings -->
+                                    <td>
+                                        <%if(staff[i].duty == "manager"){%>
+                                            <%=staff[i].duty.toUpperCase()%>
+                                        <%}else{%>
+                                            <select class="form-select staff-team" aria-label="Default select example">
+                                                <!-- packers -->
+                                                <%if(staff[i].team.value == "wa"){%>
+                                                    <option selected value="wa <%=staff[i].username%>"><%=staff[i].team.value.toUpperCase()%></option>
+                                                    <option value="wb <%=staff[i].username%>">WB</option>
+                                                    <option value="wc <%=staff[i].username%>">WC</option>
+                                                    <option value="wd <%=staff[i].username%>">WD</option>
+                                                <!-- meat pickers -->
+                                                <%}else if(staff[i].team.value == "wb"){%>
+                                                    <option selected value="wb <%=staff[i].username%>"><%=staff[i].team.value.toUpperCase()%></option>
+                                                    <option value="wc <%=staff[i].username%>">WC</option>
+                                                    <option value="wa <%=staff[i].username%>">WA</option>
+                                                    <option value="wd <%=staff[i].username%>">WD</option>
+                                                 <!-- -->
+                                                <%}else if(staff[i].team.value == "wc"){%>
+                                                    <option selected value="wc <%=staff[i].username%>"><%=staff[i].duty.toUpperCase()%></option>
+                                                    <option value="wa <%=staff[i].username%>">WA</option>
+                                                    <option value="wb <%=staff[i].username%>">WB</option>
+                                                    <option value="wd <%=staff[i].username%>">WD</option>
+                                                <%}else if(staff[i].team.value == "wd"){%>
+                                                    <option selected value="wd <%=staff[i].username%>"><%=staff[i].duty.toUpperCase()%></option>
+                                                    <option value="wa <%=staff[i].username%>">WA</option>
+                                                    <option value="wb <%=staff[i].username%>">WB</option>
+                                                    <option value="wc <%=staff[i].username%>">WC</option>
                                                 <%}%>
                                             </select>
                                         <%}%>
