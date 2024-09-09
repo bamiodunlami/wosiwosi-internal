@@ -105,6 +105,8 @@ const searchSingleOrder = async (req, res, next) => {
 const orderAvailableToProcess = async (req, res) => {
   if (req.isAuthenticated()) {
 
+    console.log(req.user.role)
+    
     // check if settins is team or individual and requester is a worker and not admin
     const settings = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
     //if settins is teams

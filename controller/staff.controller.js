@@ -36,6 +36,7 @@ const staffDashboardRequest = async (req, res) => {
         // online centre
         case 'online':
             res.render("staff/online-centre", { //render online center page
+              user:req.user,
                 title: "Online Center",
               });
             break

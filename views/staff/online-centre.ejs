@@ -1,6 +1,12 @@
 
 <%- include('include/header') -%>
     <section class="staff-section">
+
+      <%if(user.role="staff"){%>
+        <h6 class="alert alert-dark text-center">TEAM <%=user.team.value.toUpperCase()%></h6>
+       <%}%>
+
+
       <h6 class="page-title text-center" >Online Center</h6>
       <div class="row d-flex align-items-center text-center staff-section-option">
 
