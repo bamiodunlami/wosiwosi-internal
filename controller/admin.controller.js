@@ -34,6 +34,7 @@ const adminDashboard = async (req, res) => {
 // online centre
 const adminOperation = async (req, res) => {
   if (req.isAuthenticated()) {
+    const settings = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
     // console.log(date.toJSON().slice(0, 10));
     switch (req.params.operation) {
       // influencer
@@ -51,6 +52,7 @@ const adminOperation = async (req, res) => {
         res.render("admin/online-centre", {
           title: "Admin",
           date: date.toJSON().slice(0, 10),
+          settings:settings,
           user:req.user
         });
 
@@ -614,6 +616,28 @@ const ajaxGetRefundNotification = async (req, res)=>{
   res.send(data)
 }
 
+//lock system
+const lockSystem = async (req, res)=>{
+  const request = await settingsDb.updateOne({id:"info@wosiwosi.co.uk"},{
+    $set:{
+      lock:true
+    }
+  })
+  console.log("system locked")
+  res.redirect(req.headers.referer)
+}
+
+//unlock system
+const unlockSystem = async (req, res)=>{
+  const request = await settingsDb.updateOne({id:"info@wosiwosi.co.uk"},{
+    $set:{
+      lock:false
+    }
+  })
+  console.log("system unlocked")
+  res.redirect(req.headers.referer)
+}
+
 module.exports = {
   adminDashboard: adminDashboard,
   adminOperation: adminOperation,
@@ -638,4 +662,6 @@ module.exports = {
   ajaxGetNotification:ajaxGetNotification,
   markAsRead:markAsRead,
   ajaxGetRefundNotification:ajaxGetRefundNotification,
+  lockSystem:lockSystem,
+  unlockSystem:unlockSystem
 };

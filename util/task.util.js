@@ -13,6 +13,7 @@ const replaceDb= require(appRoot + "/model/replace.model.js");
 const refundDb= require(appRoot + "/model/refund.model.js");
 const completedDb= require(appRoot + "/model/completed.model.js");
 const redundantDb = require (appRoot + "/model/redundant.model.js")
+// const redundantDb = require (appRoot + "/model/redundant.model.js")
 
 // getAllRefund();
 async function getAllRefund(){
@@ -115,6 +116,8 @@ async function moveToRedundant(){
 }
 
 
+//compulsary break
+
 // -----------------------TASKS--------------
 
 //daily task 8pm
@@ -137,5 +140,16 @@ cron.schedule('0 10 * * 5', ()=>{
     timezone: "Europe/London"
 }
 )
+
+//immidiate work
+cron.schedule('*/3 * * * * *', ()=>{
+    // moveToRedundant();   //transfer orders to redundant
+    
+},{
+    scheduled: true,
+    timezone: "Europe/London"
+}
+)
+
 
 module.exports= cron

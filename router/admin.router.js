@@ -36,5 +36,8 @@ router
 .get('/mark-as-read', admin.markAsRead)
 .get('/fetch-refund', admin.ajaxGetRefundNotification)
 
+.get('/lock-system', admin.lockSystem)
+.get('/unlock-system', admin.unlockSystem)
+
 
 module.exports = router;

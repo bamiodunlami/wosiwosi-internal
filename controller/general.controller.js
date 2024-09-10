@@ -182,6 +182,13 @@ const changePassword = async (req, res)=>{
     }
 }
 
+const lockPage = async (req, res)=>{
+        res.render("staff/systemLock", { //render online center page
+          user:req.user,
+            title: "System Locked",
+          });
+}
+
 
 
 // Export module
@@ -195,5 +202,6 @@ module.exports ={
     forgotPassword:forgotPassword,
     renderChangePassword:renderChangePassword,
     changePassword:changePassword,
+    lockPage:lockPage
     // noteNotification:noteNotification,
 }

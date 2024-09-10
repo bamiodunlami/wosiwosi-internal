@@ -50,7 +50,7 @@ a{
 @media (max-width:800px){
     .admin-section{
         background-color: #efefef;
-        height: 100vh;
+        height: 100%;
         padding:10% 15%;
     
     }
@@ -64,7 +64,7 @@ a{
 @media (max-width:500px){
     .admin-section{
         background-color: #efefef;
-        height: 100vh;
+        height: 100%;
         padding: 10%;
     
     }

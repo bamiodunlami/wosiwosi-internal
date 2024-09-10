@@ -30,6 +30,8 @@ router
 
 .post('/changepassword', general.changePassword) // Change first login user password
 
+.get("/lock-page", general.lockPage)
+
 .get('/logout', (req, res)=>{
     req.logout((err) => {
         if (err) {

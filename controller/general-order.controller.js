@@ -104,11 +104,15 @@ const searchSingleOrder = async (req, res, next) => {
 // render orders available for workers to process, other db lookup are done by ajax in the js 
 const orderAvailableToProcess = async (req, res) => {
   if (req.isAuthenticated()) {
-
-    console.log(req.user.role)
     
     // check if settins is team or individual and requester is a worker and not admin
     const settings = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
+
+    //lock system
+    if(settings.lock == true && req.user.role == "staff"){
+      res.redirect('/lock-page')
+    }else{
+
     //if settins is teams
     if(settings.team == true){
       if(req.user.role == "staff" && req.user.team.status == false){
@@ -124,6 +128,7 @@ const orderAvailableToProcess = async (req, res) => {
         user: req.user,
         refund:refund
       });
+    }
 
   } else {
     res.redirect("/");

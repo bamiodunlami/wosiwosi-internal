@@ -14,6 +14,17 @@
           </form>
         </div>
 
+        <%if(settings.lock == true){%>
+          <div class="alert alert-success">
+            <a href="/unlock-system">Unlock system</a>
+          </div>
+       <%}else{%>
+        <div class="alert alert-danger">
+          <a href="/lock-system">Lock system</a>
+        </div>
+       <%}%>
+
+
         <!-- Order -->
           <div class="col-md-6 col-sm-12 admin-section-option-main">
             <a href="/order?fromDate=<%=date%>&toDate=<%=date%>&page=1&fromTime=00:00&toTime=23:59">
@@ -67,6 +78,15 @@
             <a href="/admin-notification">
               <div class="admin-section-option-item">
                 <h5 class="alert alert-secondary completed-orders"><strong><span id="notification-counter" class="notification-icon" style="color: red;">0</span></strong> Notification</h5>
+              </div>
+            </a>
+          </div>
+
+          <!-- Report -->
+          <div class="col-md-6 col-sm-12 admin-section-option-main">
+            <a href="">
+              <div class="admin-section-option-item">
+                <h5 class="alert alert-secondary completed-orders"> Report</h5>
               </div>
             </a>
           </div>
