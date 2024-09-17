@@ -54,7 +54,7 @@ async function getAllRefund(){
          
             //send mail
             //  console.log(eachRefund.customer_details.email,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", eachRefund.orderNumber, eachRefund.customer_details.fname, refundProductData, totalAmount)
-            await mailer.refundMail("odunlamibamidelejohn@gmail.com","bamiodunlami22@gmail.com, bamidele@wosiwosi.co.uk", eachRefund.orderNumber, eachRefund.customer_details.fname, refundProductData, totalAmount)
+            await mailer.refundMail(eachRefund.customer_details.email,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", eachRefund.orderNumber, eachRefund.customer_details.fname, refundProductData, totalAmount)
             
             //close refund
             await refundDb.updateOne({orderNumber:eachRefund.orderNumber},{
