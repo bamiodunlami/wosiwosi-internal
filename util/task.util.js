@@ -28,7 +28,7 @@ async function getAllRefund(){
         for(const eachProduct of eachRefund.product){
             //break out of the loop if any product refund is not approved
             if(eachProduct.approval === false){
-                isApproved = false
+                isApproved = false //flag
                 break;
             }else{
                 isApproved = true
