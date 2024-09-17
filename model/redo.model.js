@@ -1,49 +1,47 @@
 const mongoose = require ('mongoose')
 const appRoot = require ('app-root-path')
 const path = require ('path')
+const { readdir } = require('fs')
 const rootpath = path.resolve(process.cwd())
 appRoot.setPath(rootpath)
 
 
 mongoose.connect(`mongodb+srv://odunlamibamidelejohn:${process.env.DBPASS}@wosiwosiorder.svc0u4z.mongodb.net/?retryWrites=true&w=majority`)
 
-const redundantSchema = mongoose.Schema({
-  orderNumber:String,
-  status:Boolean,
-  date:String,
-  note:[],
-  meatPicker:{
-      id:String,
-      product:[],
-      fname:String,
-      active:Boolean,
-      time:String,
-      status:Boolean
-  },
-  dryPicker:{
-      id:String,
-      product:[],
-      fname:String,
-      active:Boolean,
-      time:String,
-      status:Boolean
-  },
-  packer:{
-      id:String,
-      product:[],
-      fname:String,
-      active:Boolean,
-      time:String,
-      status:Boolean
-  },
-  lock:Boolean,
-  hideProduct:[],
-  refund:{},
-  replacement:{},
-  redo:{}
+const redoSchma = mongoose.Schema({
+    orderNumber:String,
+    status:Boolean,
+    date:String,
+    note:[],
+    meatPicker:{
+        id:String,
+        product:[],
+        fname:String,
+        active:Boolean,
+        time:String,
+        status:Boolean
+    },
+    dryPicker:{
+        id:String,
+        product:[],
+        fname:String,
+        active:Boolean,
+        time:String,
+        status:Boolean
+    },
+    packer:{
+        id:String,
+        product:[],
+        fname:String,
+        active:Boolean,
+        time:String,
+        status:Boolean
+    },
+    lock:Boolean,
+    redo:[]
 })
 
-const redundant = new mongoose.model("redundant", redundantSchema);
+const redo = new mongoose.model("redo", redoSchma);
 
 //DB Update and migration
 async function migrateUsers() {
@@ -66,4 +64,4 @@ async function migrateUsers() {
   }
   // migrateUsers();
 
-module.exports = redundant;
+module.exports = redo;

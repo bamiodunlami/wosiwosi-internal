@@ -18,6 +18,8 @@ const mailer = require(appRoot + "/util/mailer.util.js");
 
 const singleOrder = require(appRoot + "/model/order.model.js");
 
+const redundDb= require(appRoot + "/model/redundant.model.js");
+
 const replaceDb= require(appRoot + "/model/replace.model.js");
 
 const refundDb= require(appRoot + "/model/refund.model.js");
@@ -59,7 +61,9 @@ const getRefundOrderDetails = async (req, res)=>{
 // (Ajax call from order.js) this is used to check and mark orders that are already saved for processing in the admin order page
 const retrieveSavedForProcessing = async (req, res) => {
   if (req.isAuthenticated()) {
-    const order = await singleOrder.find()
+    const redundantDatabase = await redundDb.find()
+    const orderDatabase = await singleOrder.find()
+    const order = redundantDatabase.concat(orderDatabase)
     let dataToSend = []
     for(const eachData of order){
       dataToSend.push(eachData.orderNumber)
@@ -73,7 +77,16 @@ const retrieveSavedForProcessing = async (req, res) => {
 // Ajax this function sends details of order clicked for processing
 const getSingleOrderProcessingStatus = async (req, res)=>{
   // console.log(req.query)
-  const data = await singleOrder.findOne({orderNumber:req.query.id})
+  const orderDbData = await singleOrder.findOne({orderNumber:req.query.id})
+  const redundantDbData = await redundDb.findOne({orderNumber:req.query.id})
+
+  //merge both data
+  if(orderDbData){
+    data = orderDbData
+  }else{
+    data = redundantDbData
+  }
+
   if(!data){
     res.send("false")
   }else{
@@ -147,24 +160,36 @@ const singleOrderProcessing = async (req, res) => {
     let activity = true //determines if anything can be done on the order
     // let orderToProcess= []
 
-    const settings = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
-
-      // check if order nunber ever exited in the db
-      const orderExist = await singleOrder.findOne({ orderNumber: id });
-
-      // if order number exist in singleOrder db
-      if (orderExist) {
-          // check if order is already been globally done 
-          if(orderExist.status==true){
-            activity = false //no more activity
-          }else{
-            checkIfOrderHasNotBeenTaken();
-          }
-      }
-
       // get order details from woocommerce and render single order page
       try{
-        const order = await woocommerce.get(`orders/${id}`); // get order from woocommerce
+        order = await woocommerce.get(`orders/${id}`); // get order from woocommerce
+      }catch(e){
+        console.log("ERROR")
+        res.redirect(req.headers.referer)
+      }
+
+      const settings = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
+
+      // check if order nunber ever exited in the db
+      const mainOrder = await singleOrder.findOne({ orderNumber: id });
+      const redundant = await redundDb.findOne({ orderNumber: id });
+
+      // if order number exist in singleOrder db or redundant db
+      if (mainOrder || redundant) {
+        //margen order exist or redundant into one variable
+        if(mainOrder){
+          console.log("data from mainOrder")
+          orderExist = mainOrder
+        }else{
+          console.log("data from redundant")
+          orderExist = redundant
+        }
+        // check if order is already been globally done 
+        if(orderExist.status==true){
+          activity = false //no more activity
+        }else{
+          checkIfOrderHasNotBeenTaken();
+        }
         res.render("general-order/single-order-processing", {
           title: "Order Processing",
           order: order.data,
@@ -175,9 +200,17 @@ const singleOrderProcessing = async (req, res) => {
           user:user,
           setting:settings.team
         });
-      }catch(e){
-          console.log(e)
-          res.redirect(req.headers.referer)
+      }else{
+        res.render("general-order/single-order-processing", {
+          title: "Order Processing",
+          order: order.data,
+          // orderToProcess:orderToProcess,
+          orderFromDB:null,
+          authorize:authorize,
+          activity:activity,
+          user:user,
+          setting:settings.team
+        });
       }
 
       // function to update order data

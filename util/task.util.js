@@ -13,38 +13,80 @@ const replaceDb= require(appRoot + "/model/replace.model.js");
 const refundDb= require(appRoot + "/model/refund.model.js");
 const completedDb= require(appRoot + "/model/completed.model.js");
 const redundantDb = require (appRoot + "/model/redundant.model.js")
+// const redoDb = require (appRoot + "/model/redo.model.js")
 // const redundantDb = require (appRoot + "/model/redundant.model.js")
 
 // getAllRefund();
 async function getAllRefund(){
-    const refundData = await refundDb.find()
-    for(let i = 0; i<refundData.length; i++){
-        for(const refundProduct of refundData[i].product){
-            if(refundData[i].close == false && refundProduct.approval == true ){
-                let customerMail, fname, product, quantity, amount
-                orderNumber = refundData[i].orderNumber
-                customerMail = refundData[i].customer_details.email
-                fname = refundData[i].customer_details.fname
-                product = refundProduct.productName
-                quantity = refundProduct.productQuantity
-                amount = refundProduct.productPrice
-                // console.log(customerMail,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", orderNumber, fname, product, quantity, amount)
-                mailer.refundMail(customerMail,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", orderNumber, fname, product, quantity, amount)
+    let isApproved = false;
+
+    const refundData = await refundDb.find({close:false})
+
+    for(const eachRefund of refundData){ //enter into each refund
+
+        //enter into product array and check if refund approved or not
+        for(const eachProduct of eachRefund.product){
+            //break out of the loop if any product refund is not approved
+            if(eachProduct.approval === false){
+                isApproved = false
+                break;
+            }else{
+                isApproved = true
             }
         }
+
+        //if it's approved
+        if(isApproved){
+
+            console.log("approved "+ eachRefund.orderNumber)
+
+            let totalAmount = 0;
+
+            //get data of all refund product
+            let getProductData = eachRefund.product
+            let refundProductData = getProductData.map((item) => (`${item.productName} x ${item.productQuantity} @ £${item.productPrice}`)).join(", ");
+            // console.log(refundProductData)
+
+            //get total amound
+            for (const eachAmount of eachRefund.product){
+                totalAmount = totalAmount + Number(eachAmount.productPrice)
+            }
+         
+            //send mail
+            //  console.log(eachRefund.customer_details.email,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", eachRefund.orderNumber, eachRefund.customer_details.fname, refundProductData, totalAmount)
+            await mailer.refundMail("odunlamibamidelejohn@gmail.com","bamiodunlami22@gmail.com, bamidele@wosiwosi.co.uk", eachRefund.orderNumber, eachRefund.customer_details.fname, refundProductData, totalAmount)
+            
+            //close refund
+            await refundDb.updateOne({orderNumber:eachRefund.orderNumber},{
+                $set:{
+                    status:true,
+                    close:true,
+                }
+            })
+
+        }else{
+            console.log("skipping "+ eachRefund.orderNumber)
+        }        
     }
 }
 
 //reset Refund
-async function resetTodayRefund(){
-    let eachRefundDOne =await refundDb.updateMany({
-        $set:{
-            close:true
-        }
-    })
-    console.log(eachRefundDOne)
-    mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "refund")
-}
+// async function resetTodayRefund(){
+//     const refund = await refundDb.find({status:true})
+//     for(const refundItem of refund){
+//         console.log(refundItem.orderNumber)
+//         let eachRefundDOne = await refundDb.updateOne(
+//             {orderNumber:refundItem.orderNumber},
+//             { $set:{
+//                 close:true
+//             }},
+//         )
+//         console.log(eachRefundDOne)
+//     }
+//     // console.log(eachRefundDOne)
+//     // mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "refund")
+// }
+
 
 //reset today's completed order
 async function resetTodayCompletedOrder(){
@@ -60,21 +102,22 @@ async function resetTodayCompletedOrder(){
 
 //move completed order to redundant db every friday
 async function moveToRedundant(){
+    // const temporaryArray =[]
     const completedOrder = await singlOrder.find()
-    console.log(completedOrder.length)
+    // temporaryArray.push(completedOrder)
+    // console.log(completedOrder.length)
     for(const eachCompletedOrder of completedOrder){
         if(eachCompletedOrder.status == false){ //if order is locked, skip it
             console.log(completedOrder.orderNumber  + " skipped")
         } else{ 
-            let main, refund, replace, redo, dateCompleted, orderNumber
+            let refund, replace, redo, orderNumber
 
-            dateCompleted = eachCompletedOrder.date
             orderNumber = eachCompletedOrder.orderNumber
-            main = eachCompletedOrder
+            // main = eachCompletedOrder
 
 
             // look for redund 
-            let refundOrder = await refundDb.findOne({orderNumber:orderNumber})
+            let refundOrder = await refundDb.findOne({orderNumber:orderNumber, close:true})
             if(refundOrder){ // if orderNumber exist in replacement
                 console.log("refund found")
                 refund = refundOrder
@@ -95,9 +138,15 @@ async function moveToRedundant(){
 
 
             const saveRedundant = new redundantDb({
-                date:dateCompleted,
                 orderNumber:orderNumber,
-                main:main,
+                status:eachCompletedOrder.status,
+                date:eachCompletedOrder.date,
+                note:eachCompletedOrder.note,
+                meatPicker:eachCompletedOrder.meatPicker,
+                dryPicker:eachCompletedOrder.dryPicker,
+                packer:eachCompletedOrder.packer,
+                lock:eachCompletedOrder.lock,
+                hideProduct:eachCompletedOrder.hideProduct,
                 refund:refund,
                 replacement:replace,
                 // redo:{}
@@ -116,16 +165,48 @@ async function moveToRedundant(){
 }
 
 
-//compulsary break
+// revert movement temporary
+async function revertMovement(){
+    const revert = await redundantDb.find()
+    for(const eachRevert of revert){
+        let alreadyAvailable = await singlOrder.findOne({orderNumber:eachRevert.orderNumber})
+        if(alreadyAvailable){
+            console.log("skipped order " + alreadyAvailable.orderNumber)
+            await redundantDb.deleteOne({orderNumber:eachRevert.orderNumber})
+        }else{
+            console.log("working on " + eachRevert.orderNumber)
+            const resaveOrder = new singlOrder({
+                orderNumber:eachRevert.orderNumber,
+                status:eachRevert.status,
+                date:eachRevert.date,
+                note:eachRevert.note,
+                meatPicker:eachRevert.meatPicker,
+                dryPicker:eachRevert.dryPicker,
+                packer:eachRevert.packer,
+                lock:eachRevert.lock,
+                hideProduct:eachRevert.hideProduct,
+            })
+            resaveOrder.save()
+            await redundantDb.deleteOne({orderNumber:eachRevert.orderNumber})
+        }
+    }
+    console.log("all done")
+
+}
 
 // -----------------------TASKS--------------
 
-//daily task 8pm
-
+//daily task 9pm
 cron.schedule('0 20 * * 1-4', () => {
     getAllRefund(); //send refund message
+  }, {
+    scheduled: true,
+    timezone: "Europe/London"
+});
+
+//daily task 9pm
+cron.schedule('0 21 * * 1-4', () => {
     resetTodayCompletedOrder(); // reset completed order
-    resetTodayRefund(); // reset redund order
   }, {
     scheduled: true,
     timezone: "Europe/London"
@@ -133,17 +214,15 @@ cron.schedule('0 20 * * 1-4', () => {
 
 //Friday weekly task
 cron.schedule('0 10 * * 5', ()=>{
-    // moveToRedundant();   //transfer orders to redundant
-    
+    moveToRedundant();   //transfer orders to redundant
 },{
     scheduled: true,
     timezone: "Europe/London"
 }
 )
 
-//immidiate work
-cron.schedule('*/3 * * * * *', ()=>{
-    // moveToRedundant();   //transfer orders to redundant
+//every 5 min work
+cron.schedule('*/5 * * * *', ()=>{
     
 },{
     scheduled: true,

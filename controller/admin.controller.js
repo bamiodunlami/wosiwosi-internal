@@ -55,6 +55,7 @@ const adminOperation = async (req, res) => {
           settings:settings,
           user:req.user
         });
+        break;
 
       // staff
       case "staff":
@@ -66,6 +67,7 @@ const adminOperation = async (req, res) => {
             staff:staff,
             team:teamSettings.team
           })
+          break;
       // default
       default:
         break;

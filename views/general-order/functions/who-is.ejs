@@ -1,37 +1,37 @@
-            <!-- actions -->
-        <% if(orderFromDB){%>
-            <div class="row">
-                <!-- neat picker -->
-                <div class="col-md-4 col-4">
-                    <div class="alert alert-light">
-                        <h6> Meat:
-                        <% if(orderFromDB.meatPicker.fname){%>                        
-                            <span id="meat-picker-duty"><%=orderFromDB.meatPicker.fname%></span>
-                        <%}%>
-                        </h6>
-                    </div>
-                </div> 
-
-                <!-- dry picker-->
-                <div class="col-md-4 col-4">
-                    <div class="alert alert-light">
-                        <h6>Picker:
-                        <% if(orderFromDB.dryPicker.fname){%>                        
-                            <span id="dry-picker-duty"><%=orderFromDB.dryPicker.fname%></span>
-                        <%}%>
-                        </h6>
-                    </div>
-                </div> 
-
-                <!-- packer -->
-                <div class="col-md-4 col-4">
-                    <div class="alert alert-light">
-                        <h6> Packer:
-                        <% if(orderFromDB.packer.fname){%>                        
-                           <span id="packer-duty"><%=orderFromDB.packer.fname%></span> 
-                        <%}%>
-                        </h6>
-                    </div>
-                </div> 
-            </div>
+<!-- actions -->
+<% if(orderFromDB){%>
+<div class="row">
+  <!-- neat picker -->
+  <div class="col-md-4 col-4">
+    <div class="alert alert-light">
+      <h6>
+        Meat: <% if(orderFromDB.meatPicker.fname){%>
+        <span id="meat-picker-duty"><%=orderFromDB.meatPicker.fname%></span>
         <%}%>
+      </h6>
+    </div>
+  </div>
+
+  <!-- dry picker-->
+  <div class="col-md-4 col-4">
+    <div class="alert alert-light">
+      <h6>
+        Picker: <% if(orderFromDB.dryPicker.fname){%>
+        <span id="dry-picker-duty"><%=orderFromDB.dryPicker.fname%></span>
+        <%}%>
+      </h6>
+    </div>
+  </div>
+
+  <!-- packer -->
+  <div class="col-md-4 col-4">
+    <div class="alert alert-light">
+      <h6>
+        Packer: <% if(orderFromDB.packer.fname){%>
+        <span id="packer-duty"><%=orderFromDB.packer.fname%></span>
+        <%}%>
+      </h6>
+    </div>
+  </div>
+</div>
+<%}%>

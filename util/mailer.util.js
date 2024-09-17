@@ -246,12 +246,12 @@ const redeemRequest = (to, bcc, fname, amount) => {
 };
 
 //refund mail
-const refundMail = (to, bcc, orderNumber, fname, product, quantity, amount) =>{
+const refundMail = (to, bcc, orderNumber, fname, product, amount) =>{
     mailOptions ={
         from: '"Wosiwosi" <info@wosiwosi.co.uk>',
         to: to,
         bcc:bcc,
-        subject: "REFUND PROCCESSED",
+        subject: `REFUND ORDER ${orderNumber}`,
         html: 
         `<!DOCTYPE html>
         <html>
@@ -286,7 +286,9 @@ const refundMail = (to, bcc, orderNumber, fname, product, quantity, amount) =>{
                 <p> ORDER NUMBER ${orderNumber},</p>
                 <p> Dear ${fname},</p>
                 <p>Thank you for shopping at Wosiwosi.</p>
-                <p>We have proccessed your refund for ${product} x ${quantity} at ${amount} </p>
+                <p>The below item(s) are out of stock as at the time of packing your order and a refund has been processed:</p>
+                <p>${product}</p>
+                <p>Total refundable: £${amount}</p>
                 <p>It should appear on the bank card through which the order was placed within 7 working days</p>
                 <p>Regards,</p>
                 <p>Wosiwosi Foods UK Limited</p>
