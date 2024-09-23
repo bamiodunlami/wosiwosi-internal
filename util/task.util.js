@@ -99,7 +99,17 @@ async function resetTodayCompletedOrder(){
     mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "competed")
     console.log("reset done")
 }
-// resetTodayCompletedOrder()
+
+//clear all notification for the day
+async function clearNotification(){
+    const markNotification = await notificationDb.updateOne({},{
+        $set:{
+          readStatus:true
+        }
+    })
+    mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "clear notification")
+    console.log("reset done")
+}
 
 //move completed order to redundant db every friday
 async function moveToRedundant(){
@@ -164,36 +174,42 @@ async function moveToRedundant(){
     mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "redundant")
     console.log("redundant done")
 }
-// moveToRedundant();
+
+//delete notification on friday
+async function deleteAllNotifications(){
+    const markNotification = await notificationDb.deleteMany();
+    mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "all notification deleted")
+    console.log("reset done")
+}
 
 // revert movement temporary
-async function revertMovement(){
-    const revert = await redundantDb.find()
-    for(const eachRevert of revert){
-        let alreadyAvailable = await singlOrder.findOne({orderNumber:eachRevert.orderNumber})
-        if(alreadyAvailable){
-            console.log("skipped order " + alreadyAvailable.orderNumber)
-            await redundantDb.deleteOne({orderNumber:eachRevert.orderNumber})
-        }else{
-            console.log("working on " + eachRevert.orderNumber)
-            const resaveOrder = new singlOrder({
-                orderNumber:eachRevert.orderNumber,
-                status:eachRevert.status,
-                date:eachRevert.date,
-                note:eachRevert.note,
-                meatPicker:eachRevert.meatPicker,
-                dryPicker:eachRevert.dryPicker,
-                packer:eachRevert.packer,
-                lock:eachRevert.lock,
-                hideProduct:eachRevert.hideProduct,
-            })
-            resaveOrder.save()
-            await redundantDb.deleteOne({orderNumber:eachRevert.orderNumber})
-        }
-    }
-    console.log("all done")
+// async function revertMovement(){
+//     const revert = await redundantDb.find()
+//     for(const eachRevert of revert){
+//         let alreadyAvailable = await singlOrder.findOne({orderNumber:eachRevert.orderNumber})
+//         if(alreadyAvailable){
+//             console.log("skipped order " + alreadyAvailable.orderNumber)
+//             await redundantDb.deleteOne({orderNumber:eachRevert.orderNumber})
+//         }else{
+//             console.log("working on " + eachRevert.orderNumber)
+//             const resaveOrder = new singlOrder({
+//                 orderNumber:eachRevert.orderNumber,
+//                 status:eachRevert.status,
+//                 date:eachRevert.date,
+//                 note:eachRevert.note,
+//                 meatPicker:eachRevert.meatPicker,
+//                 dryPicker:eachRevert.dryPicker,
+//                 packer:eachRevert.packer,
+//                 lock:eachRevert.lock,
+//                 hideProduct:eachRevert.hideProduct,
+//             })
+//             resaveOrder.save()
+//             await redundantDb.deleteOne({orderNumber:eachRevert.orderNumber})
+//         }
+//     }
+//     console.log("all done")
 
-}
+// }
 
 // -----------------------TASKS--------------
 
@@ -208,23 +224,17 @@ cron.schedule('0 20 * * 1-4', () => {
 //daily task 9pm
 cron.schedule('0 21 * * 1-4', () => {
     resetTodayCompletedOrder(); // reset completed order
+    clearNotification(); //reset notification
   }, {
     scheduled: true,
     timezone: "Europe/London"
 });
 
+
 //Friday weekly task
 cron.schedule('0 10 * * 5', ()=>{
+    deleteAllNotifications(); // delete notification
     moveToRedundant();   //transfer orders to redundant
-},{
-    scheduled: true,
-    timezone: "Europe/London"
-}
-)
-
-//every 5 min work
-cron.schedule('*/5 * * * *', ()=>{
-    
 },{
     scheduled: true,
     timezone: "Europe/London"

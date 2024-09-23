@@ -232,8 +232,10 @@ const saveAllForProcessing = async (req, res) => {
           })
           await saveOrder.save() //save for processing
           console.log(eachData + " saved")
-        }else{console.log(eachData + " order exist in Redundant DB")}
-      }else{console.log(eachData + " order exist in singleOrderDB")}
+        }
+        // else{console.log(eachData + " order exist in Redundant DB")}
+      }
+      // else{console.log(eachData + " order exist in singleOrderDB")}
     }
     res.send('Orders Saved')
   } else {
@@ -485,7 +487,7 @@ const createInfluencer = async (req, res) => {
 const undoOrder = async (req, res)=>{
   if(req.isAuthenticated()){
     const orderNumber = req.query.id
-    //check single order DB to if it exist there
+    //check single order DB if it exist there
     const checkSingleOrderDb = await singlOrder.findOne({orderNumber:orderNumber})
     if(checkSingleOrderDb){
      const update = await singlOrder.updateOne({orderNumber:orderNumber},{
