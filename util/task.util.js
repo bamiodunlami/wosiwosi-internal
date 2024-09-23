@@ -102,7 +102,7 @@ async function resetTodayCompletedOrder(){
 
 //clear all notification for the day
 async function clearNotification(){
-    const markNotification = await notificationDb.updateOne({},{
+    const markNotification = await notificationDb.updateMany({},{
         $set:{
           readStatus:true
         }
@@ -214,16 +214,23 @@ async function deleteAllNotifications(){
 // -----------------------TASKS--------------
 
 //daily task 9pm
-cron.schedule('0 20 * * 1-4', () => {
+cron.schedule('0 21 * * 1-4', () => {
     getAllRefund(); //send refund message
   }, {
     scheduled: true,
     timezone: "Europe/London"
 });
 
-//daily task 9pm
-cron.schedule('0 21 * * 1-4', () => {
+//daily task 10pm
+cron.schedule('0 22 * * 1-4', () => {
     resetTodayCompletedOrder(); // reset completed order
+  }, {
+    scheduled: true,
+    timezone: "Europe/London"
+});
+
+//daily task 11pm
+cron.schedule('0 23 * * 1-4', () => {
     clearNotification(); //reset notification
   }, {
     scheduled: true,
