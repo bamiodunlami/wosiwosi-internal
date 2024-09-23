@@ -13,6 +13,7 @@ const mailer = require(appRoot + "/util/mailer.util.js");
 const singlOrder = require(appRoot + "/model/order.model.js")
 const replaceDb= require(appRoot + "/model/replace.model.js");
 const refundDb= require(appRoot + "/model/refund.model.js");
+const redundantDb= require(appRoot + "/model/redundant.model.js");
 const notificationDb= require(appRoot + "/model/notification.model.js");
 const completedDb= require(appRoot + "/model/completed.model.js");
 const settingsDb= require(appRoot + "/model/settings.model.js");
@@ -35,7 +36,7 @@ const adminDashboard = async (req, res) => {
 const adminOperation = async (req, res) => {
   if (req.isAuthenticated()) {
     const settings = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
-    // console.log(date.toJSON().slice(0, 10));
+    console.log(date.toJSON().slice(0, 10));
     switch (req.params.operation) {
       // influencer
       case "influencer":
@@ -193,42 +194,46 @@ const renderOrderListPage = async (req, res) => {
 const saveAllForProcessing = async (req, res) => {
   if (req.isAuthenticated()) {
     let data = req.body.data
-    // console.log(data)
     //safe data to databose
     for (const eachData of data){
-      const order = await singlOrder.findOne({orderNumber:eachData})
-      if(!order){
-        let saveOrder = new singleOrder({
-          orderNumber:eachData,
-          status:false,
-          note:[],
-          meatPicker:{
+      const checkSingleOrderDb = await singlOrder.findOne({orderNumber:eachData})
+      if(!checkSingleOrderDb){ // if order does not exist in single order DB
+        //check redundant DB
+        const checkRedundantDb = await redundantDb.findOne({orderNumber:eachData})
+        if(!checkRedundantDb){
+          let saveOrder = new singleOrder({
+            orderNumber:eachData,
+            status:false,
+            note:[],
+            meatPicker:{
+                id:'',
+                fname:'',
+                active:false,
+                time:'',
+                status:false
+            },
+            dryPicker:{
               id:'',
               fname:'',
               active:false,
               time:'',
               status:false
-          },
-          dryPicker:{
-            id:'',
-            fname:'',
-            active:false,
-            time:'',
-            status:false
-          },
-          packer:{
-            id:'',
-            fname:'',
-            active:false,
-            time:'',
-            status:false
-          },
-          booking:{
+            },
+            packer:{
+              id:'',
+              fname:'',
+              active:false,
+              time:'',
               status:false
-          }
-        })
-        await saveOrder.save()
-      }
+            },
+            booking:{
+                status:false
+            }
+          })
+          await saveOrder.save() //save for processing
+          console.log(eachData + " saved")
+        }else{console.log(eachData + " order exist in Redundant DB")}
+      }else{console.log(eachData + " order exist in singleOrderDB")}
     }
     res.send('Orders Saved')
   } else {
@@ -480,6 +485,9 @@ const createInfluencer = async (req, res) => {
 const undoOrder = async (req, res)=>{
   if(req.isAuthenticated()){
     const orderNumber = req.query.id
+    //check single order DB to if it exist there
+    const checkSingleOrderDb = await singlOrder.findOne({orderNumber:orderNumber})
+    if(checkSingleOrderDb){
      const update = await singlOrder.updateOne({orderNumber:orderNumber},{
       $set:{
         status:false,
@@ -495,7 +503,47 @@ const undoOrder = async (req, res)=>{
       await refundDb.deleteOne({orderNumber:orderNumber})
       await replaceDb.deleteOne({orderNumber:orderNumber})
       await completedDb.deleteOne({orderNumber:orderNumber})
-      res.redirect(req.headers.referer)
+    }else{
+      const checkRedundant = await redundantDb.findOne({orderNumber:orderNumber})
+      if(checkRedundant){
+        //resave it to order to be saved process
+        let saveOrder = new singleOrder({
+          orderNumber:orderNumber,
+          status:false,
+          note:[],
+          meatPicker:{
+              id:'',
+              fname:'',
+              active:false,
+              time:'',
+              status:false
+          },
+          dryPicker:{
+            id:'',
+            fname:'',
+            active:false,
+            time:'',
+            status:false
+          },
+          packer:{
+            id:'',
+            fname:'',
+            active:false,
+            time:'',
+            status:false
+          },
+          booking:{
+              status:false
+          }
+        })
+        await saveOrder.save() //save for processing
+        await redundantDb.deleteOne({orderNumber:orderNumber})
+        await refundDb.deleteOne({orderNumber:orderNumber})
+        await replaceDb.deleteOne({orderNumber:orderNumber})
+        await completedDb.deleteOne({orderNumber:orderNumber})
+      }
+    }
+    res.redirect(req.headers.referer)
   }else{
     res.redirect("/")
   }

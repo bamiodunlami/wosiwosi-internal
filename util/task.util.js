@@ -99,6 +99,7 @@ async function resetTodayCompletedOrder(){
     mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "competed")
     console.log("reset done")
 }
+// resetTodayCompletedOrder()
 
 //move completed order to redundant db every friday
 async function moveToRedundant(){
@@ -163,7 +164,7 @@ async function moveToRedundant(){
     mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "redundant")
     console.log("redundant done")
 }
-
+// moveToRedundant();
 
 // revert movement temporary
 async function revertMovement(){
