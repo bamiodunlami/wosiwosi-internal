@@ -38,7 +38,7 @@ const redoSchma = mongoose.Schema({
         status:Boolean
     },
     lock:Boolean,
-    redo:[]
+    exclude:[]
 })
 
 const redo = new mongoose.model("redo", redoSchma);

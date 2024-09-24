@@ -13,6 +13,7 @@ const replaceDb= require(appRoot + "/model/replace.model.js");
 const refundDb= require(appRoot + "/model/refund.model.js");
 const completedDb= require(appRoot + "/model/completed.model.js");
 const redundantDb = require (appRoot + "/model/redundant.model.js")
+const notificationDb = require (appRoot + "/model/notification.model.js")
 // const redoDb = require (appRoot + "/model/redo.model.js")
 // const redundantDb = require (appRoot + "/model/redundant.model.js")
 
@@ -110,6 +111,7 @@ async function clearNotification(){
     mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "clear notification")
     console.log("reset done")
 }
+
 
 //move completed order to redundant db every friday
 async function moveToRedundant(){
@@ -214,7 +216,7 @@ async function deleteAllNotifications(){
 // -----------------------TASKS--------------
 
 //daily task 9pm
-cron.schedule('0 21 * * 1-4', () => {
+cron.schedule('0 20 * * 1-4', () => {
     getAllRefund(); //send refund message
   }, {
     scheduled: true,
@@ -222,21 +224,13 @@ cron.schedule('0 21 * * 1-4', () => {
 });
 
 //daily task 10pm
-cron.schedule('0 22 * * 1-4', () => {
+cron.schedule('0 21 * * 1-4', () => {
+    clearNotification(); //
     resetTodayCompletedOrder(); // reset completed order
   }, {
     scheduled: true,
     timezone: "Europe/London"
 });
-
-//daily task 11pm
-cron.schedule('0 23 * * 1-4', () => {
-    clearNotification(); //reset notification
-  }, {
-    scheduled: true,
-    timezone: "Europe/London"
-});
-
 
 //Friday weekly task
 cron.schedule('0 10 * * 5', ()=>{
