@@ -13,7 +13,7 @@ router
 .get("/admin/:operation", admin.adminOperation) //take care of admin operation
 
 .get('/duty-settings', admin.dutySettings) //duty settings
-.post('/change-team', admin.changeTeam)
+// .post('/change-team', admin.changeTeam)
 .post('/change-duty', admin.changeDuty) // change staff duty
 
 .get("/order", admin.renderOrderListPage) //main order page
@@ -33,11 +33,13 @@ router
 .get('/replacement', admin.renderReplacementPage) //render replacement
 .get('/admin-notification', admin.renderNotificationPage) //render note notification page
 .get('/fetch-notification', admin.ajaxGetNotification) //
-.get('/mark-as-read', admin.markAsRead)
+.get('/mark-as-read', admin.markAsRead) //mark notificatio as read
 .get('/fetch-refund', admin.ajaxGetRefundNotification)
 
 .get('/lock-system', admin.lockSystem)
 .get('/unlock-system', admin.unlockSystem)
+
+.post('/redo-order', admin.redoOrder) //redo order
 
 
 module.exports = router;

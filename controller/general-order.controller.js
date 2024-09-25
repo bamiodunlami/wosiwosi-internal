@@ -127,7 +127,7 @@ const orderAvailableToProcess = async (req, res) => {
     }else{
 
     //if settins is teams
-    if(settings.team == true){
+    if(settings.team == false){
       if(req.user.role == "staff" && req.user.team.status == false){
         res.redirect("/select-duty")
       }
@@ -232,7 +232,7 @@ const singleOrderProcessing = async (req, res) => {
                 },
               }
             );
-            marryTeamWhenOneOtherIsClicked(orderData)
+            // marryTeamWhenOneOtherIsClicked(orderData)
             //consider if team
           break;
 
@@ -251,7 +251,7 @@ const singleOrderProcessing = async (req, res) => {
                 },
               }
             );
-            marryTeamWhenOneOtherIsClicked(orderData)
+            // marryTeamWhenOneOtherIsClicked(orderData)
           break;
 
           // if packer
@@ -269,7 +269,7 @@ const singleOrderProcessing = async (req, res) => {
                 },
               }
             );
-            marryTeamWhenOneOtherIsClicked(orderData)
+            // marryTeamWhenOneOtherIsClicked(orderData)
           break;
         
           // default
@@ -320,10 +320,10 @@ const singleOrderProcessing = async (req, res) => {
         }
       }
 
-      //check if global setting for team is true, then mark other team member when one clicks
+      // check if global setting for team is false, then mark other team member when one clicks
       async function marryTeamWhenOneOtherIsClicked(orderData){
         const teamSetting = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
-        if(teamSetting.team == true){
+        if(teamSetting.team == false){ // is now an individual system
           //find who is who among the team and assing order number to em
           const teamMember = await User.find({"team.value":req.user.team.value}) //search for team member
           for(const team  of teamMember){ //loop through team memver

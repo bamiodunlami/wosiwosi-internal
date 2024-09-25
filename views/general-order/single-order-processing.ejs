@@ -39,58 +39,61 @@
 
 
             <!-- customer note -->
-            <div class="col-md-12">                    
-                <% if(order.customer_note){%>
-                <div class="alert alert-warning">
-                    <h6 class="text-center">Customer Note</h6>
-                    <div class="text-center"><%=order.customer_note%></div>
-                </div>                    
-                <%}%>
+            <div class="row">
+                <div class="col-md-12">                    
+                    <% if(order.customer_note){%>
+                    <div class="alert alert-warning">
+                        <h6 class="text-center">Customer Note</h6>
+                        <div class="text-center"><%=order.customer_note%></div>
+                    </div>                    
+                    <%}%>
+                </div>
             </div>
 
             <!-- staff notes -->
-            <div class="col-md-12 alert alert-primary">
-                    <div class="alert alert-light">
-                        <h6 class="text-center">Staff Note</h6>
-                        <div class="note-msg" id="note-msg">
-                            <!-- if note is available from db -->
-                            <%if(orderFromDB){%>
-                                <% for (let i =0; i<orderFromDB.note.length; i++){%>
-                                    <div class="alert alert-danger"> <%=orderFromDB.note[i].fname%>: <%=orderFromDB.note[i].note%></div>
-                                    <%}%>
-                            <%}%>
-                            <!--  -->
+             <div class="row">
+                <div class="col-md-12 alert alert-primary">
+                        <div class="alert alert-light">
+                            <h6 class="text-center">Staff Note</h6>
+                            <div class="note-msg" id="note-msg">
+                                <!-- if note is available from db -->
+                                <%if(orderFromDB){%>
+                                    <% for (let i =0; i<orderFromDB.note.length; i++){%>
+                                        <div class="alert alert-danger"> <%=orderFromDB.note[i].fname%>: <%=orderFromDB.note[i].note%></div>
+                                        <%}%>
+                                <%}%>
+                                <!--  -->
+                            </div>
+                        </div>
+
+                    <div class="">
+                        <textarea class="note-input" id="note" maxlength="60" placeholder="Kindly add your note"></textarea>
+                        <input type="hidden" id="orderNumber" value="<%=order.id%>">
+                        <input type="hidden" id="userId" value="<%=user.username%>">
+                        <input type="hidden" id="fname" value="<%=user.fname%>">
+                        <div>
+                            <button class="btn btn-sm btn-primary" id="sendNoteBtn">Drop note</button>
                         </div>
                     </div>
 
-                <div class="">
-                    <textarea class="note-input" id="note" maxlength="60" placeholder="Kindly add your note"></textarea>
-                    <input type="hidden" id="orderNumber" value="<%=order.id%>">
-                    <input type="hidden" id="userId" value="<%=user.username%>">
-                    <input type="hidden" id="fname" value="<%=user.fname%>">
-                    <div>
-                        <button class="btn btn-sm btn-primary" id="sendNoteBtn">Drop note</button>
-                    </div>
                 </div>
-
-            </div>
+             </div>
 
 
         <!-- table and action -->
                     <!-- if order is not locked but active and available -->
                     <%if(authorize == true && activity == true){%>
-                        <%- include("functions/order-table") -%>
-                        <%- include("functions/order-action") -%>
+                        <div class="row">
+                            <%- include("functions/order-table") -%>
+                            <%- include("functions/order-action") -%>
+                        </div>
                     <%}else{%>
                         <h4 class="alert alert-danger text-center">This order is already being processed - <%=orderFromDB.date.slice(0,10)%></h4>
                         <%- include("functions/order-table") -%>
-                        <a href="/completed-order" class="btn btn-dark btn-sm">Back</a>
-                        <a href="/processingorder" class="btn btn-warning btn-sm">Processing</a>
                         <%if(user.duty == "manager"){%>
-
+                            <a href="/admin/online" class="btn btn-dark btn-sm">Back</a>
                             <!-- undo order -->
                             <a href="/undo-order?id=<%=order.id%>" class="btn btn-primary btn-sm">Undo</a>
-                             
                             <!-- resend product -->
                             <!-- <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Resend Product</button> -->
                             <!-- Modal -->
@@ -255,6 +258,13 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <!-- comment -->
+                                         <label>Resson for redo</label>
+                                        <select class="form-select comment" aria-label="Default select example">
+                                            <option value="Staff mistake">Staff Mistake</option>
+                                            <option value="Failed delivery">Failed delivery</option>
+                                            <option value="others">others</option>
+                                        </select>
                                     </div>
                                     <!-- modal footer -->
                                     <div class="modal-footer">
@@ -264,9 +274,11 @@
                                 </div>
                                 </div>
                             </div>
+                        <%}else{%>
+                            <a href="/staff/online" class="btn btn-dark btn-sm">Back</a>
+                            <a href="/processingorder" class="btn btn-warning btn-sm">Processing</a>
                         <%}%>
                     <%}%>
-
         </div>
     </section>
 

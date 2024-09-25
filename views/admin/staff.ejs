@@ -6,13 +6,15 @@
 
             <!-- duty settings determination -->
             
-            <% if(team == false){%>
+            <% if(team == true){%>
                 <div class="">
-                    <a href="/duty-settings?request=true" class="btn btn-secondary btn-md">Ativate team mode</a>
+                    <!-- team mode becomes false -->
+                    <a href="/duty-settings?request=false" class="btn btn-secondary btn-md">Activate individual mode</a> 
                 </div>
             <%}else{%>
                 <div class="">
-                    <a href="/duty-settings?request=false" class="btn btn-danger btn-md">Deactivate team mode</a>
+                    <!-- team mode becomes true and individual mode becomes false -->
+                    <a href="/duty-settings?request=true" class="btn btn-danger btn-md">Deactivate individual mode</a>
                 </div>
             <%}%>
 
@@ -28,7 +30,7 @@
                             <th scope="col" class="lname">Last Name</th>
                             <th scope="col">Phone</th>
                             <th scope="col">Duty</th>
-                            <th>Team</th>
+                            <!-- <th>Team</th> -->
                             <% if(user.role == "admin" && user.level == 6){%>
                                 <th scope="col">Password</th>
                             <%}%>
@@ -71,7 +73,7 @@
                                         <%}%>
                                     </td>
                                     <!-- team settings -->
-                                    <td>
+                                    <td style="display: none;">
                                         <%if(staff[i].duty == "manager"){%>
                                             <%=staff[i].duty.toUpperCase()%>
                                         <%}else{%>

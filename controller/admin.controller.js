@@ -17,6 +17,7 @@ const redundantDb= require(appRoot + "/model/redundant.model.js");
 const notificationDb= require(appRoot + "/model/notification.model.js");
 const completedDb= require(appRoot + "/model/completed.model.js");
 const settingsDb= require(appRoot + "/model/settings.model.js");
+const redoDb= require(appRoot + "/model/redo.model.js");
 
 // AJAX CALL
 // admin dashboard
@@ -78,7 +79,7 @@ const adminOperation = async (req, res) => {
   }
 };
 
-//staff team settings (this determins if team work in group or individual)
+//staff team settings (this determins if staff work in team or individual)
 const dutySettings = async (req, res)=>{
   let query = req.query.request
   // console.log(query)
@@ -88,18 +89,18 @@ const dutySettings = async (req, res)=>{
     }
   })
 
-  //set everyone to false when settings change from team to individual, this will help staff select their own duty again when it is switched back to team
-  if(query == "false"){
+  if(query == "false"){   //set everyone to false when settings change from team to individual
     const changeTeam = await User.updateMany({role:"staff"},{
       $set:{
         "team.status":false,
-        duty:"packer"
+        duty:" "
       }
     })
-  }else{ //settings changed from individual to team
+  }else{ //settings changed from individual to team and 
     const changeTeam = await User.updateMany({role:"staff"},{
       $set:{
-        duty:""
+        // "team.status":true,
+        duty:"packer"
       }
     })
   }
@@ -108,25 +109,25 @@ const dutySettings = async (req, res)=>{
 }
 
 //change staff team
-const changeTeam = async (req, res)=>{  
-  let incominData = req.body.team
-  let teamAndId = incominData.split(' ')
-  let team = teamAndId[0]
-  let id = teamAndId[1]
+// const changeTeam = async (req, res)=>{  
+//   let incominData = req.body.team
+//   let teamAndId = incominData.split(' ')
+//   let team = teamAndId[0]
+//   let id = teamAndId[1]
 
-  const changeTeam = await User.updateOne({username:id},{
-    $set:{
-      "team.value": team
-    }
-  })
+//   const changeTeam = await User.updateOne({username:id},{
+//     $set:{
+//       "team.value": team
+//     }
+//   })
 
-  if(changeTeam.modifiedCount == 1){
-    res.send("true")
-  }else{
-    res.send('false')
-  }
+//   if(changeTeam.modifiedCount == 1){
+//     res.send("true")
+//   }else{
+//     res.send('false')
+//   }
 
-}
+// }
 
 //change staff duty
 const changeDuty = async (req, res)=>{  
@@ -690,11 +691,45 @@ const unlockSystem = async (req, res)=>{
   res.redirect(req.headers.referer)
 }
 
+//redo order
+const redoOrder = async (req, res)=>{
+  console.log(req.body);
+  const orderNumber = req.body.orderNumber
+  //save data into an aray
+  const data = {
+    id:Math.floor(Math.random()*97423),
+    date:date.toJSON(),
+    comment:req.body.comment,
+    exclude:req.body.unmark
+  }
+  //check if this order has been redone
+  const isAvailable = await redoDb.findOne({orderNumber:orderNumber})
+  if(isAvailable){
+    //update that order number and push data to the data array
+    const updateOrder = await redoDb.updateOne({orderNumber:orderNumber}, {
+      $push:{
+        data:data
+      }
+    })
+    if(updateOrder.modifiedCount == 1){ //if updated, send true
+      res.send(true)
+    }
+  }else{
+    //save new redo
+    const saveToRedo = new redoDb({
+        orderNumber:orderNumber,
+        data:[data]
+    })
+    await saveToRedo.save()
+    res.send(true)
+  }
+}
+
 module.exports = {
   adminDashboard: adminDashboard,
   adminOperation: adminOperation,
   dutySettings:dutySettings,
-  changeTeam:changeTeam,
+  // changeTeam:changeTeam,
   changeDuty:changeDuty,
   renderOrderListPage: renderOrderListPage,
   saveAllForProcessing: saveAllForProcessing,
@@ -715,5 +750,6 @@ module.exports = {
   markAsRead:markAsRead,
   ajaxGetRefundNotification:ajaxGetRefundNotification,
   lockSystem:lockSystem,
-  unlockSystem:unlockSystem
+  unlockSystem:unlockSystem,
+  redoOrder:redoOrder
 };

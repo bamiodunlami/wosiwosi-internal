@@ -16,7 +16,7 @@ router
 
 .get('/mark-notification-read', staff.markRefundNotificationAsRead)
 
-.get('/select-duty', staff.renderStaffDutyPage)
+.get('/select-team', staff.renderStaffSelectTeamPage)
 
 .post('/change-my-duty', staff.dutyChangeRequest)
 

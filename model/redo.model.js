@@ -1,7 +1,6 @@
 const mongoose = require ('mongoose')
 const appRoot = require ('app-root-path')
 const path = require ('path')
-const { readdir } = require('fs')
 const rootpath = path.resolve(process.cwd())
 appRoot.setPath(rootpath)
 
@@ -10,35 +9,7 @@ mongoose.connect(`mongodb+srv://odunlamibamidelejohn:${process.env.DBPASS}@wosiw
 
 const redoSchma = mongoose.Schema({
     orderNumber:String,
-    status:Boolean,
-    date:String,
-    note:[],
-    meatPicker:{
-        id:String,
-        product:[],
-        fname:String,
-        active:Boolean,
-        time:String,
-        status:Boolean
-    },
-    dryPicker:{
-        id:String,
-        product:[],
-        fname:String,
-        active:Boolean,
-        time:String,
-        status:Boolean
-    },
-    packer:{
-        id:String,
-        product:[],
-        fname:String,
-        active:Boolean,
-        time:String,
-        status:Boolean
-    },
-    lock:Boolean,
-    exclude:[]
+    data:[],
 })
 
 const redo = new mongoose.model("redo", redoSchma);
