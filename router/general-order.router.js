@@ -27,7 +27,7 @@ router
 .post('/replace', generalOrder.replace) //request for a refund by staff
 .post('/refund', generalOrder.refund)
 
-.post('/meatpacked', generalOrder.meatPacked)
+// .post('/meatpacked', generalOrder.meatPacked)
 
 
 module.exports=router

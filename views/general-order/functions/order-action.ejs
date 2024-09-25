@@ -9,6 +9,7 @@
                     <a href="/processingorder" class="btn btn-warning btn-md" style="margin-bottom: 2px;">Back</a>
 
                     <%if(user.duty == "manager"){%>
+                        <!-- admin tools -->
                         <div class="col-sm-12 mb-1">
                             <a href="/remove-from-order?order=<%=order.id%>" class="btn btn-danger btn-sm">Remove from processing</a>
                             <a href="/reset-worker?order=<%=order.id%>" class="btn btn-dark btn-sm">Reset worker</a>
@@ -39,12 +40,12 @@
                         </div>
                     <%}%>
                     <!-- if it's team mode -->
-                     <%if(setting == true && user.duty == "packer" && orderFromDB.meatPicker.active == false){%>
-                        <button class="btn btn-dark btn-sm" id="meatPacked">Meat Packed</button>
-                        <button class="btn btn-success btn-sm" id="completeBtn">Order Packed</button>
-                     <%}else{%>
+                     <!-- <if(setting == true && user.duty == "packer" && orderFromDB.meatPicker.active == false){> -->
+                        <!-- <button class="btn btn-dark btn-sm" id="meatPacked">Meat Packed</button>
+                        <button class="btn btn-success btn-sm" id="completeBtn">Order Packed</button> -->
+                     <!-- <}else{> -->
                     <button class="btn btn-success btn-sm" id="completeBtn">Completed order</button>
-                    <%}%>
+                    <!-- <}> -->
                 </div>
             <%}else{%>
             <!-- if order is not added to Orders to be processed (function in singleOrderProcessing.js) -->
