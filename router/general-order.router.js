@@ -16,18 +16,21 @@ router
 .post('/get-order-details', generalOrder.getRefundOrderDetails) // ajax to get all status of single order (refund in particular)
 .get('/order-to-process', generalOrder.retrieveSavedForProcessing) //send order to process file
 .get('/order-processing-status', generalOrder.getSingleOrderProcessingStatus)
-
+.post('/product-picked', generalOrder.productPicked) //save macked product
+ 
 // OTHERS
 .get('/searchsingleorder', generalOrder.searchSingleOrder) //search for order number
 .get('/processingorder', generalOrder.orderAvailableToProcess) //view page with list of orders available for processing
 .get('/single-order-processing', generalOrder.singleOrderProcessing) // single order processing page
 .post('/note', generalOrder.orderNote) //note for both admin and staff
-.post("/complete", generalOrder.orderDone) // a particular order has beem completed
-.get("/completed-order", generalOrder.completedOrder) //view completed order
+
+.post("/complete", generalOrder.orderCompleted) // a particular order has beem completed
+
+.get("/completed-order", generalOrder.viewCompletedOrder) //view completed order
 .post('/replace', generalOrder.replace) //request for a refund by staff
 .post('/refund', generalOrder.refund)
 
-// .post('/meatpacked', generalOrder.meatPacked)
+
 
 
 module.exports=router

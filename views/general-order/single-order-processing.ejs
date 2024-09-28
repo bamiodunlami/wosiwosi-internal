@@ -88,7 +88,7 @@
                             <%- include("functions/order-action") -%>
                         </div>
                     <%}else{%>
-                        <h4 class="alert alert-danger text-center">This order is already being processed - <%=orderFromDB.date.slice(0,10)%></h4>
+                        <h4 class="alert alert-danger text-center">This order is already being processed</h4>
                         <%- include("functions/order-table") -%>
                         <%if(user.duty == "manager"){%>
                             <a href="/admin/online" class="btn btn-dark btn-sm">Back</a>
@@ -283,6 +283,6 @@
     </section>
 
     <%- include('include/footerTemp') -%>
-    <script src="/min/singleOrderProcessing.js"></script>
+    <script src="/js/singleOrderProcessing.js"></script>
     <script src="/js/redo.js"></script>
     <%- include('include/footer') -%>

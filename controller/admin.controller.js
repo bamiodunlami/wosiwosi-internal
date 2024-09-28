@@ -93,7 +93,7 @@ const dutySettings = async (req, res)=>{
     const changeTeam = await User.updateMany({role:"staff"},{
       $set:{
         "team.status":false,
-        duty:" "
+        duty:"packer"
       }
     })
   }else{ //settings changed from individual to team and 
@@ -104,7 +104,6 @@ const dutySettings = async (req, res)=>{
       }
     })
   }
-
   res.redirect(req.headers.referer)
 }
 
@@ -206,6 +205,7 @@ const saveAllForProcessing = async (req, res) => {
             orderNumber:eachData,
             status:false,
             note:[],
+            productPicked:[],
             meatPicker:{
                 id:'',
                 fname:'',
@@ -262,6 +262,7 @@ const resetWorker = async (req, res) =>{
   if(req.isAuthenticated()){
     await singlOrder.updateOne({orderNumber:req.query.order},{
       $set:{
+        productPicked:[],
           meatPicker:{
             id:"",
             fname:"",
@@ -296,7 +297,8 @@ const assignStaffToOrder = async (req, res)=>{
   if(req.isAuthenticated()){
     let orderNumber = req.body.orderNumber
     const staff = await User.findOne({username:req.body.staffId})
-    console.log(staff.duty)
+    const findOrder = await singleOrder.findOne({orderNumber:orderNumber})
+    // console.log(staff.duty)
     if(staff){
       switch (staff.duty){
         case "meat-picker":
@@ -311,6 +313,7 @@ const assignStaffToOrder = async (req, res)=>{
               }
             }
           })
+          marryTeamWhenOneOtherIsClicked(findOrder)
           break;
         
         case "dry-picker":
@@ -325,6 +328,7 @@ const assignStaffToOrder = async (req, res)=>{
               },
             }
           })
+          marryTeamWhenOneOtherIsClicked(findOrder)
           break;
   
         case "packer":
@@ -339,10 +343,46 @@ const assignStaffToOrder = async (req, res)=>{
               },
             }
           })
+          marryTeamWhenOneOtherIsClicked(findOrder)
           break;
         
         default:
           break
+      }
+      // If global settings team is false i.e staff works as an individual, check if staff has a partner or not and marry their both work
+      //when any partner clicks an other, the other partner's details shows
+      async function marryTeamWhenOneOtherIsClicked(orderData){
+        const teamSetting = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
+        if(teamSetting.team == false && staff.team.status == false){ // is now an individual system and no partner
+          await singleOrder.updateOne({orderNumber:orderNumber},{
+            $set: {
+              meatPicker: {
+                id: staff.username,
+                // product:orderData.meatPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
+                fname:staff.fname,
+                active: true,
+                time: date.toJSON(),
+                status: orderData.meatPicker.status,
+              },
+              dryPicker:{
+                id: staff.username,
+                // product:orderData.dryPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
+                fname:staff.fname,
+                active: true,
+                time: date.toJSON(),
+                status: orderData.dryPicker.status,
+              },
+              packer:{
+                id: staff.username,
+                // product:orderData.packer.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
+                fname:staff.fname,
+                active: true,
+                time: date.toJSON(),
+                status: orderData.packer.status,
+              }
+            }
+          })  
+        }
       }
       res.send(true)
     }else{
@@ -494,7 +534,22 @@ const undoOrder = async (req, res)=>{
      const update = await singlOrder.updateOne({orderNumber:orderNumber},{
       $set:{
         status:false,
+        productPicked:[],
         packer:{
+          id:"",
+          fname:"",
+          active:false,
+          time:"",
+          status:false
+        },
+        dryPicker:{
+          id:"",
+          fname:"",
+          active:false,
+          time:"",
+          status:false
+        },
+        meatPicker:{
           id:"",
           fname:"",
           active:false,
@@ -514,6 +569,7 @@ const undoOrder = async (req, res)=>{
           orderNumber:orderNumber,
           status:false,
           note:[],
+          productPicked:[],
           meatPicker:{
               id:'',
               fname:'',

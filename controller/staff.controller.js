@@ -35,15 +35,20 @@ const staffDashboardRequest = async (req, res) => {
 
         // online centre
         case 'online':
-          const checkSettings = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
-          if(checkSettings.team == false && req.user.team.status == false){ //if it's individual mode,and currnt user has no team, then ask if worker will like to pair
-            res.redirect("/select-team")
-          }else{
-            res.render("staff/online-centre", { //render online center page
-              user:req.user,
-                title: "Online Center",
-            });
-          }
+          res.render("staff/online-centre", { //render online center page
+            user:req.user,
+              title: "Online Center",
+          });
+        // LET USER SELECT DUTY OR PARTNER
+          // const checkSettings = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
+          // if(checkSettings.team == false && req.user.team.status == false){ //if it's individual mode,and currnt user has no team, then ask if worker will like to pair
+          //   res.redirect("/select-team")
+          // }else{
+          //   res.render("staff/online-centre", { //render online center page
+          //     user:req.user,
+          //       title: "Online Center",
+          //   });
+          // }
           break
         
         case "my-profile":
@@ -80,7 +85,7 @@ const markRefundNotificationAsRead = async (req, res)=>{
 const renderStaffSelectTeamPage = async (req, res)=>{
   if(req.isAuthenticated()){
     const userInSameTeam = await User.find({"team.value":req.user.team.value})
-    res.render('staff/staff-duty',{
+    res.render('staff/my-duty',{
       title:"Select Duty",
       team:userInSameTeam,
       user:req.user

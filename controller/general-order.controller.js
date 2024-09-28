@@ -94,6 +94,115 @@ const getSingleOrderProcessingStatus = async (req, res)=>{
   }
 }
 
+// when it is in team mode
+const productPicked = async(req, res)=>{
+  if(req.isAuthenticated()){
+    let orderNumber = req.body.id
+    let userDuty = req.user.duty
+    let product = req.body.product
+    let query = req.query.request
+    // console.log(query)
+    // console.log(product)
+    // console.log(orderNumber, userDuty)
+    if(query == "dry-picked"){
+       await singleOrder.updateOne({orderNumber:orderNumber},{
+          $set:{
+            "dryPicker.status":true
+          }
+      })
+    }else if( query == "meat-picked"){
+      await singleOrder.updateOne({orderNumber:orderNumber},{
+          $set:{
+            "meatPicker.status":true
+          }
+      })
+    }
+
+    //save product
+    const theOrder = await singleOrder.findOne({orderNumber:orderNumber})
+    const alreadySaved = theOrder.productPicked
+    // console.log(alreadySaved)
+    const mergedProducts = [...new Set([...alreadySaved,...product])]; // Ecma 6 for concatenating array without duplicate
+    // console.log(mergedProducts); 
+    await singleOrder.updateOne({orderNumber:orderNumber},{
+      $set:{
+        productPicked:mergedProducts
+      }
+    })
+
+    // switch (userDuty){
+
+    //   case "meat-picker":
+    //     await singleOrder.updateOne({orderNumber:orderId},{
+    //       $set:{
+    //         meatPicker:{
+    //           id: req.user.username,
+    //           product:product,
+    //           fname:req.user.fname,
+    //           active: true,
+    //           time: date.toJSON(),
+    //           status: true,
+    //         }
+    //       }
+    //     })
+    //     break;
+      
+    //   case "dry-picker":
+    //     await singleOrder.updateOne({orderNumber:orderId},{
+    //       $set:{
+    //         dryPicker: {
+    //           id: req.user.username,
+    //           product:product,
+    //           fname:req.user.fname,
+    //           active: true,
+    //           time: date.toJSON(),
+    //           status: true,
+    //         },
+    //       }
+    //     })
+    //     break;
+
+    //   case "packer":
+    //     await singleOrder.updateOne({orderNumber:orderId},{
+    //       $set:{
+    //         meatPicker: {
+    //           id: req.user.username,
+    //           product:product,
+    //           fname:req.user.fname,
+    //           active: true,
+    //           time: date.toJSON(),
+    //           status: true,
+    //         },
+    //         date:date.toJSON().slice(0,10)
+    //       }
+    //     })
+    //     break;
+      
+    //   case "manager":
+    //       await singleOrder.updateOne({orderNumber:orderId},{
+    //         $set:{
+    //           status:true,
+    //           packer: {
+    //             id: req.user.username,
+    //             fname:req.user.fname,
+    //             active: true,
+    //             time: date.toJSON(),
+    //             status: true,
+    //           },
+    //           date:date.toJSON().slice(0,10)
+    //         }
+    //       });
+    //     break;
+
+    //   default:
+    //     break
+    // }
+    res.send(true);
+  }else{
+    res.redirect(false)
+  }
+}
+
 // ORDER CONTROLLERS
 // search single order and display
 const searchSingleOrder = async (req, res, next) => {
@@ -127,11 +236,11 @@ const orderAvailableToProcess = async (req, res) => {
     }else{
 
     //if settins is teams
-    if(settings.team == false){
-      if(req.user.role == "staff" && req.user.team.status == false){
-        res.redirect("/select-duty")
-      }
-    }
+    // if(settings.team == false){
+    //   if(req.user.role == "staff" && req.user.team.status == false){
+    //     res.redirect("/select-duty")
+    //   }
+    // }
 
     const order = await singleOrder.find({status:false})
     const refund = await refundDb.find({staffId:req.user.username, status:true, readStatus:false})
@@ -223,35 +332,36 @@ const singleOrderProcessing = async (req, res) => {
                 $set: {
                   meatPicker: {
                     id: req.user.username,
-                    product:orderData.meatPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
+                    // product:orderData.meatPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
                     fname:req.user.fname,
                     active: true,
                     time: date.toJSON(),
-                    // status: false,
+                    status: orderData.meatPicker.status,
                   },
                 },
               }
             );
-            // marryTeamWhenOneOtherIsClicked(orderData)
+            marryTeamWhenOneOtherIsClicked(orderData)
             //consider if team
           break;
 
           // if product picker
           case "dry-picker":
+            // console.log(orderData)
             await singleOrder.updateOne({ orderNumber: id },{
                 $set: {
                   dryPicker: {
                     id: req.user.username,
-                    product:orderData.dryPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
+                    // product:orderData.dryPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
                     fname:req.user.fname,
                     active: true,
-                    time: date.toJSON()
-                    // status: false,
+                    time: date.toJSON(),
+                    status: orderData.dryPicker.status,
                   },
                 },
               }
             );
-            // marryTeamWhenOneOtherIsClicked(orderData)
+            marryTeamWhenOneOtherIsClicked(orderData)
           break;
 
           // if packer
@@ -260,16 +370,16 @@ const singleOrderProcessing = async (req, res) => {
                 $set: {
                   packer: {
                     id: req.user.username,
-                    product:orderData.packer.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
+                    // product:orderData.packer.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
                     fname:req.user.fname,
                     active: true,
                     time: date.toJSON(),
-                    // status: false,
+                    status: orderData.packer.status,
                   },
                 },
               }
             );
-            // marryTeamWhenOneOtherIsClicked(orderData)
+            marryTeamWhenOneOtherIsClicked(orderData)
           break;
         
           // default
@@ -320,62 +430,91 @@ const singleOrderProcessing = async (req, res) => {
         }
       }
 
-      // check if global setting for team is false, then mark other team member when one clicks
+      // If global settings team is false i.e staff works as an individual, check if staff has a partner or not and marry their both work
+      //when any partner clicks an other, the other partner's details shows
       async function marryTeamWhenOneOtherIsClicked(orderData){
         const teamSetting = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
-        if(teamSetting.team == false){ // is now an individual system
-          //find who is who among the team and assing order number to em
-          const teamMember = await User.find({"team.value":req.user.team.value}) //search for team member
-          for(const team  of teamMember){ //loop through team memver
-
-            // ----------------------------------------------------//
-            if(team.duty == "meat-picker" && team.username != req.user.username){ // avoid possible error of assiging order number to already assigned team 
-              // const orderData =  await singleOrder.findOne({orderNumber: id})
-              await singleOrder.updateOne({orderNumber: id},{
-                $set: {
-                  meatPicker: {
-                    id: team.username,
-                    product:orderData.meatPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
-                    fname:team.fname,
-                    active: true,
-                    time: date.toJSON(),
-                    // status: false,
-                  },
-                },
-              });
-            }else if(team.duty == "dry-picker" && team.username != req.user.username){ // avoid possible error of assiging order number to already assigned team 
-              // const orderData =  await singleOrder.findOne({orderNumber: id})
-              await singleOrder.updateOne({orderNumber: id},{
-                $set: {
-                  dryPicker: {
-                    id: team.username,
-                    product:orderData.dryPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
-                    fname:team.fname,
-                    active: true,
-                    time: date.toJSON(),
-                    // status: false,
-                  },
-                },
-              });
-            }else if(team.duty == "packer" && team.username != req.user.username){ // avoid possible error of assiging order number to already assigned team 
-              // const orderData =  await singleOrder.findOne({orderNumber: id})
-              await singleOrder.updateOne({orderNumber: id},{
-                $set: {
-                  packer: {
-                    id: team.username,
-                    product:orderData.packer.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
-                    fname:team.fname,
-                    active: true,
-                    time: date.toJSON(),
-                    // status: false,
-                  },
-                },
-              });
+        if(teamSetting.team == false && req.user.team.status == false){ // is now an individual system and no partner
+          await singleOrder.updateOne({orderNumber:id},{
+            $set: {
+              meatPicker: {
+                id: req.user.username,
+                // product:orderData.meatPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
+                fname:req.user.fname,
+                active: true,
+                time: date.toJSON(),
+                status: orderData.meatPicker.status,
+              },
+              dryPicker:{
+                id: req.user.username,
+                // product:orderData.dryPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
+                fname:req.user.fname,
+                active: true,
+                time: date.toJSON(),
+                status: orderData.dryPicker.status,
+              },
+              packer:{
+                id: req.user.username,
+                // product:orderData.packer.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
+                fname:req.user.fname,
+                active: true,
+                time: date.toJSON(),
+                status: orderData.packer.status,
+              }
             }
-            // -------------------------------------------------//
-
-          }
+          })  
         }
+        // else if(teamSetting.team == false && req.user.team.status == true){ // individual with partner
+        //   //find who is who among the team and assign order number to em
+        //   const teamMember = await User.find({"team.value":req.user.team.value}) //search for team member
+        //   for(const team  of teamMember){ //loop through team memver
+        //     // ----------------------------------------------------//
+        //     if(team.duty == "meat-picker" && team.username != req.user.username){ // avoid possible error of assiging order number to already assigned team 
+        //       // const orderData =  await singleOrder.findOne({orderNumber: id})
+        //       await singleOrder.updateOne({orderNumber: id},{
+        //         $set: {
+        //           meatPicker: {
+        //             id: team.username,
+        //             product:orderData.meatPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
+        //             fname:team.fname,
+        //             active: true,
+        //             time: date.toJSON(),
+        //             // status: false,
+        //           },
+        //         },
+        //       });
+        //     }else if(team.duty == "dry-picker" && team.username != req.user.username){ // avoid possible error of assiging order number to already assigned team 
+        //       // const orderData =  await singleOrder.findOne({orderNumber: id})
+        //       await singleOrder.updateOne({orderNumber: id},{
+        //         $set: {
+        //           dryPicker: {
+        //             id: team.username,
+        //             product:orderData.dryPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
+        //             fname:team.fname,
+        //             active: true,
+        //             time: date.toJSON(),
+        //             // status: false,
+        //           },
+        //         },
+        //       });
+        //     }else if(team.duty == "packer" && team.username != req.user.username){ // avoid possible error of assiging order number to already assigned team 
+        //       // const orderData =  await singleOrder.findOne({orderNumber: id})
+        //       await singleOrder.updateOne({orderNumber: id},{
+        //         $set: {
+        //           packer: {
+        //             id: team.username,
+        //             product:orderData.packer.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
+        //             fname:team.fname,
+        //             active: true,
+        //             time: date.toJSON(),
+        //             // status: false,
+        //           },
+        //         },
+        //       });
+        //     }
+        //     // -------------------------------------------------//
+        //   }
+        // }
       }
 
   } else {
@@ -427,14 +566,26 @@ const orderNote = async (req, res) => {
   }
 };
 
-// a particular order has been done
-const orderDone = async (req, res) =>{
+// a particular order has been completed
+const orderCompleted = async (req, res) =>{
   if(req.isAuthenticated()){
     let orderId = req.body.id
     let userDuty = req.user.duty
     let product = req.body.product
     // console.log(product)
     // console.log(orderId, userDuty)
+    const theOrder = await singleOrder.findOne({orderNumber:orderId})
+    const alreadySaved = theOrder.productPicked
+    // console.log(alreadySaved)
+
+    const mergedProducts = [...new Set([...alreadySaved,...product])]; // Ecma 6 for concatenating array without duplicate
+    // console.log(mergedProducts); 
+    await singleOrder.updateOne({orderNumber:orderId},{
+      $set:{
+        productPicked:mergedProducts
+      }
+    })
+
     switch (userDuty){
 
       case "meat-picker":
@@ -442,7 +593,7 @@ const orderDone = async (req, res) =>{
           $set:{
             meatPicker:{
               id: req.user.username,
-              product:product,
+              // product:product,
               fname:req.user.fname,
               active: true,
               time: date.toJSON(),
@@ -457,7 +608,7 @@ const orderDone = async (req, res) =>{
           $set:{
             dryPicker: {
               id: req.user.username,
-              product:product,
+              // product:product,
               fname:req.user.fname,
               active: true,
               time: date.toJSON(),
@@ -473,7 +624,7 @@ const orderDone = async (req, res) =>{
             status:true,
             packer: {
               id: req.user.username,
-              product:product,
+              // product:product,
               fname:req.user.fname,
               active: true,
               time: date.toJSON(),
@@ -546,7 +697,7 @@ const orderDone = async (req, res) =>{
 }
 
 // view  completed orders
-const completedOrder = async (req, res)=>{
+const viewCompletedOrder = async (req, res)=>{
   if(req.isAuthenticated()){
     const completedOrder = await completedDb.find({status:true})
       res.render('general-order/completed-order', {
@@ -676,123 +827,6 @@ const refund = async (req, res)=>{
   }
 }
 
-// //when it is in team mode
-// const meatPacked = async(req, res)=>{
-//   if(req.isAuthenticated()){
-//     let orderId = req.body.id
-//     let userDuty = req.user.duty
-//     let product = req.body.product
-//     // console.log(product)
-//     // console.log(orderId, userDuty)
-//     switch (userDuty){
-
-//       // case "meat-picker":
-//       //   await singleOrder.updateOne({orderNumber:orderId},{
-//       //     $set:{
-//       //       meatPicker:{
-//       //         id: req.user.username,
-//       //         product:product,
-//       //         fname:req.user.fname,
-//       //         active: true,
-//       //         time: date.toJSON(),
-//       //         status: true,
-//       //       }
-//       //     }
-//       //   })
-//       //   break;
-      
-//       // case "dry-picker":
-//       //   await singleOrder.updateOne({orderNumber:orderId},{
-//       //     $set:{
-//       //       dryPicker: {
-//       //         id: req.user.username,
-//       //         product:product,
-//       //         fname:req.user.fname,
-//       //         active: true,
-//       //         time: date.toJSON(),
-//       //         status: true,
-//       //       },
-//       //     }
-//       //   })
-//       //   break;
-
-//       case "packer":
-//         await singleOrder.updateOne({orderNumber:orderId},{
-//           $set:{
-//             meatPicker: {
-//               id: req.user.username,
-//               product:product,
-//               fname:req.user.fname,
-//               active: true,
-//               time: date.toJSON(),
-//               status: true,
-//             },
-//             date:date.toJSON().slice(0,10)
-//           }
-//         })
-//         break;
-      
-//       // case "manager":
-//       //     await singleOrder.updateOne({orderNumber:orderId},{
-//       //       $set:{
-//       //         status:true,
-//       //         packer: {
-//       //           id: req.user.username,
-//       //           fname:req.user.fname,
-//       //           active: true,
-//       //           time: date.toJSON(),
-//       //           status: true,
-//       //         },
-//       //         date:date.toJSON().slice(0,10)
-//       //       }
-//       //     });
-//       //   break;
-
-//       default:
-//         break
-//     }
-
-//     // check if order is completed, then save to temporaty complete order db
-//     // let completed  = await singleOrder.findOne({orderNumber:orderId})
-//     // if(completed.status == true){
-//     //   const saveToCompletedDc = new completedDb({
-//     //     orderNumber:completed.orderNumber,
-//     //     status:completed.status,
-//     //     note:completed.note,
-//     //     meatPicker:{
-//     //         id:completed.meatPicker.id,
-//     //         product:completed.meatPicker.product,
-//     //         fname:completed.meatPicker.fname,
-//     //         active:completed.meatPicker.active,
-//     //         time:completed.meatPicker.time,
-//     //         status:completed.meatPicker.status
-//     //     },
-//     //     dryPicker:{
-//     //       id:completed.dryPicker.id,
-//     //       product:completed.dryPicker.product,
-//     //       fname:completed.dryPicker.fname,
-//     //       active:completed.dryPicker.active,
-//     //       time:completed.dryPicker.time,
-//     //       status:completed.dryPicker.status
-//     //     },
-//     //     packer:{
-//     //       id:completed.packer.id,
-//     //       product:completed.packer.product,
-//     //       fname:completed.packer.fname,
-//     //       active:completed.packer.active,
-//     //       time:completed.packer.time,
-//     //       status:completed.packer.status
-//     //     },
-//     //   })
-//     //   await saveToCompletedDc.save()
-//     // }
-
-//     res.send(true);
-//   }else{
-//     res.redirect("/")
-//   }
-// }
-
 // Export module
 module.exports = {
   searchSingleOrder:searchSingleOrder,
@@ -800,13 +834,12 @@ module.exports = {
   singleOrderProcessing: singleOrderProcessing,
   checkStatusOfOrderToProcess: checkStatusOfOrderToProcess, //AJAX
   orderNote: orderNote,
-  orderDone:orderDone,
-  completedOrder,
+  orderCompleted:orderCompleted,
+  viewCompletedOrder:viewCompletedOrder,
   replace:replace,
   refund:refund,
   getRefundOrderDetails:getRefundOrderDetails, //AJax
   retrieveSavedForProcessing:retrieveSavedForProcessing, //Ajax
   getSingleOrderProcessingStatus:getSingleOrderProcessingStatus,
-
-  // meatPacked:meatPacked
+  productPicked:productPicked //ajax
 };

@@ -26,11 +26,12 @@
                             <select class="form-select staff-duty" id="assign-staff" aria-label="Default select example">
                                 <option value="">Assign to staff</option>
                                 <option value="patrick@mywosiwosi.co.uk">Patrick</option>
+                                <option value="sunny@mywosiwosi.co.uk">Sunny</option>
                                 <option value="liton@mywosiwosi.co.uk">Liton</option>
                                 <option value="sajal@mywosiwosi.co.uk">Sajal</option>
                                 <option value="moshood@mywosiwosi.co.uk">Moshood</option>
                                 <option value="lekan@mywosiwosi.co.uk">Lekan</option>
-                                <option value="osas@mywosiwosi.co.uk">Osas</option>
+                                <option value="anu@mywosiwosi.co.uk">Anu</option>
                                 <option value="maro@mywosiwosi.co.uk">Maro</option>
                                 <option value="gbenga@wosiwosi.co.uk">Gbenga</option>
                                 <option value="odunlamibamidelejohn@gmail.com">Bamidele</option>
@@ -40,12 +41,16 @@
                         </div>
                     <%}%>
                     <!-- if it's team mode -->
-                     <!-- <if(setting == true && user.duty == "packer" && orderFromDB.meatPicker.active == false){> -->
-                        <!-- <button class="btn btn-dark btn-sm" id="meatPacked">Meat Packed</button>
-                        <button class="btn btn-success btn-sm" id="completeBtn">Order Packed</button> -->
-                     <!-- <}else{> -->
-                    <button class="btn btn-success btn-sm" id="completeBtn">Completed order</button>
-                    <!-- <}> -->
+                    <!-- setting == true && user.duty == "packer" && orderFromDB.meatPicker.active == false -->
+                     <%if(setting == false && user.team.status == false){%>
+                        <!-- individual mode -->
+                        <button class="btn btn-dark btn-sm" id="dryPicked">Dry Picked</button>
+                        <button class="btn btn-primary btn-sm" id="meatPicked">Meat Picked</button>
+                        <button class="btn btn-success btn-sm" id="completeBtn" disabled>Complete</button>
+                     <%}else{%>
+                        <!-- team mode -->
+                        <button class="btn btn-success btn-sm" id="completeBtn">Completed order</button>
+                    <%}%>
                 </div>
             <%}else{%>
             <!-- if order is not added to Orders to be processed (function in singleOrderProcessing.js) -->

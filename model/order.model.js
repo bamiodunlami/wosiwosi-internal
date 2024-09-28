@@ -12,6 +12,7 @@ const singleOrderSchema = mongoose.Schema({
     status:Boolean,
     date:String,
     note:[],
+    productPicked:[],
     meatPicker:{
         id:String,
         product:[],
@@ -48,7 +49,7 @@ async function migrateUsers() {
       const mig = await singleOrder.find();
       // Update each user record with the new field
       for (let i=0; i<mig.length; i++) {
-            mig[i].date = "no data capture"
+            mig[i].productPicked = []
             await mig[i].save()
       }
   

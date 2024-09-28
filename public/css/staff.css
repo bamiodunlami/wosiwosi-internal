@@ -47,12 +47,9 @@ a{
 
 /* staff change duty */
 .team-main{
-    height: 80vh;
+    padding: 10%;
 }
 
-.team-bar{
-    width: 500px;
-}
 
 .team-form{
     padding: 20px;
@@ -76,8 +73,9 @@ a{
     }
 
     /* team duty */
-    .team-bar{
-        padding: 0 5%;
+    /* team duty */
+    .team-main{
+        padding: 10% 5%;
     }
 }
 
@@ -91,7 +89,7 @@ a{
     }
 
     /* team duty */
-    .team-bar{
-        padding: 0 5%;
+    .team-main{
+        padding: 10% 5%;
     }
 }
