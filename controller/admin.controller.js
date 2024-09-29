@@ -747,6 +747,34 @@ const unlockSystem = async (req, res)=>{
   res.redirect(req.headers.referer)
 }
 
+//enableStaff
+const enableStaff = async (req, res) =>{
+    if(req.isAuthenticated()){
+      const staff = await User.updateOne({username:req.query.staffId},{
+        $set:{
+          status:true
+        }
+      })
+    res.redirect(req.headers.referer)
+    }else{
+      res.redirect("/")
+    }
+}
+
+//disable staff
+const disableStaff = async (req, res) =>{
+  if(req.isAuthenticated()){
+    const staff = await User.updateOne({username:req.query.staffId},{
+      $set:{
+        status:false
+      }
+    })
+  res.redirect(req.headers.referer)
+  }else{
+    res.redirect("/")
+  }
+}
+
 //redo order
 const redoOrder = async (req, res)=>{
   console.log(req.body);
@@ -807,5 +835,7 @@ module.exports = {
   ajaxGetRefundNotification:ajaxGetRefundNotification,
   lockSystem:lockSystem,
   unlockSystem:unlockSystem,
+  enableStaff:enableStaff,
+  disableStaff:disableStaff,
   redoOrder:redoOrder
 };

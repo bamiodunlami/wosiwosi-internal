@@ -39,6 +39,10 @@ router
 .get('/lock-system', admin.lockSystem)
 .get('/unlock-system', admin.unlockSystem)
 
+//enable and disable staff
+.get('/enable-staff', admin.enableStaff)
+.get('/disable-staff', admin.disableStaff)
+
 .post('/redo-order', admin.redoOrder) //redo order
 
 

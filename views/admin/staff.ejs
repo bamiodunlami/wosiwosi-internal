@@ -30,6 +30,7 @@
                             <th scope="col" class="lname">Last Name</th>
                             <th scope="col">Phone</th>
                             <th scope="col">Duty</th>
+                            <th scope="col">Action</th>
                             <!-- <th>Team</th> -->
                             <% if(user.role == "admin" && user.level == 6){%>
                                 <th scope="col">Password</th>
@@ -105,6 +106,14 @@
                                             </select>
                                         <%}%>
                                     </td>
+                                    <!-- enable or disable staff -->
+                                     <td>
+                                        <%if(staff[i].status == false){%>
+                                            <a class="btn btn-success btn-sm" href="/enable-staff?staffId=<%=staff[i].username%>">Unlock</a>
+                                        <%}else{%>
+                                            <a class="btn btn-danger btn-sm" href="/disable-staff?staffId=<%=staff[i].username%>">Lock</a>
+                                        <%}%>
+                                     </td>
                                     <% if(user.role == "admin" && user.level == 6){%>
                                         <td><a href="/resetpassword?id=<%=staff[i].username%>" class="btn btn-warning btn-sm">Reset</a></td>
                                     <%}%>

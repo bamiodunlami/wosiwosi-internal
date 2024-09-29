@@ -94,7 +94,7 @@ const getSingleOrderProcessingStatus = async (req, res)=>{
   }
 }
 
-// when it is in team mode
+// when it is in individual mode AJax
 const productPicked = async(req, res)=>{
   if(req.isAuthenticated()){
     let orderNumber = req.body.id
@@ -241,12 +241,48 @@ const orderAvailableToProcess = async (req, res) => {
     //     res.redirect("/select-duty")
     //   }
     // }
+    //sort orders to show individual staff if it's team system or individual
+    let order;
+    if(settings.team == false && req.user.team.status == false && req.user.level < 3){
+      order = await  singleOrder.find({status:false, "packer.id":req.user.username})
+    }else{
+      order = await  singleOrder.find({status:false})
+    }
 
-    const order = await singleOrder.find({status:false})
+
+    // numbers of order available to each staff when it's in individual mode, only available to supervisor and managers
+    let eachStaffOrder=[];
+    if(settings.team == false && req.user.level > 3 ){ //available to supervisor and above leve (>3)
+      const staffAvailable = await User.find({role:"staff"}) //get all staff
+      for(const eachStaff of staffAvailable){ // loop through each staff
+        if(eachStaff.team.status == false){ // if it's individual and no support team
+          let staffOrder = await  singleOrder.find({"packer.id":eachStaff.username}) //get order
+          let undone = await  singleOrder.find({status:false, "packer.id":eachStaff.username}) //get orde
+          //if staff order length is 0, dont push, mean the are not assing to any order
+          if(staffOrder.length == 0){
+            //push nothing
+          }else{
+            //push staff name and numbers of available order as object into an array
+            eachStaffOrder.push({
+              fname:eachStaff.fname,
+              order: staffOrder.length,
+              undone:undone.length
+            })
+          }
+        }else{ // if it's individual and there's support team
+
+        }
+      }
+    }else{ // other staff has no access to this tab
+      staffOrder=[] //return staff order to 0
+    }
+
+    // const order = await singleOrder.find({status:false})
     const refund = await refundDb.find({staffId:req.user.username, status:true, readStatus:false})
       res.render("general-order/orderToProcess", {
         title: "Processing Order",
         order: order,
+        orderAssign:eachStaffOrder,
         user: req.user,
         refund:refund
       });

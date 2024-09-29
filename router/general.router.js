@@ -32,6 +32,7 @@ router
 
 .get("/lock-page", general.lockPage)
 
+
 .get('/logout', (req, res)=>{
     req.logout((err) => {
         if (err) {

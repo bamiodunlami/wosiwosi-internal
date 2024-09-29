@@ -45,13 +45,13 @@ app.use(passport.session())
 app.use(flash());
 
 
-
 app.use(adminRoute);
 app.use(generalRoute);
 // app.use(pickerRoute);
 app.use(influencerRoute);
 app.use(generalOrder);
 app.use(staff)
+
 
 
 

@@ -10,6 +10,14 @@
 
             <h6 class="alert alert-success text-center">Order to process <%=order.length%></h6>
 
+            <!-- if it's on individual mode show the number of undo order for each staff -->
+             <%if(orderAssign.length >0){%>
+                <%for(const eachStaff of orderAssign){%>
+                    <span class="small-box-margin"><%=eachStaff.fname%>: <%=eachStaff.undone%>/<%=eachStaff.order%></span>
+                <%}%>
+            <%}%>
+
+            <!-- refund notification -->
             <div class="row" >
                 <div class="col-sm-12 col-12">
                     <% if(refund.length > 0){%>
