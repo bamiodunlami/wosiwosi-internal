@@ -10,12 +10,23 @@
 
             <h6 class="alert alert-success text-center">Order to process <%=order.length%></h6>
 
-            <!-- if it's on individual mode show the number of undo order for each staff -->
-             <%if(orderAssign.length >0){%>
-                <%for(const eachStaff of orderAssign){%>
-                    <span class="small-box-margin"><%=eachStaff.fname%>: <%=eachStaff.undone%>/<%=eachStaff.order%></span>
+            <!-- show team member if team.status is true -->
+                <%if(teamMember != null){%>
+                <h6 class="alert alert-info text-center">
+                    Team: 
+                    <%for(const eachTeam of teamMember){%>
+                        <span><%=eachTeam.fname%>, </span>
+                    <%}%>
+                </h6>
                 <%}%>
-            <%}%>
+
+
+            <!-- if it's on individual mode show the number of undo order for each staff -->
+             <!-- <if(orderAssign.length >0){>
+                <for(const eachStaff of orderAssign){>
+                    <span class="small-box-margin"><=eachStaff.fname>: <eachStaff.undone>/<eachStaff.order></span>
+                <}>
+            <}> -->
 
             <!-- refund notification -->
             <div class="row" >

@@ -135,18 +135,79 @@ const changeDuty = async (req, res)=>{
   let duty = dutyAndId[0]
   let id = dutyAndId[1]
 
-  const changeDuty = await User.updateOne({username:id},{
+  const settings = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
+  //DONT CHANGE DUTY
+  // if(settings.team == false){ // if it's individual, duty cannot be changed
+  //   res.send(false)
+  // }else{ 
+    const changeDuty = await User.updateOne({username:id},{
+      $set:{
+        duty:duty
+      }
+    })
+    if(changeDuty.modifiedCount == 1){
+      res.send("true")
+    }else{
+      res.send('false')
+    }
+  // }
+}
+
+// pair staff
+const pairStaff = async (req, res)=>{  
+  let incominData = req.body.pair
+  let mainAndPair = incominData.split(' ')
+  let mainStaff = mainAndPair[0]
+  let pairedStaff = mainAndPair[1]
+
+  const findMainStaff = await User.findOne({username:mainStaff})
+  const findPairedStaff = await User.findOne({username:pairedStaff})
+
+  const teamValue=findMainStaff.fname.toLowerCase().slice(0,1) + findPairedStaff.fname.toLowerCase().slice(0,1) //make a team name from their first letter of fname
+
+  // update to staff pair
+  const updateMainStaff = await User.updateOne({username:mainStaff},{
     $set:{
-      duty:duty
+      duty:"packer",
+      team:{
+        status:true,
+        value:teamValue
+      }
     }
   })
-
-  if(changeDuty.modifiedCount == 1){
-    res.send("true")
+  // if main staff is updated, update the other person
+  if(updateMainStaff.modifiedCount == 1){
+      await User.updateOne({username:pairedStaff},{
+        $set:{
+          duty:'packer',
+          team:{
+            status:true,
+            value:teamValue
+          }
+        }
+      })
+      res.send(true)
   }else{
-    res.send('false')
+    res.send(false)
   }
+}
 
+// unpair staff
+const unpairStaff = async (req, res)=>{
+  if(req.isAuthenticated()){
+    console.log(req.query.request)
+    await User.updateMany({"team.value":req.query.request},{
+      $set:{
+        team:{
+          value:"",
+          status:false
+        }
+      }
+    })
+    res.redirect(req.headers.referer)
+  }else{  
+    res.redirect("/")
+  }
 }
 
 // order page
@@ -815,6 +876,8 @@ module.exports = {
   dutySettings:dutySettings,
   // changeTeam:changeTeam,
   changeDuty:changeDuty,
+  pairStaff:pairStaff,
+  unpairStaff:unpairStaff,
   renderOrderListPage: renderOrderListPage,
   saveAllForProcessing: saveAllForProcessing,
   removeFromOrder: removeFromOrder,

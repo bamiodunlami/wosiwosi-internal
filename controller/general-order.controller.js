@@ -107,12 +107,20 @@ const productPicked = async(req, res)=>{
     if(query == "dry-picked"){
        await singleOrder.updateOne({orderNumber:orderNumber},{
           $set:{
+            "dryPicker.id": req.user.username,
+            "dryPicker.fname":req.user.fname,
+            "dryPiker.active": true,
+            "dryPicker.time": date.toJSON(),
             "dryPicker.status":true
           }
       })
     }else if( query == "meat-picked"){
       await singleOrder.updateOne({orderNumber:orderNumber},{
           $set:{
+            "meatPicker.id": req.user.username,
+            "meatPicker.fname":req.user.fname,
+            "meatPicker.active": true,
+            "meatPicker.time": date.toJSON(),
             "meatPicker.status":true
           }
       })
@@ -226,29 +234,54 @@ const searchSingleOrder = async (req, res, next) => {
 // render orders available for workers to process, other db lookup are done by ajax in the js 
 const orderAvailableToProcess = async (req, res) => {
   if (req.isAuthenticated()) {
-    
     // check if settins is team or individual and requester is a worker and not admin
     const settings = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
 
     //lock system
-    if(settings.lock == true && req.user.role == "staff"){
+    if(settings.lock == true && req.user.level <3){
       res.redirect('/lock-page')
     }else{
 
-    //if settins is teams
-    // if(settings.team == false){
-    //   if(req.user.role == "staff" && req.user.team.status == false){
-    //     res.redirect("/select-duty")
-    //   }
-    // }
-    //sort orders to show individual staff if it's team system or individual
-    let order;
-    if(settings.team == false && req.user.team.status == false && req.user.level < 3){
-      order = await  singleOrder.find({status:false, "packer.id":req.user.username})
+    //check if user is individal and has partner
+    if(settings.team == false && req.user.team.status == true){
+      teamMember = await User.find({"team.status":true, "team.value":req.user.team.value})
+      // console.log(teamMember)
     }else{
-      order = await  singleOrder.find({status:false})
+      teamMember = null
     }
 
+
+    //sort orders to show individual staff if it's team system or individual
+    let order;
+    if(settings.team == false && req.user.team.status == false && req.user.level < 3){ //indibidual with no team
+      order = await  singleOrder.find({status:false, "packer.id":req.user.username})
+    } else if (settings.team == false && req.user.team.status == true && req.user.level < 3){ // individual with team
+      let listTeam = []
+      //first get the list of team member
+      for(const eachTeam of teamMember){
+        listTeam.push(eachTeam.username)
+      }
+      teamMemeberOne = listTeam[0]
+      teamMemeberTwo = listTeam[1]
+
+      //find whose id is on the order as a packer
+      staffOneOrder = await  singleOrder.find({status:false, "packer.id":teamMemeberOne})
+      staffTwoOrder = await  singleOrder.find({status:false, "packer.id":teamMemeberTwo})
+
+      let orderTosend = staffOneOrder.concat(staffTwoOrder)
+      
+      order = orderTosend
+      // if(staffOneOrder.length > 0){
+      //   order=staffOneOrder
+      // }else{
+      //   order = staffTwoOrder
+      // }
+
+      // console.log(order)
+
+    } else{
+      order = await  singleOrder.find({status:false}) //team system
+    }
 
     // numbers of order available to each staff when it's in individual mode, only available to supervisor and managers
     let eachStaffOrder=[];
@@ -281,6 +314,7 @@ const orderAvailableToProcess = async (req, res) => {
     const refund = await refundDb.find({staffId:req.user.username, status:true, readStatus:false})
       res.render("general-order/orderToProcess", {
         title: "Processing Order",
+        teamMember:teamMember,
         order: order,
         orderAssign:eachStaffOrder,
         user: req.user,
@@ -338,7 +372,6 @@ const singleOrderProcessing = async (req, res) => {
         res.render("general-order/single-order-processing", {
           title: "Order Processing",
           order: order.data,
-          // orderToProcess:orderToProcess,
           orderFromDB: orderExist,
           authorize:authorize,
           activity:activity,
@@ -377,7 +410,7 @@ const singleOrderProcessing = async (req, res) => {
                 },
               }
             );
-            marryTeamWhenOneOtherIsClicked(orderData)
+            setUserAsPickerAndPacker(orderData)
             //consider if team
           break;
 
@@ -397,7 +430,7 @@ const singleOrderProcessing = async (req, res) => {
                 },
               }
             );
-            marryTeamWhenOneOtherIsClicked(orderData)
+            setUserAsPickerAndPacker(orderData)
           break;
 
           // if packer
@@ -415,7 +448,7 @@ const singleOrderProcessing = async (req, res) => {
                 },
               }
             );
-            marryTeamWhenOneOtherIsClicked(orderData)
+            setUserAsPickerAndPacker(orderData)
           break;
         
           // default
@@ -449,9 +482,11 @@ const singleOrderProcessing = async (req, res) => {
             
             case "packer":
               // chceck if meat picking hasnt been handled by sonmeon else
-              if(orderExist.packer.active == true && user.username != orderExist.packer.id){
+              if(settings.team == false && req.user.team.status == true){ //individual mode with partner
+                authorize =true;
+              }else if(orderExist.packer.active == true && user.username != orderExist.packer.id){ //team mode
                 authorize = false;
-              }else{
+              }else{ //
                 updateData(); //update data
                 authorize =true;
               }
@@ -466,9 +501,8 @@ const singleOrderProcessing = async (req, res) => {
         }
       }
 
-      // If global settings team is false i.e staff works as an individual, check if staff has a partner or not and marry their both work
-      //when any partner clicks an other, the other partner's details shows
-      async function marryTeamWhenOneOtherIsClicked(orderData){
+      // If global settings team is false i.e staff works as an individual without partner, set that staff to all duties
+      async function setUserAsPickerAndPacker(orderData){
         const teamSetting = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
         if(teamSetting.team == false && req.user.team.status == false){ // is now an individual system and no partner
           await singleOrder.updateOne({orderNumber:id},{
@@ -500,59 +534,7 @@ const singleOrderProcessing = async (req, res) => {
             }
           })  
         }
-        // else if(teamSetting.team == false && req.user.team.status == true){ // individual with partner
-        //   //find who is who among the team and assign order number to em
-        //   const teamMember = await User.find({"team.value":req.user.team.value}) //search for team member
-        //   for(const team  of teamMember){ //loop through team memver
-        //     // ----------------------------------------------------//
-        //     if(team.duty == "meat-picker" && team.username != req.user.username){ // avoid possible error of assiging order number to already assigned team 
-        //       // const orderData =  await singleOrder.findOne({orderNumber: id})
-        //       await singleOrder.updateOne({orderNumber: id},{
-        //         $set: {
-        //           meatPicker: {
-        //             id: team.username,
-        //             product:orderData.meatPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
-        //             fname:team.fname,
-        //             active: true,
-        //             time: date.toJSON(),
-        //             // status: false,
-        //           },
-        //         },
-        //       });
-        //     }else if(team.duty == "dry-picker" && team.username != req.user.username){ // avoid possible error of assiging order number to already assigned team 
-        //       // const orderData =  await singleOrder.findOne({orderNumber: id})
-        //       await singleOrder.updateOne({orderNumber: id},{
-        //         $set: {
-        //           dryPicker: {
-        //             id: team.username,
-        //             product:orderData.dryPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
-        //             fname:team.fname,
-        //             active: true,
-        //             time: date.toJSON(),
-        //             // status: false,
-        //           },
-        //         },
-        //       });
-        //     }else if(team.duty == "packer" && team.username != req.user.username){ // avoid possible error of assiging order number to already assigned team 
-        //       // const orderData =  await singleOrder.findOne({orderNumber: id})
-        //       await singleOrder.updateOne({orderNumber: id},{
-        //         $set: {
-        //           packer: {
-        //             id: team.username,
-        //             product:orderData.packer.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
-        //             fname:team.fname,
-        //             active: true,
-        //             time: date.toJSON(),
-        //             // status: false,
-        //           },
-        //         },
-        //       });
-        //     }
-        //     // -------------------------------------------------//
-        //   }
-        // }
       }
-
   } else {
     res.redirect("/");
   }
