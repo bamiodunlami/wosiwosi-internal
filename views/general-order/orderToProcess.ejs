@@ -22,11 +22,11 @@
 
 
             <!-- if it's on individual mode show the number of undo order for each staff -->
-             <!-- <if(orderAssign.length >0){>
-                <for(const eachStaff of orderAssign){>
-                    <span class="small-box-margin"><=eachStaff.fname>: <eachStaff.undone>/<eachStaff.order></span>
-                <}>
-            <}> -->
+             <%if(orderAssign.length >0){%>
+                <%for(const eachStaff of orderAssign){%>
+                    <span class="small-box-margin"><%=eachStaff.fname%>: <%=eachStaff.undone%>/<%=eachStaff.order%></span>
+                <%}%>
+            <%}%>
 
             <!-- refund notification -->
             <div class="row" >

@@ -71,24 +71,6 @@ async function getAllRefund(){
     }
 }
 
-//reset Refund
-// async function resetTodayRefund(){
-//     const refund = await refundDb.find({status:true})
-//     for(const refundItem of refund){
-//         console.log(refundItem.orderNumber)
-//         let eachRefundDOne = await refundDb.updateOne(
-//             {orderNumber:refundItem.orderNumber},
-//             { $set:{
-//                 close:true
-//             }},
-//         )
-//         console.log(eachRefundDOne)
-//     }
-//     // console.log(eachRefundDOne)
-//     // mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "refund")
-// }
-
-
 //reset today's completed order
 async function resetTodayCompletedOrder(){
     const completedOrder = await completedDb.find()
@@ -111,7 +93,6 @@ async function clearNotification(){
     mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "clear notification")
     console.log("reset done")
 }
-
 
 //move completed order to redundant db every friday
 async function moveToRedundant(){
@@ -155,6 +136,7 @@ async function moveToRedundant(){
                 status:eachCompletedOrder.status,
                 date:eachCompletedOrder.date,
                 note:eachCompletedOrder.note,
+                product:eachCompletedOrder.product,
                 meatPicker:eachCompletedOrder.meatPicker,
                 dryPicker:eachCompletedOrder.dryPicker,
                 packer:eachCompletedOrder.packer,
@@ -184,35 +166,6 @@ async function deleteAllNotifications(){
     console.log("reset done")
 }
 
-// revert movement temporary
-// async function revertMovement(){
-//     const revert = await redundantDb.find()
-//     for(const eachRevert of revert){
-//         let alreadyAvailable = await singlOrder.findOne({orderNumber:eachRevert.orderNumber})
-//         if(alreadyAvailable){
-//             console.log("skipped order " + alreadyAvailable.orderNumber)
-//             await redundantDb.deleteOne({orderNumber:eachRevert.orderNumber})
-//         }else{
-//             console.log("working on " + eachRevert.orderNumber)
-//             const resaveOrder = new singlOrder({
-//                 orderNumber:eachRevert.orderNumber,
-//                 status:eachRevert.status,
-//                 date:eachRevert.date,
-//                 note:eachRevert.note,
-//                 meatPicker:eachRevert.meatPicker,
-//                 dryPicker:eachRevert.dryPicker,
-//                 packer:eachRevert.packer,
-//                 lock:eachRevert.lock,
-//                 hideProduct:eachRevert.hideProduct,
-//             })
-//             resaveOrder.save()
-//             await redundantDb.deleteOne({orderNumber:eachRevert.orderNumber})
-//         }
-//     }
-//     console.log("all done")
-
-// }
-
 // -----------------------TASKS--------------
 
 //daily task 9pm
@@ -223,7 +176,7 @@ cron.schedule('0 20 * * 1-4', () => {
     timezone: "Europe/London"
 });
 
-//daily task 10pm
+//daily task 9pm
 cron.schedule('0 21 * * 1-4', () => {
     clearNotification(); //
     resetTodayCompletedOrder(); // reset completed order
@@ -232,10 +185,17 @@ cron.schedule('0 21 * * 1-4', () => {
     timezone: "Europe/London"
 });
 
-//Friday weekly task
-cron.schedule('0 10 * * 5', ()=>{
+//daily task 10pm
+cron.schedule('0 22 * * 1-4', () => {
+    moveToRedundant();
+  }, {
+    scheduled: true,
+    timezone: "Europe/London"
+});
+
+//Friday 8am weekly task
+cron.schedule('0 8 * * 5', ()=>{
     deleteAllNotifications(); // delete notification
-    moveToRedundant();   //transfer orders to redundant
 },{
     scheduled: true,
     timezone: "Europe/London"
