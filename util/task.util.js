@@ -82,7 +82,6 @@ async function resetTodayCompletedOrder(){
     mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "competed")
     console.log("reset done")
 }
-resetTodayCompletedOrder()
 
 //clear all notification for the day
 async function clearNotification(){
@@ -159,8 +158,6 @@ async function moveToRedundant(){
     mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "redundant")
     console.log("redundant done")
 }
-
-// moveToRedundant()
 
 //delete notification on friday
 async function deleteAllNotifications(){

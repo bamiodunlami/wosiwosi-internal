@@ -337,16 +337,12 @@ const singleOrderProcessing = async (req, res) => {
     const user=req.user;
     let authorize = true; //determines who does something to the order
     let activity = true //determines if anything can be done on the order
-    // let orderToProcess= []
 
-      // get order details from woocommerce and render single order page
-      try{
-        order = await woocommerce.get(`orders/${id}`); // get order from woocommerce
-      }catch(e){
-        console.log("ERROR")
-        res.redirect(req.headers.referer)
-      }
+    // get order details from woocommerce and render single order page
+    try{
+      order = await woocommerce.get(`orders/${id}`); // get order from woocommerce
 
+      //get settings
       const settings = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
 
       // check if order nunber ever exited in the db
@@ -355,6 +351,7 @@ const singleOrderProcessing = async (req, res) => {
 
       // if order number exist in singleOrder db or redundant db
       if (mainOrder || redundant) {
+
         //margen order exist or redundant into one variable
         if(mainOrder){
           console.log("data from mainOrder")
@@ -363,6 +360,7 @@ const singleOrderProcessing = async (req, res) => {
           console.log("data from redundant")
           orderExist = redundant
         }
+
         // check if order is already been globally done 
         if(orderExist.status==true){
           activity = false //no more activity
@@ -535,6 +533,10 @@ const singleOrderProcessing = async (req, res) => {
           })  
         }
       }
+    }catch(e){
+      console.log(e)
+      res.redirect(req.headers.referer)
+    }
   } else {
     res.redirect("/");
   }
