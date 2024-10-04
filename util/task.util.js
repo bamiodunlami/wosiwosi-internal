@@ -82,6 +82,7 @@ async function resetTodayCompletedOrder(){
     mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "competed")
     console.log("reset done")
 }
+resetTodayCompletedOrder()
 
 //clear all notification for the day
 async function clearNotification(){
@@ -136,7 +137,7 @@ async function moveToRedundant(){
                 status:eachCompletedOrder.status,
                 date:eachCompletedOrder.date,
                 note:eachCompletedOrder.note,
-                product:eachCompletedOrder.product,
+                productPicked:eachCompletedOrder.productPicked,
                 meatPicker:eachCompletedOrder.meatPicker,
                 dryPicker:eachCompletedOrder.dryPicker,
                 packer:eachCompletedOrder.packer,
@@ -158,6 +159,8 @@ async function moveToRedundant(){
     mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "redundant")
     console.log("redundant done")
 }
+
+// moveToRedundant()
 
 //delete notification on friday
 async function deleteAllNotifications(){

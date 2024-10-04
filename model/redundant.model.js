@@ -12,6 +12,7 @@ const redundantSchema = mongoose.Schema({
   status:Boolean,
   date:String,
   note:[],
+  productPicked:[],
   meatPicker:{
       id:String,
       product:[],

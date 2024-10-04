@@ -48,5 +48,8 @@ router
 
 .post('/redo-order', admin.redoOrder) //redo order
 
+.get('/report', admin.renderReportPage)
+.get('/report/:param', admin.reportOption)
+
 
 module.exports = router;

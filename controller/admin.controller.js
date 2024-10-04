@@ -5,7 +5,9 @@ appRoot.setPath(rootpath);
 
 const fs = require("fs");
 const singleOrder = require("../model/order.model");
+// const appRootPath = require("app-root-path");
 const date = new Date();
+
 const passport = require(appRoot + "/util/passport.util.js");
 const User = require(appRoot + "/model/user.model.js");
 const woocommerce = require(appRoot + "/util/woo.util.js");
@@ -18,6 +20,9 @@ const notificationDb= require(appRoot + "/model/notification.model.js");
 const completedDb= require(appRoot + "/model/completed.model.js");
 const settingsDb= require(appRoot + "/model/settings.model.js");
 const redoDb= require(appRoot + "/model/redo.model.js");
+const dateFilter = require (appRoot + "/util/dateFilter.util.js")
+
+dateFilter("hello", " there", " we are", " wosiwosi")
 
 // AJAX CALL
 // admin dashboard
@@ -870,6 +875,70 @@ const redoOrder = async (req, res)=>{
   }
 }
 
+// report page
+const renderReportPage = async (req, res)=>{
+  if(req.isAuthenticated()){
+    res.render('admin/report',{
+      title:"Report"
+    })
+  }else{
+    res.redirect('/')
+  }
+}
+
+const reportOption = async (req, res)=>{
+  if(req.isAuthenticated()){
+    param = req.params.param
+    // let dateFilter = date.toJSON().slice(0,10)
+    switch(param){
+      case "staff-performance":
+        const staffList = await User.find({role:"staff"})
+        const orderList = await redundantDb.find({date:"2024-09-29"})
+        dateFilter("hello", " there", " we are", " wosiwosi")
+        let staffReport =[]
+
+        // loog throught staff 
+        for(const eachStaff of staffList){
+          //creat object to hold details of what staff did
+          let report ={
+            id:"",
+            fname:"",
+            pick:[],
+            meat:[],
+            pack:[],
+          }
+          let staffId = eachStaff.username
+          report.id = staffId //store staff username
+          report.fname=eachStaff.fname
+          for(const staffOrder of orderList){ //loop through order
+            if(staffOrder.meatPicker.id == staffId){ //meat
+              report.meat.push(staffOrder.orderNumber)
+            }
+            if(staffOrder.dryPicker.id == staffId){ //meat
+              report.pick.push(staffOrder.orderNumber)
+            }
+            if(staffOrder.packer.id == staffId){ //meat
+              report.pack.push(staffOrder.orderNumber)
+            }
+          }
+
+          staffReport.push(report)
+        }
+        // console.log(staffReport)
+        res.render('admin/staff-performance',{
+          title:"Staff Performance",
+          order:orderList,
+          report:staffReport
+        })
+        break;
+      default:
+        break
+    }
+  }else{
+    res.redirect("/")
+  }
+}
+
 module.exports = {
   adminDashboard: adminDashboard,
   adminOperation: adminOperation,
@@ -900,5 +969,7 @@ module.exports = {
   unlockSystem:unlockSystem,
   enableStaff:enableStaff,
   disableStaff:disableStaff,
-  redoOrder:redoOrder
+  redoOrder:redoOrder,
+  renderReportPage:renderReportPage,
+  reportOption:reportOption,
 };
