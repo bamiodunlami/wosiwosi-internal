@@ -20,9 +20,8 @@ const notificationDb= require(appRoot + "/model/notification.model.js");
 const completedDb= require(appRoot + "/model/completed.model.js");
 const settingsDb= require(appRoot + "/model/settings.model.js");
 const redoDb= require(appRoot + "/model/redo.model.js");
-const dateFilter = require (appRoot + "/util/dateFilter.util.js")
+// const dateFilter = require (appRoot + "/util/dateFilter.util.js")
 
-dateFilter("hello", " there", " we are", " wosiwosi")
 
 // AJAX CALL
 // admin dashboard
@@ -893,8 +892,16 @@ const reportOption = async (req, res)=>{
     switch(param){
       case "staff-performance":
         const staffList = await User.find({role:"staff"})
-        const orderList = await redundantDb.find({date:"2024-09-29"})
-        dateFilter("hello", " there", " we are", " wosiwosi")
+
+
+        // let dateSort = dateFilter("2024-10-2", "2024-10-6")
+        // for(const eachDay of dateSort){
+        //   // console.log("checking " + eachDay)
+        //   let list = await redundantDb.find({date:eachDay})
+        //   // console.log(list)
+        // }
+
+        const orderList = await redundantDb.find({date:"2024-10-3"})
         let staffReport =[]
 
         // loog throught staff 

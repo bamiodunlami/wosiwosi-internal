@@ -49,10 +49,14 @@ const checkStatusOfOrderToProcess = async (req, res) => {
 
 // ajax to get all status of each product row of single order page(refund in particular)
 const getRefundOrderDetails = async (req, res)=>{
-  const sendRefundDetails = await refundDb.findOne({orderNumber:req.body.orderNumber});  
-  // console.log(sendRefundDetails)
-  if(sendRefundDetails){
-    res.send(sendRefundDetails)
+  const fromRefundDb = await refundDb.findOne({orderNumber:req.body.orderNumber});  
+  const fromRedundantDb = await redundDb.findOne({orderNumber:req.body.orderNumber});  
+
+  // console.log(fromRefundDb)
+  if(fromRefundDb){
+    res.send(fromRefundDb)
+  } else if (fromRedundantDb){
+    res.send(fromRedundantDb.refund)
   }else{
     res.send("")
   }
