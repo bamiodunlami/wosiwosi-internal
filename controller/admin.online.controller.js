@@ -5,7 +5,7 @@ appRoot.setPath(rootpath);
 
 const fs = require("fs");
 const singleOrder = require("../model/order.model");
-// const appRootPath = require("app-root-path");
+
 const date = new Date();
 
 const passport = require(appRoot + "/util/passport.util.js");
@@ -20,68 +20,8 @@ const notificationDb= require(appRoot + "/model/notification.model.js");
 const completedDb= require(appRoot + "/model/completed.model.js");
 const settingsDb= require(appRoot + "/model/settings.model.js");
 const redoDb= require(appRoot + "/model/redo.model.js");
-// const dateFilter = require (appRoot + "/util/dateFilter.util.js")
 
 
-// AJAX CALL
-// admin dashboard
-const adminDashboard = async (req, res) => {
-  if (req.isAuthenticated()) {
-    // console.log(date.toJSON().slice(0, 10));
-    res.render("admin/home", {
-      title: "Admin",
-      date: date.toJSON().slice(0, 10),
-    });
-  } else {
-    res.redirect("/");
-  }
-};
-
-// online centre
-const adminOperation = async (req, res) => {
-  if (req.isAuthenticated()) {
-    const settings = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
-    console.log(date.toJSON().slice(0, 10));
-    switch (req.params.operation) {
-      // influencer
-      case "influencer":
-        const influencer = await User.find({ role: "influencer" });
-        res.render("admin/influencer", {
-          title: "Influencer",
-          user: req.user,
-          influencer: influencer,
-        });
-        break;
-
-      // online center
-      case "online":
-        res.render("admin/online-centre", {
-          title: "Admin",
-          date: date.toJSON().slice(0, 10),
-          settings:settings,
-          user:req.user
-        });
-        break;
-
-      // staff
-      case "staff":
-        const staff = await User.find()
-        const teamSettings = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
-          res.render("admin/staff", { //change to staff page
-            user:req.user,
-            title:"Stafd",
-            staff:staff,
-            team:teamSettings.team
-          })
-          break;
-      // default
-      default:
-        break;
-    }
-  } else {
-    res.redirect("/");
-  }
-};
 
 //staff team settings (this determins if staff work in team or individual)
 const dutySettings = async (req, res)=>{
@@ -540,55 +480,6 @@ const hideProduct = async (req, res)=>{
   }
 }
 
-// create influencer
-const createInfluencer = async (req, res) => {
-  if (req.isAuthenticated()) {
-    const influencerFname = req.body.fname;
-    const influencerLname = req.body.fname;
-    const influencerUsername = req.body.username;
-    const influencerId = req.body.id;
-    const coupon = req.body.coupon;
-    const bonus = Number(req.body.bonus);
-    const bonusType = Number(req.body.bonusType);
-
-    const influnecerPassword = `${coupon}${influencerId}`;
-
-    const saveInfluencer = new User({
-      username: influencerUsername,
-      fname: influencerFname,
-      lname: influencerLname,
-      status: true,
-      id: influencerId,
-      role: "influencer",
-      passChange: false,
-      code: coupon,
-      bonus: bonus,
-      bonusType: bonusType,
-    });
-    const saveInfluencerDetails = await saveInfluencer.save();
-    const newInfluencer = await User.findOne({
-      username: influencerUsername,
-      role: "influencer",
-    });
-    await newInfluencer.setPassword(influnecerPassword); // create password
-    await newInfluencer.save(); //save password
-
-    if (newInfluencer) {
-      res.redirect(req.headers.referer);
-      mailer.mailInfluencerDetails(
-        influencerUsername,
-        "media@wosiwosi.co.uk",
-        influencerFname,
-        influencerUsername,
-        influnecerPassword
-      );
-    } else {
-    }
-  } else {
-    res.redirect("/login");
-  }
-};
-
 //undo order
 const undoOrder = async (req, res)=>{
   if(req.isAuthenticated()){
@@ -893,14 +784,6 @@ const reportOption = async (req, res)=>{
       case "staff-performance":
         const staffList = await User.find({role:"staff"})
 
-
-        // let dateSort = dateFilter("2024-10-2", "2024-10-6")
-        // for(const eachDay of dateSort){
-        //   // console.log("checking " + eachDay)
-        //   let list = await redundantDb.find({date:eachDay})
-        //   // console.log(list)
-        // }
-
         const orderList = await redundantDb.find({date:"2024-10-3"})
         let staffReport =[]
 
@@ -914,6 +797,7 @@ const reportOption = async (req, res)=>{
             meat:[],
             pack:[],
           }
+          
           let staffId = eachStaff.username
           report.id = staffId //store staff username
           report.fname=eachStaff.fname
@@ -946,11 +830,73 @@ const reportOption = async (req, res)=>{
   }
 }
 
+// report ajax
+const reportAjax = async (req, res)=>{
+  if(req.isAuthenticated()){
+    let query = req.body.sort
+    let data = req.body.data
+    switch(query){
+      // weekly sort
+      case "week":
+        let week = data.split(' ')
+        getStaffData()
+      break;
+
+      // daily
+      case "day":
+        getStaffData(data)
+      break;
+
+      // default
+      default:
+        break
+    }
+
+    async function getStaffData(data) {
+      const staffList = await User.find({role:"staff"})
+      // let dataTosend = []
+      let staffReport = []
+      for(const eachDate of data){
+        const orderList = await redundantDb.find({date:eachDate})
+        for(const eachStaff of staffList){
+          //creat object to hold details of what staff did
+          let report ={
+            id:"",
+            fname:"",
+            pick:[],
+            meat:[],
+            pack:[],
+          }
+          let staffId = eachStaff.username
+          report.id = staffId //store staff username
+          report.fname=eachStaff.fname
+          for(const staffOrder of orderList){ //loop through order
+            if(staffOrder.meatPicker.id == staffId){ //meat
+              report.meat.push(staffOrder.orderNumber)
+            }
+            if(staffOrder.dryPicker.id == staffId){ //meat
+              report.pick.push(staffOrder.orderNumber)
+            }
+            if(staffOrder.packer.id == staffId){ //meat
+              report.pack.push(staffOrder.orderNumber)
+            }
+          }
+          staffReport.push(report)
+        }
+      }
+      console.log(staffReport)
+    }
+
+  }else{
+    res.send(false)
+  }
+}
+
+
+
+
 module.exports = {
-  adminDashboard: adminDashboard,
-  adminOperation: adminOperation,
   dutySettings:dutySettings,
-  // changeTeam:changeTeam,
   changeDuty:changeDuty,
   pairStaff:pairStaff,
   unpairStaff:unpairStaff,
@@ -961,7 +907,6 @@ module.exports = {
   lockOrder:lockOrder,
   unlockOrder:unlockOrder,
   assignStaffToOrder:assignStaffToOrder,
-  createInfluencer: createInfluencer,
   undoOrder:undoOrder,
   clearNote:clearNote,
   hideProduct:hideProduct,
@@ -979,4 +924,5 @@ module.exports = {
   redoOrder:redoOrder,
   renderReportPage:renderReportPage,
   reportOption:reportOption,
+  reportAjax:reportAjax,
 };

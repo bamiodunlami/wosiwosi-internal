@@ -13,14 +13,14 @@ let options = {
     bodyBlackList: blackList,
 }
 
-const adminRoute =  require(`${__dirname}/router/admin.router.js`);
+const adminGeneralRouter =  require(`${__dirname}/router/admin.general.router.js`);
+const adminRoute =  require(`${__dirname}/router/admin.online.router.js`);
 // const pickerRoute =  require(`${__dirname}/router/picker.router.js`);
 const generalRoute =  require(`${__dirname}/router/general.router.js`);
 const influencerRoute = require(`${__dirname}/router/influencer.router.js`);
 const generalOrder = require(`${__dirname}/router/general-order.router.js`);
-const staff = require (`${__dirname}/router/staff.router.js`)
-
-const cron = require (`${__dirname}/util/task.util.js`)
+const staff = require (`${__dirname}/router/staff.router.js`);
+const cron = require (`${__dirname}/util/task.util.js`);
 
 const port=process.env.PORT || 3000;
 
@@ -44,7 +44,7 @@ app.use(session({
 app.use(passport.session())
 app.use(flash());
 
-
+app.use(adminGeneralRouter)
 app.use(adminRoute);
 app.use(generalRoute);
 // app.use(pickerRoute);
@@ -53,14 +53,11 @@ app.use(generalOrder);
 app.use(staff)
 
 
-
-
 // 404
 app.use((req, res)=>{
   // console.log("404")
   res.send("404 page not available")
 })
-
 
 
 app.listen(port, () => {

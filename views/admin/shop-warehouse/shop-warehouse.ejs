@@ -1,0 +1,43 @@
+<%- include('../include/header') -%>
+
+<section class="admin-section">
+    <h5 class="page-title text-center">SHOP AND WAREHOUSE</h5>
+    <div class="row d-flex align-items-center text-center admin-section-option">
+
+        <!--  processing-->
+        <div class="col-md-6 col-sm-12 admin-section-option-main">
+          <a href="/shop-warehouse/track-invoice">
+            <div class="admin-section-option-item">
+              <h5 class="alert alert-secondary completed-orders">Track Invoice</h5>
+            </div>
+          </a>
+        </div>
+
+        <!-- Completed -->
+        <div class="col-md-6 col-sm-12 admin-section-option-main">
+          <a href="/refund-report">
+            <div class="admin-section-option-item">
+              <h5 class="alert alert-secondary completed-orders">Product Expiry</h5>
+            </div>
+          </a>
+        </div>
+
+        <!-- Report -->
+        <div class="col-md-6 col-sm-12 admin-section-option-main">
+          <a href="/redo-report">
+            <div class="admin-section-option-item">
+              <h5 class="alert alert-secondary completed-orders">Staff Tota</h5>
+            </div>
+          </a>
+        </div>
+        
+        <div>
+          <a style="margin-top: 10px;" href="/admin" class="btn btn-secondary btn-sm">Back</a>
+        </div>
+
+    </div>
+  </section>
+
+<%- include('../include/footerTemp') -%>
+<!-- <script src="/min/notification.js"></script> -->
+<% include('../include/footer') -%>

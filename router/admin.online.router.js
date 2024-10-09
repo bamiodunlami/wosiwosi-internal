@@ -6,14 +6,11 @@ const path = require("path");
 const rootpath = path.resolve(process.cwd());
 appRoot.setPath(rootpath);
 
-const admin = require(appRoot + "/controller/admin.controller.js");
+const admin = require(appRoot + "/controller/admin.online.controller.js");
 
 router
-.get("/admin", admin.adminDashboard) //render admin dashboard
-.get("/admin/:operation", admin.adminOperation) //take care of admin operation
-
 .get('/duty-settings', admin.dutySettings) //duty settings
-// .post('/change-team', admin.changeTeam)
+
 .post('/pair-staff', admin.pairStaff) // change staff duty
 .get("/unpair", admin.unpairStaff) //unpair staff
 .post('/change-duty', admin.changeDuty) // change staff duty
@@ -29,7 +26,7 @@ router
 .get('/unlock-order', admin.unlockOrder)
 .get('/clear-note', admin.clearNote)
 .post('/hide-product', admin.hideProduct)
-.post("/createinfluencer", admin.createInfluencer) //create influencer
+
 .get('/undo-order', admin.undoOrder) //undo order completion
 .get('/get-refund-request', admin.RenderRefundRequest) //render refund page
 .get('/request/:option', admin.requestOption) //refund option
@@ -50,6 +47,7 @@ router
 
 .get('/report', admin.renderReportPage)
 .get('/report/:param', admin.reportOption)
+.post ('/sort-report', admin.reportAjax)
 
 
 module.exports = router;

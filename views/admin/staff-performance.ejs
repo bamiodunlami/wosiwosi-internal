@@ -3,41 +3,19 @@
     <section class="order-page">
         <div class="container">
             <h6 class="alert alert-success text-center">Staff Perfomance</h6>
+            
             <div class="row d-flex justify-content-center text-center alert alert-light">
-                <h5>FILTERS</h5>
+                <p class="page-title">Select date and filter option</p>
                 <div class="col-md-6 dateFilter text-center">
-                    <div class="dateFilter-container">
-                        <div class="row">
-                            <div class="dateFilter-item col-md-5 col-sm-12">
+                            <div class="dateFilter-item">
                                 <input type="date" id="date" class="form-control"/>
                             </div>
-                            <div class="dateFilter-item  col-md-2 col-sm-12">
-                                <button type="submit" class="btn btn-success">Filter</button>
+                            <div class="dateFilter-item">                                            
+                                <button type="button" id="dayBtn" class="btn btn-secondary">Day</button>
+                                <button type="button" id="weekBtn" class="btn btn-secondary">Weekly</button>
+                                <button type="button" id="monthBtn" class="btn btn-secondary">Month</button>
+                                <button type="button" id="yearBtn" class="btn btn-secondary">Yea till date</button>
                             </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- <div class="row">
-                <div class="text-center alert alert-info">
-                    <h6>TOTAL ORDER: <order.length></h6>
-                </div> -->
-
-                <div class="col-md-4">
-                    <h3 class="">Sort by week</h3>
-                    <div class="">
-                            <form>
-                                    <div class="form-group">
-                                            <button type="button" onclick="GetWeek();" class="btn btn-primary btn-block"><span class="glyphicon glyphicon-save"></span> Submit</button>
-                                    </div>
-                                    
-                            </form>
-                    </div>
-                    <div class="col-md-9">
-                            <div id="result"></div>
-                    </div>
-                </div>
                 </div>
             </div>
 
