@@ -1,0 +1,86 @@
+<%- include('../include/header') -%>
+<div class="account-page">
+    <div class="container">
+
+        <div class="row justify-content-center">
+            <h6 class="text-center alert alert-success">DAILY ONLINE SALES SUMARRY</h6>
+
+            <div class="mb-2 col-sm-6 alert alert-light">
+                <h6 class="text-center ">DATE FILTER</h6>
+                <input type="date" class="form-control" id="date">
+            </div>
+        </div>
+
+
+        <!-- data -->
+        <div class="row">
+
+            <button class="loadingBtn btn btn-dark hidden" type="button" id="loadingBtn" disabled>
+                <span class="spinner-border spinner-border-sm" aria-hidden="true"></span>
+                <span role="status">Loading data...may take minutes</span>
+            </button>
+            <hr>
+
+            <div class="col-sm-6">
+                <h6 class="alert alert-dark">TOTAL ORDER: <span id="total-order"><strong>0</strong></span></h6>
+            </div>
+
+            <div class="col-sm-6">
+                <h6 class="alert alert-info">TOTAL £: <span id="pounds"><strong>0</strong></span></h6>
+            </div>
+
+            <div class="col-sm-6">
+                <h6 class="alert alert-warning">TOTAL ₦: <span id="naira"><strong>0</strong></span></h6>
+            </div>
+
+            <div class="col-sm-6">
+                <h6 class="alert alert-primary">FX: £1 = ₦<span id="exchange"><strong>0</strong></span></h6>
+            </div>
+
+            <!-- <div class="transaction-table col-sm-12">
+                <table class="table table-striped table-hover">
+                    <thead>
+                        <tr>
+                            <th>S/N</th>
+                            <th>Date</th>
+                            <th>Order Number</th>
+                            <th>£ Payment</th>
+                            <th>₦ Payment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                         for(let i =0; i<data.length; i++){
+                            <tr>
+                                <td>=i+1</td>
+                                <td>=data[i].date_paid.slice(0,10)</td>
+                                <td>=data[i].id</td>
+                                <td>
+                                    if(data[i].currency_symbol == "£"){
+                                        =data[i].total
+                                    }else{
+                                        -
+                                    }
+                                </td>
+                                <td>
+                                    if(data[i].currency_symbol == "₦"){
+                                        =data[i].total
+                                    }else{
+                                        -
+                                    }
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div> -->
+
+            <hr>
+            <div class="text-center">
+                <a href="/admin/shop-warehouse" class="btn btn-md btn-dark">Back</a>
+            </div>
+        </div>
+
+    </div>
+</div>
+<script src="/min/account.js"></script>
+<%-include('../include/footer') -%>

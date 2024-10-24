@@ -171,8 +171,7 @@ const renderOrderListPage = async (req, res) => {
       pageNumber = 1;
     }
 
-    const wooOrder = await woocommerce.get(
-      `orders?after=${fromDate}T${fromTime}:00&before=${toDate}T${toTime}:59`,
+    const wooOrder = await woocommerce.get(`orders?after=${fromDate}T${fromTime}:00&before=${toDate}T${toTime}:59`,
       {
         page: pageNumber,
         per_page: numberPerPage,

@@ -1,0 +1,41 @@
+/* Oder page */
+.order-page {
+  padding: 5% 15%;
+}
+
+.page-button {
+  padding: 15px;
+}
+
+.note-input {
+  width: 100%;
+}
+
+/* order to process */
+.order-to-process-staff-notification {
+  padding: 5px;
+  border: solid 0.5px #000;
+}
+
+.small-box-margin {
+  padding: 5px 8px;
+  /* border: solid 0.5px #696969; */
+  border-radius: 3px;
+  background-color: #e8e8e8;
+  color: #000000;
+}
+
+/* tab view */
+@media (max-width: 800px) {
+  /* other page */
+  .order-page {
+    padding: 10% 0%;
+  }
+}
+
+/* mobile view */
+@media (max-width: 500px) {
+  .order-page {
+    padding: 10% 2%;
+  }
+}

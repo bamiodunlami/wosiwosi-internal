@@ -14,6 +14,7 @@ let options = {
 }
 
 const adminGeneralRouter =  require(`${__dirname}/router/admin.general.router.js`);
+const adminShopRoute = require(`${__dirname}/router/admin.shop.router.js`)
 const adminRoute =  require(`${__dirname}/router/admin.online.router.js`);
 // const pickerRoute =  require(`${__dirname}/router/picker.router.js`);
 const generalRoute =  require(`${__dirname}/router/general.router.js`);
@@ -45,6 +46,7 @@ app.use(passport.session())
 app.use(flash());
 
 app.use(adminGeneralRouter)
+app.use(adminShopRoute)
 app.use(adminRoute);
 app.use(generalRoute);
 // app.use(pickerRoute);

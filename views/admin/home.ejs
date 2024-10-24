@@ -1,42 +1,39 @@
-
 <%- include('include/header') -%>
-    <section class="dashboard-option-section">
-      <h5 class="page-title text-center">ADMIN PORTAL</h5>
-        <div class="row dashboar-main-bar d-flex align-items-center text-center">
+<section class="dashboard-option-section">
+  <h5 class="page-title text-center">ADMIN PORTAL</h5>
+  <div class="row dashboar-main-bar d-flex align-items-center text-center">
+    <!-- Online Fulfilment-->
+    <div class="col-md-6 col-sm-12 dashboard-option">
+      <a href="/admin/online">
+        <div class="option-item">
+          <h5>Online Centre</h5>
+          <p>View and fulfil online order</p>
+        </div>
+      </a>
+    </div>
 
-            <!-- Online Fulfilment-->
-            <div class="col-md-6 col-sm-12  dashboard-option">
-                <a href="/admin/online"> 
-                    <div class="option-item">
-                        <h5>Online Centre</h5>
-                        <p>View and fulfil online order</p>
-                    </div>
-                </a>
-            </div>
+    <!-- Shop and warehouse-->
+    <div class="col-md-6 col-sm-12 dashboard-option">
+      <a href="admin/shop-warehouse">
+        <div class="option-item">
+          <h5>Shop and Wharehouse</h5>
+          <p>View shop operations</p>
+        </div>
+      </a>
+    </div>
 
-            <!-- Shop and warehouse-->
-            <div class="col-md-6 col-sm-12  dashboard-option">
-                <a href="admin/shop-warehouse"> 
-                    <div class="option-item">
-                        <h5>Shop and Wharehouse</h5>
-                        <p>View shop operations</p>
-                    </div>
-                </a>
-            </div>
+    <!-- Staff-->
+    <div class="col-md-6 col-sm-12 dashboard-option">
+      <a href="/admin/staff">
+        <div class="option-item">
+          <h5>Staff</h5>
+          <p>View and edit staff profile</p>
+        </div>
+      </a>
+    </div>
 
-
-            <!-- Staff-->
-            <div class="col-md-6 col-sm-12  dashboard-option">
-                <a href="/admin/staff"> 
-                    <div class="option-item">
-                        <h5>Staff</h5>
-                        <p>View and edit staff profile</p>
-                    </div>
-                </a>
-            </div>
-
-            <!-- walkie talkie-->
-            <!-- <div class="col-md-6 col-sm-12  dashboard-option">
+    <!-- walkie talkie-->
+    <!-- <div class="col-md-6 col-sm-12  dashboard-option">
                 <a href="/walkietalkie"> 
                     <div class="option-item">
                         <h5>Walkie Talkie</h5>
@@ -45,24 +42,24 @@
                 </a>
             </div> -->
 
-            <!--influencer-->
-            <div class="col-md-6 col-sm-12  dashboard-option">
-                <a href="/admin/influencer"> 
-                    <div class="option-item">
-                        <h5>Influencer</h5>
-                        <p>View Influencer dashboard</p>
-                    </div>
-                </a>
-            </div>         
+    <!--influencer-->
+    <div class="col-md-6 col-sm-12 dashboard-option">
+      <a href="/admin/influencer">
+        <div class="option-item">
+          <h5>Influencer</h5>
+          <p>View Influencer dashboard</p>
         </div>
+      </a>
+    </div>
+  </div>
 
-        <div class="col-sm-12 text-center">
-            <a href="/logout" class="btn btn-danger btn-md">Logout</a>
-        </div>
+  <div class="col-sm-12 text-center">
+    <a
+      href="/logout"
+      class="btn btn-danger btn-md"
+      >Logout</a
+    >
+  </div>
+</section>
 
-
-
-    </section>
-
-    <%- include('include/footerTemp') -%>
-    <%- include('include/footer') -%>
+<%- include('include/footer') -%>
