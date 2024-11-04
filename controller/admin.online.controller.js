@@ -317,7 +317,7 @@ const assignStaffToOrder = async (req, res)=>{
                 id: staff.username,
                 fname:staff.fname,
                 active: true,
-                time: date.toJSON(),
+                time: date,
                 status: false,
               }
             }
@@ -332,7 +332,7 @@ const assignStaffToOrder = async (req, res)=>{
                 id: staff.username,
                 fname:staff.fname,
                 active: true,
-                time: date.toJSON(),
+                time: date,
                 status: false,
               },
             }
@@ -347,7 +347,7 @@ const assignStaffToOrder = async (req, res)=>{
                 id: staff.username,
                 fname:staff.fname,
                 active: true,
-                time: date.toJSON(),
+                time: date,
                 status: false,
               },
             }
@@ -370,7 +370,7 @@ const assignStaffToOrder = async (req, res)=>{
                 // product:orderData.meatPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
                 fname:staff.fname,
                 active: true,
-                time: date.toJSON(),
+                time: date,
                 status: orderData.meatPicker.status,
               },
               dryPicker:{
@@ -378,7 +378,7 @@ const assignStaffToOrder = async (req, res)=>{
                 // product:orderData.dryPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
                 fname:staff.fname,
                 active: true,
-                time: date.toJSON(),
+                time: date,
                 status: orderData.dryPicker.status,
               },
               packer:{
@@ -386,11 +386,13 @@ const assignStaffToOrder = async (req, res)=>{
                 // product:orderData.packer.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
                 fname:staff.fname,
                 active: true,
-                time: date.toJSON(),
+                time: date,
                 status: orderData.packer.status,
               }
             }
           })  
+        }else{
+          //
         }
       }
       res.send(true)
@@ -742,7 +744,7 @@ const redoOrder = async (req, res)=>{
   //save data into an aray
   const data = {
     id:Math.floor(Math.random()*97423),
-    date:date.toJSON(),
+    date:date,
     comment:req.body.comment,
     exclude:req.body.unmark
   }
@@ -783,7 +785,7 @@ const renderReportPage = async (req, res)=>{
 const reportOption = async (req, res)=>{
   if(req.isAuthenticated()){
     param = req.params.param
-    // let dateFilter = date.toJSON().slice(0,10)
+    // let dateFilter = date.slice(0,10)
     switch(param){
       case "staff-performance":
         const staffList = await User.find({role:"staff"})

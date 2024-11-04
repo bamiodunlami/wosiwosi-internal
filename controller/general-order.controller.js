@@ -8,7 +8,13 @@ const fs = require("fs");
 
 const woocommerce = require(appRoot + "/util/woo.util.js");
 
-const date = new Date(); //date
+const dateObject = new Date();
+
+let convertToUkTimeZone = new Intl.DateTimeFormat('en-GB', {timeZone: 'Europe/London'}).format(dateObject);
+
+// convert date to YY--MM--DD
+let date = `${convertToUkTimeZone.slice(6,10)}-${convertToUkTimeZone.slice(3, 5)}-${convertToUkTimeZone.slice(0, 2)}`;
+
 
 const passport = require(appRoot + "/util/passport.util.js"); //passport
 
@@ -114,7 +120,7 @@ const productPicked = async(req, res)=>{
             "dryPicker.id": req.user.username,
             "dryPicker.fname":req.user.fname,
             "dryPiker.active": true,
-            "dryPicker.time": date.toJSON(),
+            "dryPicker.time": date,
             "dryPicker.status":true
           }
       })
@@ -124,7 +130,7 @@ const productPicked = async(req, res)=>{
             "meatPicker.id": req.user.username,
             "meatPicker.fname":req.user.fname,
             "meatPicker.active": true,
-            "meatPicker.time": date.toJSON(),
+            "meatPicker.time": date,
             "meatPicker.status":true
           }
       })
@@ -152,7 +158,7 @@ const productPicked = async(req, res)=>{
     //           product:product,
     //           fname:req.user.fname,
     //           active: true,
-    //           time: date.toJSON(),
+    //           time: date,
     //           status: true,
     //         }
     //       }
@@ -167,7 +173,7 @@ const productPicked = async(req, res)=>{
     //           product:product,
     //           fname:req.user.fname,
     //           active: true,
-    //           time: date.toJSON(),
+    //           time: date,
     //           status: true,
     //         },
     //       }
@@ -182,10 +188,10 @@ const productPicked = async(req, res)=>{
     //           product:product,
     //           fname:req.user.fname,
     //           active: true,
-    //           time: date.toJSON(),
+    //           time: date,
     //           status: true,
     //         },
-    //         date:date.toJSON().slice(0,10)
+    //         date:date
     //       }
     //     })
     //     break;
@@ -198,10 +204,10 @@ const productPicked = async(req, res)=>{
     //             id: req.user.username,
     //             fname:req.user.fname,
     //             active: true,
-    //             time: date.toJSON(),
+    //             time: date,
     //             status: true,
     //           },
-    //           date:date.toJSON().slice(0,10)
+    //           date:date
     //         }
     //       });
     //     break;
@@ -406,7 +412,7 @@ const singleOrderProcessing = async (req, res) => {
                     // product:orderData.meatPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
                     fname:req.user.fname,
                     active: true,
-                    time: date.toJSON(),
+                    time: date,
                     status: orderData.meatPicker.status,
                   },
                 },
@@ -426,7 +432,7 @@ const singleOrderProcessing = async (req, res) => {
                     // product:orderData.dryPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
                     fname:req.user.fname,
                     active: true,
-                    time: date.toJSON(),
+                    time: date,
                     status: orderData.dryPicker.status,
                   },
                 },
@@ -444,7 +450,7 @@ const singleOrderProcessing = async (req, res) => {
                     // product:orderData.packer.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
                     fname:req.user.fname,
                     active: true,
-                    time: date.toJSON(),
+                    time: date,
                     status: orderData.packer.status,
                   },
                 },
@@ -514,7 +520,7 @@ const singleOrderProcessing = async (req, res) => {
                 // product:orderData.meatPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
                 fname:req.user.fname,
                 active: true,
-                time: date.toJSON(),
+                time: date,
                 status: orderData.meatPicker.status,
               },
               dryPicker:{
@@ -522,7 +528,7 @@ const singleOrderProcessing = async (req, res) => {
                 // product:orderData.dryPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
                 fname:req.user.fname,
                 active: true,
-                time: date.toJSON(),
+                time: date,
                 status: orderData.dryPicker.status,
               },
               packer:{
@@ -530,7 +536,7 @@ const singleOrderProcessing = async (req, res) => {
                 // product:orderData.packer.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
                 fname:req.user.fname,
                 active: true,
-                time: date.toJSON(),
+                time: date,
                 status: orderData.packer.status,
               }
             }
@@ -577,7 +583,7 @@ const orderNote = async (req, res) => {
         senderFname:req.user.fname,
         senderDuty:req.user.duty,
         orderNumber:req.body.orderNumber,
-        date:date.toJSON(),
+        date:date,
         readStatus:false,
         directedTo: "manager",
         message:req.body.note
@@ -620,7 +626,7 @@ const orderCompleted = async (req, res) =>{
               // product:product,
               fname:req.user.fname,
               active: true,
-              time: date.toJSON(),
+              time: date,
               status: true,
             }
           }
@@ -635,7 +641,7 @@ const orderCompleted = async (req, res) =>{
               // product:product,
               fname:req.user.fname,
               active: true,
-              time: date.toJSON(),
+              time: date,
               status: true,
             },
           }
@@ -651,10 +657,10 @@ const orderCompleted = async (req, res) =>{
               // product:product,
               fname:req.user.fname,
               active: true,
-              time: date.toJSON(),
+              time: date,
               status: true,
             },
-            date:date.toJSON().slice(0,10)
+            date:date
           }
         })
         break;
@@ -667,10 +673,10 @@ const orderCompleted = async (req, res) =>{
                 id: req.user.username,
                 fname:req.user.fname,
                 active: true,
-                time: date.toJSON(),
+                time: date,
                 status: true,
               },
-              date:date.toJSON().slice(0,10)
+              date:date
             }
           });
         break;
@@ -763,7 +769,7 @@ const replace = async (req, res)=>{
         orderNumber:req.body.orderNumber,
         staffId:req.body.staffUsername,
         fname:req.body.staffName,
-        date:date.toJSON(),
+        date:date,
         product:[{
           productName:req.body.productName,
           replacementName:req.body.replacementName,
@@ -820,7 +826,7 @@ const refund = async (req, res)=>{
         orderNumber:req.body.orderNumber,
         staffId:req.body.staffUsername,
         fname:req.body.staffName,
-        date:date.toJSON(),
+        date:date,
         status:false,
         close:false,
         readStatus:false,
