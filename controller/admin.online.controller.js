@@ -6,7 +6,12 @@ appRoot.setPath(rootpath);
 const fs = require("fs");
 const singleOrder = require("../model/order.model");
 
-const date = new Date();
+const dateObject = new Date();
+
+let convertToUkTimeZone = new Intl.DateTimeFormat('en-GB', {timeZone: 'Europe/London'}).format(dateObject);
+
+// convert date to YY--MM--DD
+let date = `${convertToUkTimeZone.slice(6,10)}-${convertToUkTimeZone.slice(3, 5)}-${convertToUkTimeZone.slice(0, 2)}`;
 
 const passport = require(appRoot + "/util/passport.util.js");
 const User = require(appRoot + "/model/user.model.js");
