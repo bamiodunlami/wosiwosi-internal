@@ -840,12 +840,12 @@ const reportOption = async (req, res)=>{
 const reportAjax = async (req, res)=>{
   if(req.isAuthenticated()){
     let query = req.body.sort
-    let data = req.body.data
+    let data = (req.body.data).split(' ')
     switch(query){
       // weekly sort
       case "week":
-        let week = data.split(' ')
-        getStaffData()
+        // let week = data.split(' ')
+        getStaffData(data)
       break;
 
       // daily
@@ -858,39 +858,45 @@ const reportAjax = async (req, res)=>{
         break
     }
 
-    async function getStaffData(data) {
+    async function getStaffData(dateData) {
       const staffList = await User.find({role:"staff"})
       // let dataTosend = []
       let staffReport = []
-      for(const eachDate of data){
-        const orderList = await redundantDb.find({date:eachDate})
-        for(const eachStaff of staffList){
+
+
+        for(const eachStaff of staffList){ //pick each staff 
           //creat object to hold details of what staff did
           let report ={
             id:"",
             fname:"",
-            pick:[],
-            meat:[],
+            dryPick:[],
+            meatPick:[],
             pack:[],
           }
           let staffId = eachStaff.username
           report.id = staffId //store staff username
           report.fname=eachStaff.fname
-          for(const staffOrder of orderList){ //loop through order
-            if(staffOrder.meatPicker.id == staffId){ //meat
-              report.meat.push(staffOrder.orderNumber)
-            }
-            if(staffOrder.dryPicker.id == staffId){ //meat
-              report.pick.push(staffOrder.orderNumber)
-            }
-            if(staffOrder.packer.id == staffId){ //meat
-              report.pack.push(staffOrder.orderNumber)
-            }
+
+          let temporaryMeatPickedArray = [] //this is used teporarily to old array of meat picked by the particular staff before pushing to object report
+          let temporaryDryPickedArray = [] //this is used teporarily to old array of dry picked by the particular staff before pushing to object report
+          let temporaryPackedArray = [] //this is used teporarily to old array of order packed by the particular staff before pushing to object report
+          for(const eachDate of dateData){ //pick the date one by one  
+            //for each day, look for where staff was a meatPicker
+            let meatPicked = await redundantDb.find({date:eachDate, "meatPicker.id":staffId}) 
+            temporaryMeatPickedArray = temporaryMeatPickedArray.concat(meatPicked)   // this will add new data found on a particular dat to the list already available in temporary array
+
+            let dryPicked = await redundantDb.find({date:eachDate, "dryPicker.id":staffId})
+            temporaryDryPickedArray = temporaryDryPickedArray.concat(dryPicked)
+
+            let packer = await redundantDb.find({date:eachDate, "packer.id":staffId})
+            temporaryPackedArray = temporaryPackedArray.concat(packer)
           }
+          report.dryPick=temporaryDryPickedArray
+          report.meatPick=temporaryMeatPickedArray
+          report.pack=temporaryPackedArray
           staffReport.push(report)
         }
-      }
-      console.log(staffReport)
+      res.send(staffReport)
     }
 
   }else{
