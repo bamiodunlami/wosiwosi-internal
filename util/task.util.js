@@ -175,6 +175,7 @@ async function clearRefund() {
             await refundDb.deleteOne({orderNumber:order.orderNumber})
         }
     }
+    mailer.alertDailyCompleteReset("bamidele@wosiwosi.co.uk", "refund")
 }
 
 // clearRefund()
