@@ -209,6 +209,7 @@ cron.schedule('0 21 * * 1-4', () => {
 //daily task 10pm
 cron.schedule('0 22 * * 1-4', () => {
     moveToRedundant();
+    clearRefund();
   }, {
     scheduled: true,
     timezone: "Europe/London"
