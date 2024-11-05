@@ -159,6 +159,26 @@ async function moveToRedundant(){
     console.log("redundant done")
 }
 
+//check and clear refund not moved to redundant
+async function clearRefund() {
+    const refundAvailable = await refundDb.find({close:true})
+    if(refundAvailable.length > 0){
+        for(const order of refundAvailable){
+            let findOrder = await redundantDb.findOne({orderNumber:order.orderNumber})
+            if(findOrder){
+                await redundantDb.updateOne({orderNumber:order.orderNumber},{
+                    $set:{
+                        refund:order
+                    }
+                })
+            }
+            await refundDb.deleteOne({orderNumber:order.orderNumber})
+        }
+    }
+}
+
+// clearRefund()
+
 //delete notification on friday
 async function deleteAllNotifications(){
     const markNotification = await notificationDb.deleteMany();
