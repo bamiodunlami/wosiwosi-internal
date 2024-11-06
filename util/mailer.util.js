@@ -346,6 +346,99 @@ const alertDailyCompleteReset = (to, purpose) =>{
     transporter.sendMail(mailOptions)
 }
 
+//refund mail
+const orderNotSavedToRedundant = (to, orderNumber) =>{
+    mailOptions ={
+        from: '"Wosiwosi" <info@wosiwosi.co.uk>',
+        to: to,
+        subject: `Order not saved`,
+        html: 
+        `<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>REFUND PROCCESSED</title>
+            <style>
+                body {
+                    font-family: Poppins, sans-serif;
+                    line-height: 1.6;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    text-align: left;
+                }
+                .disclaimer{
+                    font-size:11px;
+                }
+                h1 {
+                    color: #007519;
+                }
+                p {
+                    margin: 15px 0;
+                    font-size:18px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">  
+                <p> This is to let you know that order ${orderNumber} was not saved to redundant, no mail sent to customer.</p>
+                <p>Wosiwosi Foods UK Limited</p>
+            </div>
+        </body>
+        </html>`
+    }
+    transporter.sendMail(mailOptions)
+}
+
+//refund mail
+const sendOrderNotCompleteMail = (to, bcc, orderNumber) =>{
+    mailOptions ={
+        from: '"Wosiwosi" <info@wosiwosi.co.uk>',
+        to: to,
+        bcc:bcc,
+        subject: `Order not saved`,
+        html: 
+        `<!DOCTYPE html>
+        <html>
+        <head>
+            <meta charset="UTF-8">
+            <title>REFUND PROCCESSED</title>
+            <style>
+                body {
+                    font-family: Poppins, sans-serif;
+                    line-height: 1.6;
+                }
+                .container {
+                    max-width: 600px;
+                    margin: 0 auto;
+                    padding: 20px;
+                    text-align: left;
+                }
+                .disclaimer{
+                    font-size:11px;
+                }
+                h1 {
+                    color: #007519;
+                }
+                p {
+                    margin: 15px 0;
+                    font-size:18px;
+                }
+            </style>
+        </head>
+        <body>
+            <div class="container">  
+                <p> This is to let you know that refund for order ${orderNumber} was NOT processed because packer didn't use the complete button</p>
+                <p>Wosiwosi Foods UK Limited</p>
+            </div>
+        </body>
+        </html>`
+    }
+    transporter.sendMail(mailOptions)
+}
+
 
 module.exports ={
     passwordReset:passwordReset,
@@ -353,5 +446,7 @@ module.exports ={
     passwordChange:passwordChange,
     redeemRequest:redeemRequest,
     refundMail:refundMail,
-    alertDailyCompleteReset:alertDailyCompleteReset
+    alertDailyCompleteReset:alertDailyCompleteReset,
+    orderNotSavedToRedundant:orderNotSavedToRedundant,
+    sendOrderNotCompleteMail:sendOrderNotCompleteMail,
 }
