@@ -600,12 +600,13 @@ if(req.isAuthenticated()){
   switch(requestOption){
     // case refund approve
     case "approve-refund":
-      await refundDb.updateOne({orderNumber:orderNumber, "product.productName":productName},{
+      const updateRefund = await refundDb.updateOne({orderNumber:orderNumber, "product.productName":productName},{
         $set:{
           "product.$.status":true,
           "product.$.approval":true
         }
       })
+      // console.log(updateRefund)
       // const customer = await refundDb.findOne({orderNumber:orderNumber})
       //send refund mail
       // try{
