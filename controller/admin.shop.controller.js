@@ -50,7 +50,9 @@ try{
       if(eachWooOrder.currency_symbol === "£"){ // if it's pounds
         poundsValuePerPage.push(eachWooOrder.total)
       }else if(eachWooOrder.currency_symbol === "₦"){
-        exchange = eachWooOrder.meta_data[5].value.NGN.rate
+        //find in the meta_data where key = wmc_order_info, which holds the exchange rate
+        let found = eachWooOrder.meta_data.find(({key}) => key == "wmc_order_info");
+        exchange = found.value.NGN.rate //exchange rate
         NairaValuePerPage.push(eachWooOrder.total)
       }
     }
