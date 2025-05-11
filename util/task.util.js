@@ -46,7 +46,7 @@ async function getAllRefund() {
 
       //get data of all refund product
       let getProductData = allApproved;
-      let refundProductData = getProductData.map((item) =>`${item.productName} x ${item.productQuantity} @ £${item.productPrice}`).join(', ');
+      let refundProductData = getProductData.map((item) =>`${item.productName} x ${item.productQuantity} @ £${item.total}`).join(' ');
       // console.log(refundProductData)
 
       //get total amound
@@ -75,13 +75,15 @@ async function getAllRefund() {
             lock: completedOrder.lock,
             hideProduct: completedOrder.hideProduct,
             refund: eachRefund,
+            customer:completedOrder.customer
+
             });
             const saveToRedundant = await saveRedundant.save();
 
             //if it's saved
             if (saveToRedundant) {
                 // send email
-                await mailer.refundMail(eachRefund.customer_details.email,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", eachRefund.orderNumber, eachRefund.customer_details.fname, refundProductData, totalAmount)
+                await mailer.refundMail(eachRefund.customer_details.email,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk", eachRefund.orderNumber, eachRefund.customer_details.fname, refundProductData, totalAmount)
 
                 //delete order from completed
                 await redundantDb.updateOne({orderNumber:eachRefund.orderNumber}, {
@@ -126,6 +128,7 @@ async function moveOrderToRedundant() {
         packer: eachOrder.packer,
         lock: eachOrder.lock,
         hideProduct: eachOrder.hideProduct,
+        customer:eachOrder.customer
       });
       const saveToRedundant = await saveRedundant.save();
       if (saveToRedundant) {
@@ -238,6 +241,7 @@ async function resetTodayCompletedOrder() {
 
 
 //clear refund issued after order moved to redundant 
+
 async function clearRefund() {
   const refundAvailable = await refundDb.find();
   if (refundAvailable.length > 0) {
@@ -268,10 +272,20 @@ async function deleteAllNotifications() {
   console.log('reset done');
 }
 
-// -----------------------TASKS--------------
 
+// delete Old order
+async function deleteOldOrder(month) {
+  for (let x=1; x<=31; x++){
+    // console.log(x)
+    const selectedOrder = await redundantDb.deleteMany({date:`2024-${month}-0${x}`})
+    console.log(selectedOrder)
+  }
+}
+// deleteOldOrder("11")
+
+// -----------------------TASKS--------------
 //daily task 8pm
-cron.schedule('0 20 * * 1-4', () => { 
+cron.schedule('0 20 * * 1-5', () => { 
     getAllRefund(); //send refund message
   },{
     scheduled: true,
@@ -280,9 +294,9 @@ cron.schedule('0 20 * * 1-4', () => {
 );
 
 //daily task 9pm
-cron.schedule('0 21 * * 1-4', () => {
+cron.schedule('0 21 * * 1-5', () => {
     moveOrderToRedundant();
-    resetTodayCompletedOrder(); // reset completed order
+    // resetTodayCompletedOrder(); // reset completed order
   },{
     scheduled: true,
     timezone: 'Europe/London',
@@ -290,7 +304,7 @@ cron.schedule('0 21 * * 1-4', () => {
 );
 
 //daily task 10pm
-cron.schedule('0 22 * * 1-4',() => {
+cron.schedule('0 22 * * 1-5',() => {
     deleteAllNotifications();
     clearRefund();
   },{

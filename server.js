@@ -54,6 +54,9 @@ app.use(influencerRoute);
 app.use(generalOrder);
 app.use(staff)
 
+app.get('/example', (req, res) => {
+  throw new Error('Something went wrong!');
+});
 
 // 404
 app.use((req, res)=>{
@@ -61,6 +64,11 @@ app.use((req, res)=>{
   res.send("404 page not available")
 })
 
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).send('Something broke!');
+  next()
+});
 
 app.listen(port, () => {
   console.log("Server started on " + port);

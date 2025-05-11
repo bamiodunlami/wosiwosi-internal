@@ -1,5 +1,6 @@
 const appRoot = require("app-root-path");
 const path = require("path");
+const singleOrder = require("../model/order.model");
 const rootpath = path.resolve(process.cwd());
 appRoot.setPath(rootpath);
 
@@ -9,6 +10,7 @@ const mailer = require(appRoot + "/util/mailer.util.js");
 const notificationDb= require(appRoot + "/model/notification.model.js");
 const refundDb= require(appRoot + "/model/refund.model.js");
 const settingsDb= require(appRoot + "/model/settings.model.js");
+const woocommerce = require(appRoot + "/util/woo.util.js");
 
 // rendert staff dashboard
 const renderStaffPage = async (req, res) => {
@@ -130,10 +132,87 @@ const dutyChangeRequest = async (req, res)=>{
   }
 }
 
+const renderProductListPage = async (req, res)=>{
+  if(req.isAuthenticated()){
+    res.render('staff/product-list',{
+      title:"Product List",
+      staff:req.user
+    })  
+}else{
+    res.redirect('/')
+  } 
+}
+
+// AJAX
+const getProductList = async (req, res) => {
+  if (req.isAuthenticated()) {
+    try{
+      console.log("entered")
+      //find order belonging to this user
+      const myOrder = await singleOrder.find({status:false, "packer.id":req.user.username});
+      if(myOrder.length > 0){
+        let productList = [] //store all product list size and quantity in this array
+        let dryList = []
+        let frozenList = []
+        let productToSend = []
+        // loop through all order saved
+        for (const order of myOrder){
+          const response = await woocommerce.get(`orders/${order.orderNumber}`) // get order details from woocommerce
+          //loop through each response to get product item
+          response.data.line_items.forEach(async (item)=>{
+            //poush each product to the productList array
+            productList.push({
+              orderNumber:order.orderNumber,
+              product:item.name,
+              quantity:item.quantity,
+              sku:item.sku,
+              id:item.product_id,
+              // meta_data:item.meta_data,
+            })
+          })
+        }
+        //wait till order product is resolved and send all product list to the client
+        Promise.all(productList).then(async (result)=>{
+          // res.send(result)
+          for(const item of result){
+            const productCat = await woocommerce.get(`products/${item.id}`)
+            const includesMeatAndSeafood = productCat.data.categories.some(category => 
+              category.slug.toLowerCase() === "meat-and-seafoods"
+            );
+            if(includesMeatAndSeafood){
+              frozenList.push(item)
+            }else{
+              dryList.push(item)
+            }
+          }
+
+          //send the product list to the client
+          console.log(frozenList)
+          res.send({
+            status:true,
+            dryList:dryList,
+            frozenList:frozenList 
+          })
+        })
+      }else{
+        res.send({status:false})
+        res.send("No order found")
+      }
+    }catch(e){
+      console.log(e)
+      res.send({status:false})
+    }
+  } else {
+    res.redirect("/");
+  }
+};
+
 module.exports = {
   renderStaffPage: renderStaffPage,
   staffDashboardRequest: staffDashboardRequest,
   markRefundNotificationAsRead:markRefundNotificationAsRead,
   renderStaffSelectTeamPage:renderStaffSelectTeamPage,
   dutyChangeRequest:dutyChangeRequest,
+  renderProductListPage:renderProductListPage,
+  getProductList:getProductList
 };

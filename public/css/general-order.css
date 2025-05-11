@@ -35,7 +35,11 @@
 
 /* mobile view */
 @media (max-width: 500px) {
-  .order-page {
+  /* body{
+    display: none;
+  } */
+  /* .order-page {
     padding: 10% 2%;
-  }
+  } */
+
 }

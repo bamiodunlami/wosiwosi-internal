@@ -12,6 +12,17 @@ const singleOrderSchema = mongoose.Schema({
     status:Boolean,
     date:String,
     note:[],
+    customer:{
+      fname:String,
+      lname:String,
+      phone:String,
+      address:String,
+      city:String,
+      postcode:String,
+      state:String,
+      shipping_amount:Number,
+      shipping_method:String,
+    },
     productPicked:[],
     meatPicker:{
         id:String,

@@ -1,63 +1,107 @@
-const appRoot = require("app-root-path");
-const path = require("path");
+const appRoot = require('app-root-path');
+const path = require('path');
 const rootpath = path.resolve(process.cwd());
 appRoot.setPath(rootpath);
 
-const fs = require("fs");
-const singleOrder = require("../model/order.model");
+const fs = require('fs');
+const singleOrder = require('../model/order.model');
 
 const dateObject = new Date();
 
-let convertToUkTimeZone = new Intl.DateTimeFormat('en-GB', {timeZone: 'Europe/London'}).format(dateObject);
+let convertToUkTimeZone = new Intl.DateTimeFormat('en-GB', { timeZone: 'Europe/London' }).format(dateObject);
 
 // convert date to YY--MM--DD
-let date = `${convertToUkTimeZone.slice(6,10)}-${convertToUkTimeZone.slice(3, 5)}-${convertToUkTimeZone.slice(0, 2)}`;
+let date = `${convertToUkTimeZone.slice(6, 10)}-${convertToUkTimeZone.slice(3, 5)}-${convertToUkTimeZone.slice(0, 2)}`;
 
-const passport = require(appRoot + "/util/passport.util.js");
-const User = require(appRoot + "/model/user.model.js");
-const woocommerce = require(appRoot + "/util/woo.util.js");
-const mailer = require(appRoot + "/util/mailer.util.js");
-const singlOrder = require(appRoot + "/model/order.model.js")
-const replaceDb= require(appRoot + "/model/replace.model.js");
-const refundDb= require(appRoot + "/model/refund.model.js");
-const redundantDb= require(appRoot + "/model/redundant.model.js");
-const notificationDb= require(appRoot + "/model/notification.model.js");
-const completedDb= require(appRoot + "/model/completed.model.js");
-const settingsDb= require(appRoot + "/model/settings.model.js");
-const redoDb= require(appRoot + "/model/redo.model.js");
+const passport = require(appRoot + '/util/passport.util.js');
+const User = require(appRoot + '/model/user.model.js');
+const woocommerce = require(appRoot + '/util/woo.util.js');
+const mailer = require(appRoot + '/util/mailer.util.js');
+const singlOrder = require(appRoot + '/model/order.model.js');
+const replaceDb = require(appRoot + '/model/replace.model.js');
+const refundDb = require(appRoot + '/model/refund.model.js');
+const redundantDb = require(appRoot + '/model/redundant.model.js');
+const notificationDb = require(appRoot + '/model/notification.model.js');
+const completedDb = require(appRoot + '/model/completed.model.js');
+const settingsDb = require(appRoot + '/model/settings.model.js');
+const redoDb = require(appRoot + '/model/redo.model.js');
 
 
-
-//staff team settings (this determins if staff work in team or individual)
-const dutySettings = async (req, res)=>{
-  let query = req.query.request
-  // console.log(query)
-  const setTeam = await settingsDb.updateOne({id:"info@wosiwosi.co.uk"},{
-    $set:{
-      team:query
-    }
-  })
-
-  if(query == "false"){   //set everyone to false when settings change from team to individual
-    const changeTeam = await User.updateMany({role:"staff"},{
-      $set:{
-        "team.status":false,
-        duty:"packer"
-      }
-    })
-  }else{ //settings changed from individual to team and 
-    const changeTeam = await User.updateMany({role:"staff"},{
-      $set:{
-        // "team.status":true,
-        duty:"packer"
-      }
-    })
+async function test(){
+  for(let i=0; i<31; i++){
+    // day=(i + 1).toString().padStart(2, '0')
+    // console.log(day)
+    // deleteOrder = await redundantDb.deleteMany({date:`2025-02-${day}`})
+    // console.log(deleteOrder)
   }
-  res.redirect(req.headers.referer)
+
+  const orderToProcess = await redundantDb.find()
+  for(const element of orderToProcess){ 
+    console.log(element.orderNumber)
+    // const order = await woocommerce.get(`orders/${element.orderNumber}`)
+    // const orderData = order.data;
+    const updateData = await redundantDb.updateOne({orderNumber:element.orderNumber},{
+      $set:{
+        customer:{
+          fname:"",
+          lname:"",
+          phone:"",
+          address:"",
+          city:"",
+          postcode:"",
+          state:"",
+          shipping_amount:"",
+          shipping_method:"",
+        }
+      }
+    })
+    console.log(updateData)
+  };
 }
 
+// test()
+
+//staff team settings (this determins if staff work in team or individual)
+const dutySettings = async (req, res) => {
+  let query = req.query.request;
+  // console.log(query)
+  const setTeam = await settingsDb.updateOne(
+    { id: 'info@wosiwosi.co.uk' },
+    {
+      $set: {
+        team: query,
+      },
+    }
+  );
+
+  if (query == 'false') {
+    //set everyone to false when settings change from team to individual
+    const changeTeam = await User.updateMany(
+      { role: 'staff' },
+      {
+        $set: {
+          'team.status': false,
+          duty: 'packer',
+        },
+      }
+    );
+  } else {
+    //settings changed from individual to team and
+    const changeTeam = await User.updateMany(
+      { role: 'staff' },
+      {
+        $set: {
+          // "team.status":true,
+          duty: 'packer',
+        },
+      }
+    );
+  }
+  res.redirect(req.headers.referer);
+};
+
 //change staff team
-// const changeTeam = async (req, res)=>{  
+// const changeTeam = async (req, res)=>{
 //   let incominData = req.body.team
 //   let teamAndId = incominData.split(' ')
 //   let team = teamAndId[0]
@@ -78,86 +122,98 @@ const dutySettings = async (req, res)=>{
 // }
 
 //change staff duty
-const changeDuty = async (req, res)=>{  
-  let incominData = req.body.duty
-  let dutyAndId = incominData.split(' ')
-  let duty = dutyAndId[0]
-  let id = dutyAndId[1]
+const changeDuty = async (req, res) => {
+  let incominData = req.body.duty;
+  let dutyAndId = incominData.split(' ');
+  let duty = dutyAndId[0];
+  let id = dutyAndId[1];
 
-  const settings = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
+  const settings = await settingsDb.findOne({ id: 'info@wosiwosi.co.uk' });
   //DONT CHANGE DUTY
   // if(settings.team == false){ // if it's individual, duty cannot be changed
   //   res.send(false)
-  // }else{ 
-    const changeDuty = await User.updateOne({username:id},{
-      $set:{
-        duty:duty
-      }
-    })
-    if(changeDuty.modifiedCount == 1){
-      res.send("true")
-    }else{
-      res.send('false')
+  // }else{
+  const changeDuty = await User.updateOne(
+    { username: id },
+    {
+      $set: {
+        duty: duty,
+      },
     }
+  );
+  if (changeDuty.modifiedCount == 1) {
+    res.send('true');
+  } else {
+    res.send('false');
+  }
   // }
-}
+};
 
 // pair staff
-const pairStaff = async (req, res)=>{  
-  let incominData = req.body.pair
-  let mainAndPair = incominData.split(' ')
-  let mainStaff = mainAndPair[0]
-  let pairedStaff = mainAndPair[1]
+const pairStaff = async (req, res) => {
+  let incominData = req.body.pair;
+  let mainAndPair = incominData.split(' ');
+  let mainStaff = mainAndPair[0];
+  let pairedStaff = mainAndPair[1];
 
-  const findMainStaff = await User.findOne({username:mainStaff})
-  const findPairedStaff = await User.findOne({username:pairedStaff})
+  const findMainStaff = await User.findOne({ username: mainStaff });
+  const findPairedStaff = await User.findOne({ username: pairedStaff });
 
-  const teamValue=findMainStaff.fname.toLowerCase().slice(0,1) + findPairedStaff.fname.toLowerCase().slice(0,1) //make a team name from their first letter of fname
+  const teamValue = findMainStaff.fname.toLowerCase().slice(0, 1) + findPairedStaff.fname.toLowerCase().slice(0, 1); //make a team name from their first letter of fname
 
   // update to staff pair
-  const updateMainStaff = await User.updateOne({username:mainStaff},{
-    $set:{
-      duty:"packer",
-      team:{
-        status:true,
-        value:teamValue
-      }
+  const updateMainStaff = await User.updateOne(
+    { username: mainStaff },
+    {
+      $set: {
+        duty: 'packer',
+        team: {
+          status: true,
+          value: teamValue,
+        },
+      },
     }
-  })
+  );
   // if main staff is updated, update the other person
-  if(updateMainStaff.modifiedCount == 1){
-      await User.updateOne({username:pairedStaff},{
-        $set:{
-          duty:'packer',
-          team:{
-            status:true,
-            value:teamValue
-          }
-        }
-      })
-      res.send(true)
-  }else{
-    res.send(false)
+  if (updateMainStaff.modifiedCount == 1) {
+    await User.updateOne(
+      { username: pairedStaff },
+      {
+        $set: {
+          duty: 'packer',
+          team: {
+            status: true,
+            value: teamValue,
+          },
+        },
+      }
+    );
+    res.send(true);
+  } else {
+    res.send(false);
   }
-}
+};
 
 // unpair staff
-const unpairStaff = async (req, res)=>{
-  if(req.isAuthenticated()){
-    console.log(req.query.request)
-    await User.updateMany({"team.value":req.query.request},{
-      $set:{
-        team:{
-          value:"",
-          status:false
-        }
+const unpairStaff = async (req, res) => {
+  if (req.isAuthenticated()) {
+    console.log(req.query.request);
+    await User.updateMany(
+      { 'team.value': req.query.request },
+      {
+        $set: {
+          team: {
+            value: '',
+            status: false,
+          },
+        },
       }
-    })
-    res.redirect(req.headers.referer)
-  }else{  
-    res.redirect("/")
+    );
+    res.redirect(req.headers.referer);
+  } else {
+    res.redirect('/');
   }
-}
+};
 
 // order page
 const renderOrderListPage = async (req, res) => {
@@ -176,16 +232,14 @@ const renderOrderListPage = async (req, res) => {
       pageNumber = 1;
     }
 
-    const wooOrder = await woocommerce.get(`orders?after=${fromDate}T${fromTime}:00&before=${toDate}T${toTime}:59`,
-      {
-        page: pageNumber,
-        per_page: numberPerPage,
-        status: "completed processing",
-      }
-    );
+    const wooOrder = await woocommerce.get(`orders?after=${fromDate}T${fromTime}:00&before=${toDate}T${toTime}:59`, {
+      page: pageNumber,
+      per_page: numberPerPage,
+      status: 'completed processing',
+    });
     // console.log(wooOrder.data)
-    res.render("admin/order-list", {
-      title: "Order",
+    res.render('admin/order-list', {
+      title: 'Order',
       order: wooOrder.data,
       defalutNumber: numberPerPage,
       page: Number(pageNumber),
@@ -195,747 +249,820 @@ const renderOrderListPage = async (req, res) => {
       toTime: toTime,
     });
   } else {
-    res.redirect("/");
+    res.redirect('/');
   }
 };
 
-// Ajax save order for processing 
+// Ajax save order for processing
 const saveAllForProcessing = async (req, res) => {
   if (req.isAuthenticated()) {
-    let data = req.body.data
+    let data = req.body.data;
     //safe data to databose
-    for (const eachData of data){
-      const checkSingleOrderDb = await singlOrder.findOne({orderNumber:eachData})
-      if(!checkSingleOrderDb){ // if order does not exist in single order DB
+    for (const eachData of data) {
+      console.log(eachData);
+      const checkSingleOrderDb = await singlOrder.findOne({ orderNumber: eachData });
+      if (!checkSingleOrderDb) {
+        // if order does not exist in single order DB
         //check redundant DB
-        const checkRedundantDb = await redundantDb.findOne({orderNumber:eachData})
-        if(!checkRedundantDb){
+        const checkRedundantDb = await redundantDb.findOne({ orderNumber: eachData });
+        if (!checkRedundantDb) {
+          const order = await woocommerce.get(`orders/${data}`)
+          const orderData = order.data;
           let saveOrder = new singleOrder({
-            orderNumber:eachData,
-            status:false,
-            note:[],
-            productPicked:[],
-            meatPicker:{
-                id:'',
-                fname:'',
-                active:false,
-                time:'',
-                status:false
+            orderNumber: eachData,
+            status: false,
+            note: [],
+            productPicked: [],
+            meatPicker: {
+              id: '',
+              fname: '',
+              active: false,
+              time: '',
+              status: false,
             },
-            dryPicker:{
-              id:'',
-              fname:'',
-              active:false,
-              time:'',
-              status:false
+            dryPicker: {
+              id: '',
+              fname: '',
+              active: false,
+              time: '',
+              status: false,
             },
-            packer:{
-              id:'',
-              fname:'',
-              active:false,
-              time:'',
-              status:false
+            packer: {
+              id: '',
+              fname: '',
+              active: false,
+              time: '',
+              status: false,
             },
-            booking:{
-                status:false
+            booking: {
+              status: false,
+            },
+            customer:{
+              fname:orderData.shipping.first_name,
+              lname:orderData.shipping.last_name,
+              phone:orderData.shipping.phone,
+              address:`${orderData.shipping.address_1} ${orderData.shipping.address_2}`,
+              city:orderData.shipping.city,
+              postcode:orderData.shipping.postcode,
+              state:orderData.shipping.state,
+              shipping_amount:orderData.shipping_total,
+              shipping_method:orderData.shipping_lines[0].method_title,
             }
-          })
-          await saveOrder.save() //save for processing
-          console.log(eachData + " saved")
+          });
+          await saveOrder.save(); //save for processing
         }
         // else{console.log(eachData + " order exist in Redundant DB")}
       }
       // else{console.log(eachData + " order exist in singleOrderDB")}
     }
-    res.send('Orders Saved')
+    res.send('Orders Saved');
   } else {
-    res.send("Error! kindly refresh");
+    res.send('Error! kindly refresh');
   }
 };
 
 // remove single order from the orders to be done that day
 const removeFromOrder = async (req, res, next) => {
-  if(req.isAuthenticated()){
-    await singlOrder.deleteOne({orderNumber:req.query.order})
-    await replaceDb.deleteOne({orderNumber:req.query.order})
-    await refundDb.deleteOne({orderNumber:req.query.order})
-    res.redirect('/processingorder')
-  }else{
-    res.redirect("/")
+  if (req.isAuthenticated()) {
+    await singlOrder.deleteOne({ orderNumber: req.query.order });
+    await replaceDb.deleteOne({ orderNumber: req.query.order });
+    await refundDb.deleteOne({ orderNumber: req.query.order });
+    res.redirect('/processingorder');
+  } else {
+    res.redirect('/');
   }
-
 };
 
 //This function is used to remove workers details from previous order that wasnt sent, so that workers today can work on them
-const resetWorker = async (req, res) =>{
-  if(req.isAuthenticated()){
-    await singlOrder.updateOne({orderNumber:req.query.order},{
-      $set:{
-        productPicked:[],
-          meatPicker:{
-            id:"",
-            fname:"",
-            active:false,
-            time:"",
-            status:false
-        },
-        dryPicker:{
-            id:"",
-            fname:"",
-            active:false,
-            time:"",
-            status:false
-        },
-        packer:{
-            id:"",
-            fname:"",
-            active:false,
-            time:"",
-            status:false
+const resetWorker = async (req, res) => {
+  if (req.isAuthenticated()) {
+    await singlOrder.updateOne(
+      { orderNumber: req.query.order },
+      {
+        $set: {
+          productPicked: [],
+          meatPicker: {
+            id: '',
+            fname: '',
+            active: false,
+            time: '',
+            status: false,
+          },
+          dryPicker: {
+            id: '',
+            fname: '',
+            active: false,
+            time: '',
+            status: false,
+          },
+          packer: {
+            id: '',
+            fname: '',
+            active: false,
+            time: '',
+            status: false,
+          },
         },
       }
-   })
-   res.redirect('/processingorder')
-  }else{
-    res.redirect("/")
+    );
+    res.redirect('/processingorder');
+  } else {
+    res.redirect('/');
   }
-}
+};
 
 //Assign order to staff ajax
-const assignStaffToOrder = async (req, res)=>{
-  if(req.isAuthenticated()){
-    let orderNumber = req.body.orderNumber
-    const staff = await User.findOne({username:req.body.staffId})
-    const findOrder = await singleOrder.findOne({orderNumber:orderNumber})
+const assignStaffToOrder = async (req, res) => {
+  if (req.isAuthenticated()) {
+    let orderNumber = req.body.orderNumber;
+    const staff = await User.findOne({ username: req.body.staffId });
+    const findOrder = await singleOrder.findOne({ orderNumber: orderNumber });
     // console.log(staff.duty)
-    if(staff){
-      switch (staff.duty){
-        case "meat-picker":
-          await singleOrder.updateOne({orderNumber:orderNumber},{
-            $set:{
-              meatPicker:{
-                id: staff.username,
-                fname:staff.fname,
-                active: true,
-                time: date,
-                status: false,
-              }
-            }
-          })
-          marryTeamWhenOneOtherIsClicked(findOrder)
-          break;
-        
-        case "dry-picker":
-          await singleOrder.updateOne({orderNumber:orderNumber},{
-            $set:{
-              dryPicker: {
-                id: staff.username,
-                fname:staff.fname,
-                active: true,
-                time: date,
-                status: false,
+    if (staff) {
+      switch (staff.duty) {
+        case 'meat-picker':
+          await singleOrder.updateOne(
+            { orderNumber: orderNumber },
+            {
+              $set: {
+                meatPicker: {
+                  id: staff.username,
+                  fname: staff.fname,
+                  active: true,
+                  time: date,
+                  status: false,
+                },
               },
             }
-          })
-          marryTeamWhenOneOtherIsClicked(findOrder)
+          );
+          marryTeamWhenOneOtherIsClicked(findOrder);
           break;
-  
-        case "packer":
-          await singleOrder.updateOne({orderNumber:orderNumber},{
-            $set:{
-              packer: {
-                id: staff.username,
-                fname:staff.fname,
-                active: true,
-                time: date,
-                status: false,
+
+        case 'dry-picker':
+          await singleOrder.updateOne(
+            { orderNumber: orderNumber },
+            {
+              $set: {
+                dryPicker: {
+                  id: staff.username,
+                  fname: staff.fname,
+                  active: true,
+                  time: date,
+                  status: false,
+                },
               },
             }
-          })
-          marryTeamWhenOneOtherIsClicked(findOrder)
+          );
+          marryTeamWhenOneOtherIsClicked(findOrder);
           break;
-        
+
+        case 'packer':
+          await singleOrder.updateOne(
+            { orderNumber: orderNumber },
+            {
+              $set: {
+                packer: {
+                  id: staff.username,
+                  fname: staff.fname,
+                  active: true,
+                  time: date,
+                  status: false,
+                },
+              },
+            }
+          );
+          marryTeamWhenOneOtherIsClicked(findOrder);
+          break;
+
         default:
-          break
+          break;
       }
       // If global settings team is false i.e staff works as an individual, check if staff has a partner or not and marry their both work
       //when any partner clicks an other, the other partner's details shows
-      async function marryTeamWhenOneOtherIsClicked(orderData){
-        const teamSetting = await settingsDb.findOne({id:"info@wosiwosi.co.uk"})
-        if(teamSetting.team == false && staff.team.status == false){ // is now an individual system and no partner
-          await singleOrder.updateOne({orderNumber:orderNumber},{
-            $set: {
-              meatPicker: {
-                id: staff.username,
-                // product:orderData.meatPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
-                fname:staff.fname,
-                active: true,
-                time: date,
-                status: orderData.meatPicker.status,
+      async function marryTeamWhenOneOtherIsClicked(orderData) {
+        const teamSetting = await settingsDb.findOne({ id: 'info@wosiwosi.co.uk' });
+        if (teamSetting.team == false && staff.team.status == false) {
+          // is now an individual system and no partner
+          await singleOrder.updateOne(
+            { orderNumber: orderNumber },
+            {
+              $set: {
+                meatPicker: {
+                  id: staff.username,
+                  // product:orderData.meatPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
+                  fname: staff.fname,
+                  active: true,
+                  time: date,
+                  status: orderData.meatPicker.status,
+                },
+                dryPicker: {
+                  id: staff.username,
+                  // product:orderData.dryPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
+                  fname: staff.fname,
+                  active: true,
+                  time: date,
+                  status: orderData.dryPicker.status,
+                },
+                packer: {
+                  id: staff.username,
+                  // product:orderData.packer.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
+                  fname: staff.fname,
+                  active: true,
+                  time: date,
+                  status: orderData.packer.status,
+                },
               },
-              dryPicker:{
-                id: staff.username,
-                // product:orderData.dryPicker.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
-                fname:staff.fname,
-                active: true,
-                time: date,
-                status: orderData.dryPicker.status,
-              },
-              packer:{
-                id: staff.username,
-                // product:orderData.packer.product, //update product if user already had product marked and he left and come back again. the will not let ehe already marked order unmark
-                fname:staff.fname,
-                active: true,
-                time: date,
-                status: orderData.packer.status,
-              }
             }
-          })  
-        }else{
+          );
+        } else {
           //
         }
       }
-      res.send(true)
-    }else{
-      res.send(false)
+      res.send(true);
+    } else {
+      res.send(false);
     }
-  }else{
-    res.redirect('/')
+  } else {
+    res.redirect('/');
   }
-}
+};
 
 //lock order
-const lockOrder = async (req, res)=>{
-  if(req.isAuthenticated()){
-    orderNumber = req.query.order
+const lockOrder = async (req, res) => {
+  if (req.isAuthenticated()) {
+    orderNumber = req.query.order;
     //reset worker and lock order
-    await singlOrder.updateOne({orderNumber:orderNumber},{
-      $set:{
-        lock:true,
-          meatPicker:{
-            id:"",
-            fname:"",
-            active:false,
-            time:"",
-            status:false
-        },
-        dryPicker:{
-            id:"",
-            fname:"",
-            active:false,
-            time:"",
-            status:false
-        },
-        packer:{
-            id:"",
-            fname:"",
-            active:false,
-            time:"",
-            status:false
+    await singlOrder.updateOne(
+      { orderNumber: orderNumber },
+      {
+        $set: {
+          lock: true,
+          meatPicker: {
+            id: '',
+            fname: '',
+            active: false,
+            time: '',
+            status: false,
+          },
+          dryPicker: {
+            id: '',
+            fname: '',
+            active: false,
+            time: '',
+            status: false,
+          },
+          packer: {
+            id: '',
+            fname: '',
+            active: false,
+            time: '',
+            status: false,
+          },
         },
       }
-   })
-   res.redirect(req.headers.referer)
-  }else{
-    res.redirect('/')
+    );
+    res.redirect(req.headers.referer);
+  } else {
+    res.redirect('/');
   }
-}
+};
 
 // unlock order
-const unlockOrder = async (req, res)=>{
-  if(req.isAuthenticated()){
-    orderNumber = req.query.order
+const unlockOrder = async (req, res) => {
+  if (req.isAuthenticated()) {
+    orderNumber = req.query.order;
     //reset worker and lock order
-    await singlOrder.updateOne({orderNumber:orderNumber},{
-      $set:{
-        lock:false,
+    await singlOrder.updateOne(
+      { orderNumber: orderNumber },
+      {
+        $set: {
+          lock: false,
+        },
       }
-   })
-   res.redirect(req.headers.referer)
-  }else{
-    res.redirect('/')
+    );
+    res.redirect(req.headers.referer);
+  } else {
+    res.redirect('/');
   }
 };
 
 //clear note
-const clearNote = async (req, res)=>{
-  if(req.isAuthenticated()){
-    orderNumber = req.query.order
+const clearNote = async (req, res) => {
+  if (req.isAuthenticated()) {
+    orderNumber = req.query.order;
     //reset worker and lock order
-    await singlOrder.updateOne({orderNumber:orderNumber},{
-      $set:{
-        note:[],
+    await singlOrder.updateOne(
+      { orderNumber: orderNumber },
+      {
+        $set: {
+          note: [],
+        },
       }
-   })
-   res.redirect(req.headers.referer)
-  }else{
-    res.redirect('/')
+    );
+    res.redirect(req.headers.referer);
+  } else {
+    res.redirect('/');
   }
-}
+};
 
-const hideProduct = async (req, res)=>{
-  if(req.isAuthenticated()){
-    const updateOrder = await singleOrder.updateOne({orderNumber:req.body.id}, {
-      $set:{
-        hideProduct:req.body.product
+const hideProduct = async (req, res) => {
+  if (req.isAuthenticated()) {
+    const updateOrder = await singleOrder.updateOne(
+      { orderNumber: req.body.id },
+      {
+        $set: {
+          hideProduct: req.body.product,
+        },
       }
-    })
-    res.send(true)
-  }else{
-    res.redirect("/")
+    );
+    res.send(true);
+  } else {
+    res.redirect('/');
   }
-}
+};
 
 //undo order
-const undoOrder = async (req, res)=>{
-  if(req.isAuthenticated()){
-    const orderNumber = req.query.id
+const undoOrder = async (req, res) => {
+  if (req.isAuthenticated()) {
+    const orderNumber = req.query.id;
     //check single order DB if it exist there
-    const checkSingleOrderDb = await singlOrder.findOne({orderNumber:orderNumber})
-    if(checkSingleOrderDb){
-     const update = await singlOrder.updateOne({orderNumber:orderNumber},{
-      $set:{
-        status:false,
-        productPicked:[],
-        packer:{
-          id:"",
-          fname:"",
-          active:false,
-          time:"",
-          status:false
-        },
-        dryPicker:{
-          id:"",
-          fname:"",
-          active:false,
-          time:"",
-          status:false
-        },
-        meatPicker:{
-          id:"",
-          fname:"",
-          active:false,
-          time:"",
-          status:false
+    const checkSingleOrderDb = await singlOrder.findOne({ orderNumber: orderNumber });
+    if (checkSingleOrderDb) {
+      const update = await singlOrder.updateOne(
+        { orderNumber: orderNumber },
+        {
+          $set: {
+            status: false,
+            productPicked: [],
+            packer: {
+              id: '',
+              fname: '',
+              active: false,
+              time: '',
+              status: false,
+            },
+            dryPicker: {
+              id: '',
+              fname: '',
+              active: false,
+              time: '',
+              status: false,
+            },
+            meatPicker: {
+              id: '',
+              fname: '',
+              active: false,
+              time: '',
+              status: false,
+            },
+          },
         }
-      }
-     })
-      await refundDb.deleteOne({orderNumber:orderNumber})
-      await replaceDb.deleteOne({orderNumber:orderNumber})
-      await completedDb.deleteOne({orderNumber:orderNumber})
-    }else{
-      const checkRedundant = await redundantDb.findOne({orderNumber:orderNumber})
-      if(checkRedundant){
+      );
+      await refundDb.deleteOne({ orderNumber: orderNumber });
+      await replaceDb.deleteOne({ orderNumber: orderNumber });
+      await completedDb.deleteOne({ orderNumber: orderNumber });
+    } else {
+      const checkRedundant = await redundantDb.findOne({ orderNumber: orderNumber });
+      if (checkRedundant) {
         //resave it to order to be saved process
         let saveOrder = new singleOrder({
-          orderNumber:orderNumber,
-          status:false,
-          note:[],
-          productPicked:[],
-          meatPicker:{
-              id:'',
-              fname:'',
-              active:false,
-              time:'',
-              status:false
+          orderNumber: orderNumber,
+          status: false,
+          note: [],
+          productPicked: [],
+          meatPicker: {
+            id: '',
+            fname: '',
+            active: false,
+            time: '',
+            status: false,
           },
-          dryPicker:{
-            id:'',
-            fname:'',
-            active:false,
-            time:'',
-            status:false
+          dryPicker: {
+            id: '',
+            fname: '',
+            active: false,
+            time: '',
+            status: false,
           },
-          packer:{
-            id:'',
-            fname:'',
-            active:false,
-            time:'',
-            status:false
+          packer: {
+            id: '',
+            fname: '',
+            active: false,
+            time: '',
+            status: false,
           },
-          booking:{
-              status:false
-          }
-        })
-        await saveOrder.save() //save for processing
-        await redundantDb.deleteOne({orderNumber:orderNumber})
-        await refundDb.deleteOne({orderNumber:orderNumber})
-        await replaceDb.deleteOne({orderNumber:orderNumber})
-        await completedDb.deleteOne({orderNumber:orderNumber})
+          booking: {
+            status: false,
+          },
+        });
+        await saveOrder.save(); //save for processing
+        await redundantDb.deleteOne({ orderNumber: orderNumber });
+        await refundDb.deleteOne({ orderNumber: orderNumber });
+        await replaceDb.deleteOne({ orderNumber: orderNumber });
+        await completedDb.deleteOne({ orderNumber: orderNumber });
       }
     }
-    res.redirect(req.headers.referer)
-  }else{
-    res.redirect("/")
+    res.redirect(req.headers.referer);
+  } else {
+    res.redirect('/');
   }
-}
+};
 
 //refund requests
-const RenderRefundRequest = async (req, res)=>{
-  if(req.isAuthenticated()){
-  const refund = await  refundDb.find({close:false});
-  res.render('admin/refund',{
-    title:"Refund Requests",
-    refund:refund
-  })
-}else{
-  res.redirect('/')
-}
-}
+const RenderRefundRequest = async (req, res) => {
+  if (req.isAuthenticated()) {
+    const refund = await refundDb.find({ close: false });
+    res.render('admin/refund', {
+      title: 'Refund Requests',
+      refund: refund,
+    });
+  } else {
+    res.redirect('/');
+  }
+};
 
 // approve or rejest refund request
-const requestOption = async (req, res)=>{
-if(req.isAuthenticated()){
-  let orderNumber = req.query.id;
-  let productName = req.query.product
-  let productQty = req.query.qty
-  let productPrice = req.query.price
+const requestOption = async (req, res) => {
+  if (req.isAuthenticated()) {
+    let orderNumber = req.query.id;
+    let productName = req.query.product;
+    let productQty = req.query.qty;
+    let productPrice = req.query.price;
 
-  const requestOption = req.params.option;
-  await refundDb.updateOne({orderNumber:orderNumber},{
-    $set:{
-      status:true
-    }
-  }) // set status of rufund request as true to signifies that a respnse has be given and staff can be notify     
-  switch(requestOption){
-    // case refund approve
-    case "approve-refund":
-      const updateRefund = await refundDb.updateOne({orderNumber:orderNumber, "product.productName":productName},{
-        $set:{
-          "product.$.status":true,
-          "product.$.approval":true
-        }
-      })
-      // console.log(updateRefund)
-      // const customer = await refundDb.findOne({orderNumber:orderNumber})
-      //send refund mail
-      // try{
-      //   mailer.refundMail(customer.customer_details.email,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", orderNumber, customer.customer_details.fname, productName, productQty, productPrice)
-      // }catch(e){
-      //   console.log(e)
-      // }
-      res.redirect(req.headers.referer)
-      break;
+    const requestOption = req.params.option;
+    await refundDb.updateOne(
+      { orderNumber: orderNumber },
+      {
+        $set: {
+          status: true,
+        },
+      }
+    ); // set status of rufund request as true to signifies that a respnse has be given and staff can be notify
+    switch (requestOption) {
+      // case refund approve
+      case 'approve-refund':
+        const updateRefund = await refundDb.updateOne(
+          { orderNumber: orderNumber, 'product.productName': productName },
+          {
+            $set: {
+              'product.$.status': true,
+              'product.$.approval': true,
+            },
+          }
+        );
+        // console.log(updateRefund)
+        // const customer = await refundDb.findOne({orderNumber:orderNumber})
+        //send refund mail
+        // try{
+        //   mailer.refundMail(customer.customer_details.email,"laura@wosiwosi.co.uk, seyiawo@wosiwosi.co.uk, gbenga@wosiwosi.co.uk, bamidele@wosiwosi.co.uk", orderNumber, customer.customer_details.fname, productName, productQty, productPrice)
+        // }catch(e){
+        //   console.log(e)
+        // }
+        res.redirect(req.headers.referer);
+        break;
 
       // refund rejected
-      case "reject-refund":
-        await refundDb.updateOne({orderNumber:orderNumber, "product.productName":productName},{
-          $set:{
-            "product.$.status":true,
+      case 'reject-refund':
+        await refundDb.updateOne(
+          { orderNumber: orderNumber, 'product.productName': productName },
+          {
+            $set: {
+              'product.$.status': true,
+            },
           }
-        })
-        res.redirect(req.headers.referer)
+        );
+        res.redirect(req.headers.referer);
         break;
-        
-        default:
-          break;
-    }
-}else{
-  res.redirect("/")
-}
-}
 
-//replacement 
-const renderReplacementPage= async (req, res)=>{
-  if(req.isAuthenticated()){
-    const replacement = await replaceDb.find()
-    res.render('admin/replacement', {
-      title:"Replacement",
-      replace:replacement
-    })
-  }else{
-    res.redirect('/')
+      default:
+        break;
+    }
+  } else {
+    res.redirect('/');
   }
-}
+};
+
+//replacement
+const renderReplacementPage = async (req, res) => {
+  if (req.isAuthenticated()) {
+    const replacement = await replaceDb.find();
+    res.render('admin/replacement', {
+      title: 'Replacement',
+      replace: replacement,
+    });
+  } else {
+    res.redirect('/');
+  }
+};
 
 //notification
-const renderNotificationPage = async (req, res)=>{
-  if(req.isAuthenticated()){
-    const notification = await notificationDb.find()
+const renderNotificationPage = async (req, res) => {
+  if (req.isAuthenticated()) {
+    const notification = await notificationDb.find();
     res.render('admin/notification', {
-      title:"Notification",
-      notification:notification,
-      user:req.user
-    })
-  }else{
-    res.redirect('/')
+      title: 'Notification',
+      notification: notification,
+      user: req.user,
+    });
+  } else {
+    res.redirect('/');
   }
-}
+};
 
 //ajax get notifications
-const ajaxGetNotification = async (req, res)=>{
-    const data = await notificationDb.find()
-    res.send(data)
-}
+const ajaxGetNotification = async (req, res) => {
+  const data = await notificationDb.find();
+  res.send(data);
+};
 
 //notification mark as read
-const markAsRead = async (req, res)=>{
-  if(req.isAuthenticated()){
-    const markNotification = await notificationDb.updateOne({notificationId:req.query.id},{
-      $set:{
-        readStatus:true
+const markAsRead = async (req, res) => {
+  if (req.isAuthenticated()) {
+    const markNotification = await notificationDb.updateOne(
+      { notificationId: req.query.id },
+      {
+        $set: {
+          readStatus: true,
+        },
       }
-  })
-  res.redirect(req.headers.referer)
-  }else{
-    res.redirect('/')
+    );
+    res.redirect(req.headers.referer);
+  } else {
+    res.redirect('/');
   }
-} 
+};
 
 //ajax get notifications
-const ajaxGetRefundNotification = async (req, res)=>{
-  const data = await refundDb.find()
-  res.send(data)
-}
+const ajaxGetRefundNotification = async (req, res) => {
+  const data = await refundDb.find();
+  res.send(data);
+};
 
 //lock system
-const lockSystem = async (req, res)=>{
-  const request = await settingsDb.updateOne({id:"info@wosiwosi.co.uk"},{
-    $set:{
-      lock:true
+const lockSystem = async (req, res) => {
+  const request = await settingsDb.updateOne(
+    { id: 'info@wosiwosi.co.uk' },
+    {
+      $set: {
+        lock: true,
+      },
     }
-  })
-  console.log("system locked")
-  res.redirect(req.headers.referer)
-}
+  );
+  console.log('system locked');
+  res.redirect(req.headers.referer);
+};
 
 //unlock system
-const unlockSystem = async (req, res)=>{
-  const request = await settingsDb.updateOne({id:"info@wosiwosi.co.uk"},{
-    $set:{
-      lock:false
+const unlockSystem = async (req, res) => {
+  const request = await settingsDb.updateOne(
+    { id: 'info@wosiwosi.co.uk' },
+    {
+      $set: {
+        lock: false,
+      },
     }
-  })
-  console.log("system unlocked")
-  res.redirect(req.headers.referer)
-}
+  );
+  console.log('system unlocked');
+  res.redirect(req.headers.referer);
+};
 
 //enableStaff
-const enableStaff = async (req, res) =>{
-    if(req.isAuthenticated()){
-      const staff = await User.updateOne({username:req.query.staffId},{
-        $set:{
-          status:true
-        }
-      })
-    res.redirect(req.headers.referer)
-    }else{
-      res.redirect("/")
-    }
-}
+const enableStaff = async (req, res) => {
+  if (req.isAuthenticated()) {
+    const staff = await User.updateOne(
+      { username: req.query.staffId },
+      {
+        $set: {
+          status: true,
+        },
+      }
+    );
+    res.redirect(req.headers.referer);
+  } else {
+    res.redirect('/');
+  }
+};
 
 //disable staff
-const disableStaff = async (req, res) =>{
-  if(req.isAuthenticated()){
-    const staff = await User.updateOne({username:req.query.staffId},{
-      $set:{
-        status:false
+const disableStaff = async (req, res) => {
+  if (req.isAuthenticated()) {
+    const staff = await User.updateOne(
+      { username: req.query.staffId },
+      {
+        $set: {
+          status: false,
+        },
       }
-    })
-  res.redirect(req.headers.referer)
-  }else{
-    res.redirect("/")
+    );
+    res.redirect(req.headers.referer);
+  } else {
+    res.redirect('/');
   }
-}
+};
 
 //redo order
-const redoOrder = async (req, res)=>{
+const redoOrder = async (req, res) => {
   console.log(req.body);
-  const orderNumber = req.body.orderNumber
+  const orderNumber = req.body.orderNumber;
   //save data into an aray
   const data = {
-    id:Math.floor(Math.random()*97423),
-    date:date,
-    comment:req.body.comment,
-    exclude:req.body.unmark
-  }
+    id: Math.floor(Math.random() * 97423),
+    date: date,
+    comment: req.body.comment,
+    exclude: req.body.unmark,
+  };
   //check if this order has been redone
-  const isAvailable = await redoDb.findOne({orderNumber:orderNumber})
-  if(isAvailable){
+  const isAvailable = await redoDb.findOne({ orderNumber: orderNumber });
+  if (isAvailable) {
     //update that order number and push data to the data array
-    const updateOrder = await redoDb.updateOne({orderNumber:orderNumber}, {
-      $push:{
-        data:data
+    const updateOrder = await redoDb.updateOne(
+      { orderNumber: orderNumber },
+      {
+        $push: {
+          data: data,
+        },
       }
-    })
-    if(updateOrder.modifiedCount == 1){ //if updated, send true
-      res.send(true)
+    );
+    if (updateOrder.modifiedCount == 1) {
+      //if updated, send true
+      res.send(true);
     }
-  }else{
+  } else {
     //save new redo
     const saveToRedo = new redoDb({
-        orderNumber:orderNumber,
-        data:[data]
-    })
-    await saveToRedo.save()
-    res.send(true)
+      orderNumber: orderNumber,
+      data: [data],
+    });
+    await saveToRedo.save();
+    res.send(true);
   }
-}
+};
 
 // report page
-const renderReportPage = async (req, res)=>{
-  if(req.isAuthenticated()){
-    res.render('admin/report',{
-      title:"Report"
-    })
-  }else{
-    res.redirect('/')
+const renderReportPage = async (req, res) => {
+  if (req.isAuthenticated()) {
+    res.render('admin/report', {
+      title: 'Report',
+    });
+  } else {
+    res.redirect('/');
   }
-}
+};
 
-const reportOption = async (req, res)=>{
-  if(req.isAuthenticated()){
-    param = req.params.param
+const reportOption = async (req, res) => {
+  if (req.isAuthenticated()) {
+    param = req.params.param;
     // let dateFilter = date.slice(0,10)
-    switch(param){
-      case "staff-performance":
-        const staffList = await User.find({role:"staff"})
+    switch (param) {
+      case 'staff-performance':
+        const staffList = await User.find({ role: 'staff' });
 
-        const orderList = await redundantDb.find({date:"2024-10-3"})
-        let staffReport =[]
+        const orderList = await redundantDb.find({ date: '2024-10-3' });
+        let staffReport = [];
 
-        // loog throught staff 
-        for(const eachStaff of staffList){
+        // loog throught staff
+        for (const eachStaff of staffList) {
           //creat object to hold details of what staff did
-          let report ={
-            id:"",
-            fname:"",
-            pick:[],
-            meat:[],
-            pack:[],
-          }
-          
-          let staffId = eachStaff.username
-          report.id = staffId //store staff username
-          report.fname=eachStaff.fname
-          for(const staffOrder of orderList){ //loop through order
-            if(staffOrder.meatPicker.id == staffId){ //meat
-              report.meat.push(staffOrder.orderNumber)
+          let report = {
+            id: '',
+            fname: '',
+            pick: [],
+            meat: [],
+            pack: [],
+          };
+
+          let staffId = eachStaff.username;
+          report.id = staffId; //store staff username
+          report.fname = eachStaff.fname;
+          for (const staffOrder of orderList) {
+            //loop through order
+            if (staffOrder.meatPicker.id == staffId) {
+              //meat
+              report.meat.push(staffOrder.orderNumber);
             }
-            if(staffOrder.dryPicker.id == staffId){ //meat
-              report.pick.push(staffOrder.orderNumber)
+            if (staffOrder.dryPicker.id == staffId) {
+              //meat
+              report.pick.push(staffOrder.orderNumber);
             }
-            if(staffOrder.packer.id == staffId){ //meat
-              report.pack.push(staffOrder.orderNumber)
+            if (staffOrder.packer.id == staffId) {
+              //meat
+              report.pack.push(staffOrder.orderNumber);
             }
           }
 
-          staffReport.push(report)
+          staffReport.push(report);
         }
         // console.log(staffReport)
-        res.render('admin/staff-performance',{
-          title:"Staff Performance",
-          order:orderList,
-          report:staffReport
-        })
+        res.render('admin/staff-performance', {
+          title: 'Staff Performance',
+          order: orderList,
+          report: staffReport,
+        });
         break;
       default:
-        break
+        break;
     }
-  }else{
-    res.redirect("/")
+  } else {
+    res.redirect('/');
   }
-}
+};
 
 // report ajax
-const reportAjax = async (req, res)=>{
-  if(req.isAuthenticated()){
-    let query = req.body.sort
-    let data = (req.body.data).split(' ')
-    switch(query){
+const reportAjax = async (req, res) => {
+  if (req.isAuthenticated()) {
+    let query = req.body.sort;
+    let data = req.body.data.split(' ');
+    switch (query) {
       // weekly sort
-      case "week":
+      case 'week':
         // let week = data.split(' ')
-        getStaffData(data)
-      break;
+        getStaffData(data);
+        break;
 
       // daily
-      case "day":
-        getStaffData(data)
-      break;
+      case 'day':
+        getStaffData(data);
+        break;
 
       // default
       default:
-        break
+        break;
     }
 
     async function getStaffData(dateData) {
-      const staffList = await User.find({role:"staff"})
+      const staffList = await User.find({ role: 'staff' });
       // let dataTosend = []
-      let staffReport = []
+      let staffReport = [];
 
+      for (const eachStaff of staffList) {
+        //pick each staff
+        //creat object to hold details of what staff did
+        let report = {
+          id: '',
+          fname: '',
+          dryPick: [],
+          meatPick: [],
+          pack: [],
+        };
+        let staffId = eachStaff.username;
+        report.id = staffId; //store staff username
+        report.fname = eachStaff.fname;
 
-        for(const eachStaff of staffList){ //pick each staff 
-          //creat object to hold details of what staff did
-          let report ={
-            id:"",
-            fname:"",
-            dryPick:[],
-            meatPick:[],
-            pack:[],
-          }
-          let staffId = eachStaff.username
-          report.id = staffId //store staff username
-          report.fname=eachStaff.fname
+        let temporaryMeatPickedArray = []; //this is used teporarily to old array of meat picked by the particular staff before pushing to object report
+        let temporaryDryPickedArray = []; //this is used teporarily to old array of dry picked by the particular staff before pushing to object report
+        let temporaryPackedArray = []; //this is used teporarily to old array of order packed by the particular staff before pushing to object report
+        for (const eachDate of dateData) {
+          //pick the date one by one
+          //for each day, look for where staff was a meatPicker
+          let meatPicked = await redundantDb.find({ date: eachDate, 'meatPicker.id': staffId });
+          temporaryMeatPickedArray = temporaryMeatPickedArray.concat(meatPicked); // this will add new data found on a particular dat to the list already available in temporary array
 
-          let temporaryMeatPickedArray = [] //this is used teporarily to old array of meat picked by the particular staff before pushing to object report
-          let temporaryDryPickedArray = [] //this is used teporarily to old array of dry picked by the particular staff before pushing to object report
-          let temporaryPackedArray = [] //this is used teporarily to old array of order packed by the particular staff before pushing to object report
-          for(const eachDate of dateData){ //pick the date one by one  
-            //for each day, look for where staff was a meatPicker
-            let meatPicked = await redundantDb.find({date:eachDate, "meatPicker.id":staffId}) 
-            temporaryMeatPickedArray = temporaryMeatPickedArray.concat(meatPicked)   // this will add new data found on a particular dat to the list already available in temporary array
+          let dryPicked = await redundantDb.find({ date: eachDate, 'dryPicker.id': staffId });
+          temporaryDryPickedArray = temporaryDryPickedArray.concat(dryPicked);
 
-            let dryPicked = await redundantDb.find({date:eachDate, "dryPicker.id":staffId})
-            temporaryDryPickedArray = temporaryDryPickedArray.concat(dryPicked)
-
-            let packer = await redundantDb.find({date:eachDate, "packer.id":staffId})
-            temporaryPackedArray = temporaryPackedArray.concat(packer)
-          }
-          report.dryPick=temporaryDryPickedArray
-          report.meatPick=temporaryMeatPickedArray
-          report.pack=temporaryPackedArray
-          staffReport.push(report)
+          let packer = await redundantDb.find({ date: eachDate, 'packer.id': staffId });
+          temporaryPackedArray = temporaryPackedArray.concat(packer);
         }
-      res.send(staffReport)
+        report.dryPick = temporaryDryPickedArray;
+        report.meatPick = temporaryMeatPickedArray;
+        report.pack = temporaryPackedArray;
+        staffReport.push(report);
+      }
+      res.send(staffReport);
     }
-
-  }else{
-    res.send(false)
+  } else {
+    res.send(false);
   }
-}
-
-
-
+};
 
 module.exports = {
-  dutySettings:dutySettings,
-  changeDuty:changeDuty,
-  pairStaff:pairStaff,
-  unpairStaff:unpairStaff,
+  dutySettings: dutySettings,
+  changeDuty: changeDuty,
+  pairStaff: pairStaff,
+  unpairStaff: unpairStaff,
   renderOrderListPage: renderOrderListPage,
   saveAllForProcessing: saveAllForProcessing,
   removeFromOrder: removeFromOrder,
-  resetWorker:resetWorker,
-  lockOrder:lockOrder,
-  unlockOrder:unlockOrder,
-  assignStaffToOrder:assignStaffToOrder,
-  undoOrder:undoOrder,
-  clearNote:clearNote,
-  hideProduct:hideProduct,
-  RenderRefundRequest:RenderRefundRequest,
-  requestOption:requestOption,
-  renderReplacementPage:renderReplacementPage,
-  renderNotificationPage:renderNotificationPage,
-  ajaxGetNotification:ajaxGetNotification,
-  markAsRead:markAsRead,
-  ajaxGetRefundNotification:ajaxGetRefundNotification,
-  lockSystem:lockSystem,
-  unlockSystem:unlockSystem,
-  enableStaff:enableStaff,
-  disableStaff:disableStaff,
-  redoOrder:redoOrder,
-  renderReportPage:renderReportPage,
-  reportOption:reportOption,
-  reportAjax:reportAjax,
+  resetWorker: resetWorker,
+  lockOrder: lockOrder,
+  unlockOrder: unlockOrder,
+  assignStaffToOrder: assignStaffToOrder,
+  undoOrder: undoOrder,
+  clearNote: clearNote,
+  hideProduct: hideProduct,
+  RenderRefundRequest: RenderRefundRequest,
+  requestOption: requestOption,
+  renderReplacementPage: renderReplacementPage,
+  renderNotificationPage: renderNotificationPage,
+  ajaxGetNotification: ajaxGetNotification,
+  markAsRead: markAsRead,
+  ajaxGetRefundNotification: ajaxGetRefundNotification,
+  lockSystem: lockSystem,
+  unlockSystem: unlockSystem,
+  enableStaff: enableStaff,
+  disableStaff: disableStaff,
+  redoOrder: redoOrder,
+  renderReportPage: renderReportPage,
+  reportOption: reportOption,
+  reportAjax: reportAjax,
 };

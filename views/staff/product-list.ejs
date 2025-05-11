@@ -1,0 +1,31 @@
+
+<%- include('include/header') -%>
+
+<!-- show page after reading the js -->
+    <section class="order-page">
+        <div class="container">
+
+            <div class="row">
+                <h5 class="alert alert-success text-center">Product List</h5>
+                <div class="text-center " id="spinner">
+                    <div class="spinner-border" role="status">
+                    </div>
+                    <p class="">Loading, do not refresh as this might take some times.</p>
+                    </p>
+                </div>
+            </div>
+
+            <!-- back to dashboard -->
+            <div class="row">
+                <div class="text-center">
+                        <a class="btn btn-success btn-md" href="/processingorder">Back to dashboard</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+
+<%- include('include/footerTemp') -%>
+<script src="/js/productList.js"></script>
+<%- include('include/footer') -%>

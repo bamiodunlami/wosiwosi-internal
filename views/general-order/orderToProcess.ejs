@@ -48,36 +48,22 @@
                         <thead>
                         <tr>
                             <th scope="col">Order</th>
-                            <th scope="col">Meat</th>
-                            <th scope="col">Picker</th>
-                            <th scope="col">Packer</th>
+                            <th scope="col">Customer</th>
+                            <th scope="col">Address</th>
+                            <th scope="col">Staff</th>
+                            <!-- <th scope="col">Picker</th>
+                            <th scope="col">Packer</th> -->
                             <!-- <th scope="col">Note</th> -->
                             <!-- <th scope="col">Status</th> -->
                         </tr>
                         </thead>
-                        <tbody class="">
-                            <% for(i =0; i<order.length; i++ ){%>
-                                <tr class="eachOrder">
-                                    <td>
-                                        <%if(order[i].lock == true ){%>
-                                            <%if(user.duty == "manager"){%>
-                                                <a href="/single-order-processing?id=<%=order[i].orderNumber%>"><%=order[i].orderNumber%></a> <span style="color: red;">locked</span></td>
-                                            <%}else{%>
-                                                <a><%=order[i].orderNumber%></a> <span style="color: red;">locked</span></td>
-                                            <%}%>
-                                        <%}else{%>
-                                         <a href="/single-order-processing?id=<%=order[i].orderNumber%>"><%=order[i].orderNumber%></a></td>
-                                         <%}%>
-                                    <!-- ?id=<=order[i].id>&fromDate=<=fromDate>&toDate=<=toDate>&page=<=page>&fromTime=<=fromTime>&toTime=<=toTime> -->
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <!-- <td>-</td> -->
-                                        <!-- <td>
-                                            <input class="form-check-input" type="checkbox">
-                                        </td> -->
-                                </tr>
-                            <%}%>
+                        <tbody class="" id="order-table">
+                            <!-- append table -->
+                            <div class="d-flex justify-content-center">
+                                <div class="spinner-border" role="status" id="spinner">
+                                  <span class="visually-hidden">Loading...</span>
+                                </div>
+                              </div>
                         </tbody>
                     </table>
                 </div>

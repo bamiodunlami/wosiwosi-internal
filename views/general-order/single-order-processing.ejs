@@ -60,9 +60,8 @@
                                 <%if(orderFromDB){%>
                                     <% for (let i =0; i<orderFromDB.note.length; i++){%>
                                         <div class="alert alert-danger"> <%=orderFromDB.note[i].fname%>: <%=orderFromDB.note[i].note%></div>
-                                        <%}%>
+                                    <%}%>
                                 <%}%>
-                                <!--  -->
                             </div>
                         </div>
 
@@ -94,186 +93,6 @@
                             <a href="/admin/online" class="btn btn-dark btn-sm">Back</a>
                             <!-- undo order -->
                             <a href="/undo-order?id=<%=order.id%>" class="btn btn-primary btn-sm">Undo</a>
-                            <!-- resend product -->
-                            <!-- <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal" data-bs-target="#staticBackdrop">Resend Product</button> -->
-                            <!-- Modal -->
-                            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                                <div class="modal-dialog modal-xl">
-                                <div class="modal-content">
-                                    <!-- modal header -->
-                                    <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="exampleModalLabel"><strong>Order <span id="orderNumber"><%=order.id%></span></strong></h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                    </div>
-                                    <!-- modal body -->
-                                    <div class="modal-body">
-                                        <!-- Order Details -->
-                                         <div class="row">
-                                            <!-- shiiping address -->
-                                            <div class="col-md-6">
-                                                <div class="alert alert-dark">
-                                                <h6><%=order.shipping.first_name%> <%=order.billing.last_name%></h6>
-                                                <h6>
-                                                    <%=order.shipping.address_1%> 
-                                                    <%=order.shipping.address_2%>
-                                                    <%=order.shipping.city%> 
-                                                    <%=order.shipping.state%>
-                                                </h6>
-                                                <h6>Post Code: <%=order.shipping.postcode%></h6>
-                                                <h6><a href="tel:+44<%=order.billing.phone%>">+44 <%=order.billing.phone%></a></h6>
-                                                <h6><%=order.billing.email%></h6>
-                                                </div>
-                                            </div>
-
-                                            <!-- order status and payment -->
-                                            <div class="col-md-6">
-                                                <div class="alert alert-danger">
-                                                <h6>Order Status: <%=order.status%></h6>
-                                                <h6>Shipping: <%=order.shipping_lines[0].method_title%></h6>
-                                                <h6>Shipping Amount: <%=order.currency_symbol%><%=order.shipping_lines[0].total%></h6>
-                                                </div>
-                                            </div>
-
-                                            <!-- customer note -->
-                                            <div class="col-md-12">                    
-                                                <% if(order.customer_note){%>
-                                                <div class="alert alert-warning">
-                                                    <h6 class="text-center">Customer Note</h6>
-                                                    <div class="text-center"><%=order.customer_note%></div>
-                                                </div>                    
-                                                <%}%>
-                                            </div>
-                                        </div>
-                                        <!-- order table -->
-                                        <div class="row">
-                                            <div class="order-table" id="order-table">
-                                                <div class="col-sm-12">
-                                                    <p class="alert alert-warning text-center">Mark the product(s) to be resent</p>
-                                                    <table class="table table-striped table-hover ">
-                                                        <thead>
-                                                        <tr>
-                                                            <th scope="col">Img</th>
-                                                            <th scope="col">Pro</th>
-                                                            <th scope="col">Qty</th>
-                                                            <th scope="col">Amt</th>
-                                                            <th scope="col"><input type="checkbox" class="form-check-input checkbox" id="selectAll"> All</th>
-                                                            <th scope="col"></th>
-                                                        </tr>
-                                                        </thead>
-                                                        <tbody class="">
-                                                            <% for(i =0; i<order.line_items.length; i++ ){%>
-                                                                <tr class="product-table">
-                                                                    <td><a href="<%=order.line_items[i].image.src%>"><img src="<%=order.line_items[i].image.src%>" width="40px" height="40px" alt="image"></a></td>
-                                                                    <td><span class="productName"><%=order.line_items[i].name%></span><span class="error"> </span>
-                                                                        <%if(order.line_items[i].meta_data.length>2){%>
-                                                                            <h6 class="message"><%=order.line_items[i].meta_data[1].display_value%></h6>
-                                                                        <%}%>
-                                                                    </td>
-                                                                    <td style="background-color:#beffeac9;" class="productQty"><%=order.line_items[i].quantity%></td>
-                                                                    <td class="productPrice"><%=order.currency_symbol%><%=order.line_items[i].subtotal%></td>
-
-                                                                    <!-- Replace btn -->
-                                                                    <!-- <td>
-                                                                        Button trigger modal
-                                                                        <button type="button" class=" btn btn-warning btn-sm replaceTrigger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                                                            <i class="fa-solid fa-retweet"></i>
-                                                                        </button>
-                                                                        
-                                                                        Modal
-                                                                        <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                                            <div class="modal-dialog">
-                                                                            <div class="modal-content">
-                                                                                <div class="modal-header">
-                                                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Replace <span class="ReplaceModalProductName"></span></h1>
-                                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                                </div>
-                                                                                <div class="modal-body">
-                                                                                    <div>
-                                                                                        <form class="row">
-                                                                                            <input type="hidden" id="productToReplace">
-                                                                                            <div class="mb-2">
-                                                                                                <input type="text" class="form-control" placeholder="Product name" id="replacementName">
-                                                                                            </div>
-                                                                                            <div class="mb-2 col-6">
-                                                                                                <input type="text" class="form-control" placeholder="Size" id="replacementSize">
-                                                                                            </div>
-                                                                                            <div class="mb-2 col-6">
-                                                                                                <input type="number" class="form-control" placeholder="Quantity" id="replacementQuantity">
-                                                                                            </div>
-                                                                                        </form>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="modal-footer">
-                                                                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                                <button type="button" class="btn btn-warning" id="replaceBtn">Replace</button>
-                                                                                </div>
-                                                                            </div>
-                                                                            </div>
-                                                                        </div>
-                                                                    </td> -->
-
-                                                                    <!-- refund btn -->
-                                                                    <!-- <td>
-                                                                        <button type="button" class=" btn btn-danger btn-sm refundTrigger" data-bs-toggle="modal" data-bs-target="#refundModal">
-                                                                            Ref
-                                                                        </button>
-                                                            
-                                                                        <div class="modal fade" id="refundModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-                                                                            <div class="modal-dialog">
-                                                                            <div class="modal-content">
-                                                                                <div class="modal-header">
-                                                                                <h1 class="modal-title fs-5" id="exampleModalLabel">Refund</h1>
-                                                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                                                                </div>
-                                                                                <div class="modal-body">
-                                                                                    <div class="row">
-                                                                                        <div class="mb-2">
-                                                                                            <input type="text" class="form-control" placeholder="Refund Product" id="refundProduct" value="" disabled>
-                                                                                        </div>
-                                                                                        <div class="mb-2 col-6">
-                                                                                            <input type="number" class="form-control" placeholder="Quantity" id="refundQuantity" value="">
-                                                                                            <div style="color: red;" id="quantityError"></div>
-                                                                                        </div>
-                                                                                        <div class="mb-2 col-6">
-                                                                                            <input type="text" class="form-control" placeholder="Amount" id="refundPrice" value="">
-                                                                                        </div>
-                                                                                    </div>
-                                                                                </div>
-                                                                                <div class="modal-footer">
-                                                                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                                                                    <button type="button" class="btn btn-danger" id="refundBtn" disabled>Confirm</button>
-                                                                                </div>
-                                                                            </div>
-                                                                            </div>
-                                                                        </div>
-
-                                                                    </td> -->
-                                                                
-                                                                    <td><input class="form-check-input checkbox selectOrder" type="checkbox"></td>
-                                                                    <!-- <td>-</td> -->
-                                                                </tr>
-                                                            <%}%>
-                                                        </tbody>
-                                                    </table>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        <!-- comment -->
-                                         <label>Resson for redo</label>
-                                        <select class="form-select comment" aria-label="Default select example">
-                                            <option value="Staff mistake">Staff Mistake</option>
-                                            <option value="Failed delivery">Failed delivery</option>
-                                            <option value="others">others</option>
-                                        </select>
-                                    </div>
-                                    <!-- modal footer -->
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                        <button type="button" class="btn btn-danger" id="redoBtn" disabled>Resend Product</button>
-                                    </div>
-                                </div>
-                                </div>
-                            </div>
                         <%}else{%>
                             <a href="/staff/online" class="btn btn-dark btn-sm">Back</a>
                             <a href="/processingorder" class="btn btn-warning btn-sm">Processing</a>
@@ -284,5 +103,5 @@
 
 
     <script src="/min/singleOrderProcessing.js"></script>
-    <script src="/js/redo.js"></script>
+    <!-- <script src="/js/redo.js"></script> -->
     <%- include('include/footer') -%>

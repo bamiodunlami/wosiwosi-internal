@@ -8,10 +8,9 @@
                             <th scope="col">Pro</th>
                             <th scope="col">Qty</th>
                             <th scope="col">Amt</th>
-                            <!-- <th scope="col">Rep</th> -->
+                            <th scope="col">Rep</th>
                             <th scope="col">Ref</th>
                             <th scope="col">Mar</th>
-                            <th scope="col"></th>
                         </tr>
                         </thead>
                         <tbody class="">
@@ -27,13 +26,15 @@
                                     <td class="productPrice"><%=order.currency_symbol%><%=order.line_items[i].subtotal%></td>
 
                                     <!-- Replace btn -->
-                                    <!-- <td>
-                                        Button trigger modal
+                                    <td>
+                                        <!-- Button trigger modal -->
                                         <button type="button" class=" btn btn-warning btn-sm replaceTrigger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-                                            <i class="fa-solid fa-retweet"></i>
+                                            <span class="material-symbols-outlined">
+                                                swap_horizontal_circle
+                                                </span>
                                         </button>
                                         
-                                        Modal
+                                        <!-- Modal -->
                                         <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                             <div class="modal-content">
@@ -64,14 +65,15 @@
                                             </div>
                                             </div>
                                         </div>
-                                    </td> -->
+                                    </td>
 
                                     <!-- refund btn -->
                                     <td>
                                         <!-- Button trigger modal -->
                                         <button type="button" class=" btn btn-danger btn-sm refundTrigger" data-bs-toggle="modal" data-bs-target="#refundModal">
-                                            <!-- <i class="fa-solid fa-rotate-left"></i> -->
-                                            Ref
+                                            <span class="material-symbols-outlined">
+                                                cancel
+                                                </span>
                                         </button>
                                         
                                         <!-- Modal -->
@@ -103,7 +105,6 @@
                                             </div>
                                             </div>
                                         </div>
-
                                     </td>
                                 
                                     <td><input class="form-check-input product-check" type="checkbox" id="singleOrderCheckbox"></td>

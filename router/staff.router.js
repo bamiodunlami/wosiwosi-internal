@@ -20,6 +20,10 @@ router
 
 .post('/change-my-duty', staff.dutyChangeRequest)
 
+.get('/product-list', staff.renderProductListPage)
+
+.get('/get-product-list', staff.getProductList)
+
 
 
 module.exports = router
